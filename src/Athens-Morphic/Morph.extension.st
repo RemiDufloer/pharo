@@ -56,14 +56,14 @@ Morph >> drawSubmorphsOnAthensCanvas: anAthensCanvas [
 { #category : #'*Athens-Morphic' }
 Morph >> fullDrawOnAthensCanvas: anAthensCanvas [ 
 	"Draw the full Morphic structure on the given Canvas"
-
-	self visible ifFalse: [^ self].
-	(anAthensCanvas isVisible: self fullBounds) ifFalse: [^self].
-	(self hasProperty: #errorOnDraw) ifTrue: [^self "drawErrorOn: aCanvas" ].
-
-	(anAthensCanvas isVisible: self bounds) ifTrue: [ anAthensCanvas draw: self ].
 	
-	submorphs isEmpty ifTrue: [^self].
+	self visible ifFalse: ['je dois devenir invisible ' traceCr.^ self].
+	(anAthensCanvas isVisible: self fullBounds) ifFalse: ['je suis visible ?' traceCr.^self].
+	(self hasProperty: #errorOnDraw) ifTrue: ['j ai planté comme un con ?' traceCr. ^self "drawErrorOn: aCanvas" ].
+
+	(anAthensCanvas isVisible: self bounds) ifTrue: [  anAthensCanvas draw: self ].
+	
+	submorphs isEmpty ifTrue: [ ^self].
 
 	self drawSubmorphsOnAthensCanvas: anAthensCanvas
 ]
@@ -75,7 +75,7 @@ Morph >> testAthensRender [
 	surf := AthensCairoSurface extent: Display extent.
 
 	surf drawDuring: [:can |
-"		can pathTransform scaleBy: 0.5; rotateByDegrees: 30."
+		can pathTransform scaleBy: 0.5; rotateByDegrees: 30.
 		self fullDrawOnAthensCanvas: can ].
 
 	Display getCanvas drawImage: 	surf asForm  at: 0@0

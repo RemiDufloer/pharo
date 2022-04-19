@@ -1,3 +1,36 @@
+"
+Please comment me using the following template inspired by Class Responsibility Collaborator (CRC) design:
+
+For the Class part:  State a one line summary. For example, ""I represent a paragraph of text"".
+
+For the Responsibility part: Three sentences about my main responsibilities - what I do, what I know.
+
+For the Collaborators Part: State my main collaborators and one line about how I interact with them. 
+
+
+Public API and Key Messages
+
+- message one   
+- message two 
+- (for bonus points) how to create instances.
+
+   One simple example is simply gorgeous.
+ 
+Internal Representation and Key Implementation Points.
+
+    Instance Variables
+	activeHand:		<Object>
+	container:		<Object>
+	damageRecorder:		<Object>
+	lastRequestedSize:		<Object>
+	layeredMorphs:		<Object>
+	morph:		<Object>
+	morphResizable:		<Object>
+	steps:		<Object>
+
+
+    Implementation Points
+"
 Class {
 	#name : #MorphicRoot,
 	#superclass : #Object,
@@ -9,7 +42,8 @@ Class {
 		'damageRecorder',
 		'container',
 		'layeredMorphs',
-		'activeHand'
+		'activeHand',
+		'miniWorld'
 	],
 	#category : #'Morphic-Base'
 }
@@ -38,7 +72,7 @@ MorphicRoot >> addMorphFront: aMorph [
 { #category : #'world simulation' }
 MorphicRoot >> addMorphInFrontOfLayer: aMorph [
 
-	'qsdqsdq' traceCr.
+	
 	layeredMorphs add: aMorph.
 	aMorph privateOwner: self.
 
@@ -103,19 +137,19 @@ MorphicRoot >> extent: extent [
 	self morph extent: extent
 ]
 
-{ #category : #'world simulation' }
-MorphicRoot >> initialize [
+{ #category : #initialization }
+MorphicRoot >> initialize [ 
 
-	super initialize.
-	
-	layeredMorphs := OrderedCollection new: 1.
-	damageRecorder := DamageRecorder new.
+miniWorld := MiniWorld new.
+damageRecorder := DamageRecorder new.	
+layeredMorphs := OrderedCollection new: 1.
 ]
 
 { #category : #private }
 MorphicRoot >> intersectingMorphs: aMorph within: aRect [
 	| morphs |
 	
+
 	aMorph fullBounds = aRect
 		ifTrue: [ ^ { aMorph } ].
 	
@@ -178,7 +212,6 @@ MorphicRoot >> invalidate: needQueue [
 
 { #category : #accessing }
 MorphicRoot >> invalidateRect: damageRect [
-
 	damageRecorder recordInvalidRect: damageRect.
 	container queueDrawArea: damageRect
 ]
@@ -229,7 +262,12 @@ MorphicRoot >> morph: aMorph [
 	morph wantsSteps ifTrue: [ self startStepping: morph ].
 
 	container sizeRequest: aMorph extent.
+	
+	miniWorld  addSubmorph: morph .
+	
 	self invalidate: needQueue
+	
+	
 ]
 
 { #category : #private }
@@ -242,6 +280,14 @@ MorphicRoot >> morphResizable: aBoolean [
 MorphicRoot >> needUpdate [
 
 	^ damageRecorder updateIsNeeded
+]
+
+{ #category : #compatibility }
+MorphicRoot >> paintMorph: aMorph [
+
+| renderer |
+renderer := MorphicRootRenderer new .
+renderer  displayWorldState: self ofWorld: self.
 ]
 
 { #category : #compatibility }
@@ -280,9 +326,10 @@ MorphicRoot >> removeAlarm: aSelector for: aTarget [
 { #category : #'world simulation' }
 MorphicRoot >> removeMorph: aMorph [ 
 	
-	(layeredMorphs includes: aMorph) ifFalse: [ ^ self ].
+	(layeredMorphs includes: aMorph) ifFalse: ['maybe' traceCr. ^ self ].
 	
 	layeredMorphs remove: aMorph.
+	
 	self invalidateRect: aMorph fullBounds
 ]
 
@@ -383,17 +430,17 @@ MorphicRoot >> withAllOwnersDo: aBlock [
 { #category : #accessing }
 MorphicRoot >> world [
 	
-	^ self
+	^ miniWorld 
 ]
 
 { #category : #'world simulation' }
 MorphicRoot >> worldRenderer [
 	
-	^ self
+	^ miniWorld worldRenderer 
 ]
 
 { #category : #'world simulation' }
 MorphicRoot >> worldState [
 	
-	^ self
+	^ self world worldState .
 ]
