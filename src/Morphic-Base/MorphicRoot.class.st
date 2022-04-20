@@ -140,7 +140,7 @@ MorphicRoot >> extent: extent [
 { #category : #initialization }
 MorphicRoot >> initialize [ 
 
-miniWorld := MiniWorld new.
+miniWorld := MiniWorld new: self.
 damageRecorder := DamageRecorder new.	
 layeredMorphs := OrderedCollection new: 1.
 ]
@@ -285,9 +285,8 @@ MorphicRoot >> needUpdate [
 { #category : #compatibility }
 MorphicRoot >> paintMorph: aMorph [
 
-| renderer |
-renderer := MorphicRootRenderer new .
-renderer  displayWorldState: self ofWorld: self.
+aMorph traceCr.
+(self world worldRenderer)  displayWorldState: (self world worldState) ofWorld: (self world).
 ]
 
 { #category : #compatibility }
@@ -339,37 +338,6 @@ MorphicRoot >> sizeRequest: anExtent [
 	lastRequestedSize = anExtent ifTrue: [ ^ self ].
 	super sizeRequest: anExtent. 
 	lastRequestedSize := anExtent
-]
-
-{ #category : #'world simulation' }
-MorphicRoot >> startStepping: aMorph [
-
-	self 
-		startStepping: aMorph 
-		at: Time millisecondClockValue 
-		selector: #stepAt: 
-		arguments: nil 
-		stepTime: nil
-]
-
-{ #category : #'world simulation' }
-MorphicRoot >> startStepping: aMorph at: scheduledTime selector: aSelector arguments: args stepTime: stepTime [
-	"Add the given morph to the step list. Do nothing if it is already being stepped."
-	| newStep |
-
-	self stopStepping: aMorph selector: aSelector.
-	
-	newStep := GtkStepMessage 
-		scheduledAt: scheduledTime
-		stepTime: stepTime
-		receiver: aMorph
-		selector: aSelector
-		arguments: args.
-		
-	steps ifNil: [ steps := Set new ].
-	steps add: newStep.
-	
-	newStep schedule
 ]
 
 { #category : #'world simulation' }
