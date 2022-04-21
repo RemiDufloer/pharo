@@ -16,7 +16,6 @@ Class {
 	#name : #MiniWorld,
 	#superclass : #Morph,
 	#instVars : [
-		'submorph',
 		'worldRendered',
 		'state',
 		'root'
@@ -35,23 +34,23 @@ MiniWorld class >> new: aObject [
 
 { #category : #structure }
 MiniWorld >> activeHand [
-
+	
 	^ root activeHand
 ]
 
 { #category : #stepping }
 MiniWorld >> addAlarm: aSelector withArguments: argArray for: aTarget at: scheduledTime [
 	"Add a new alarm with the given set of parameters"
-	state addAlarm: aSelector withArguments: argArray for: aTarget at: scheduledTime.
+	root addAlarm: aSelector withArguments: argArray for: aTarget at: scheduledTime.
 ]
 
 { #category : #accessing }
-MiniWorld >> addSubmorph: aMorph [
+MiniWorld >> addSubmorphs:aMorph [
 
-submorph add: aMorph
+	submorphs add: aMorph  
 ]
 
-{ #category : #structure }
+{ #category : #initialization }
 MiniWorld >> becomeActiveDuring: aBlock [
 	
 	aBlock value
@@ -60,9 +59,12 @@ MiniWorld >> becomeActiveDuring: aBlock [
 { #category : #accessing }
 MiniWorld >> initialize [ 
 
-submorph := OrderedCollection new.
+		
+super initialize .
+submorphs := OrderedCollection new.
 worldRendered := MorphicRootRenderer new: self. 	
 state := MiniWorldState new.
+
 ]
 
 { #category : #'world simulation' }
@@ -112,12 +114,6 @@ MiniWorld >> stopStepping: aMorph selector: aSelector [
 	state stopStepping: aMorph selector: aSelector.
 
 	
-]
-
-{ #category : #accessing }
-MiniWorld >> submorphs [
-
-^ submorph 
 ]
 
 { #category : #accessing }

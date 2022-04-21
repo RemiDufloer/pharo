@@ -50,17 +50,17 @@ Class {
 
 { #category : #'world simulation' }
 MorphicRoot >> activeHand [
-
+	
 	^ activeHand ifNil: [ 
 		  activeHand := HandMorph new
-			                privateOwner: self;
-			                yourself ]
+			                privateOwner: self 	;
+			                yourself ]		
 ]
 
 { #category : #'world simulation' }
 MorphicRoot >> addAlarm: aSelector withArguments: argArray for: aTarget at: scheduledTime [
 	
-	^ container addAlarm: aSelector withArguments: argArray for: aTarget at: scheduledTime
+	^ container   addAlarm: aSelector withArguments: argArray for: aTarget at: scheduledTime
 ]
 
 { #category : #'world simulation' }
@@ -75,7 +75,6 @@ MorphicRoot >> addMorphInFrontOfLayer: aMorph [
 	
 	layeredMorphs add: aMorph.
 	aMorph privateOwner: self.
-
 	self invalidateRect: aMorph fullBounds
 ]
 
@@ -90,16 +89,10 @@ MorphicRoot >> beMorphNotResizable [
 	self morphResizable: false
 ]
 
-{ #category : #accessing }
+{ #category : #'as yet unclassified' }
 MorphicRoot >> beMorphResizable [
 
 	self morphResizable: true
-]
-
-{ #category : #'world simulation' }
-MorphicRoot >> becomeActiveDuring: aBlock [
-	
-	aBlock value
 ]
 
 { #category : #'world simulation' }
@@ -149,10 +142,8 @@ layeredMorphs := OrderedCollection new: 1.
 MorphicRoot >> intersectingMorphs: aMorph within: aRect [
 	| morphs |
 	
-
 	aMorph fullBounds = aRect
 		ifTrue: [ ^ { aMorph } ].
-	
 	morphs := OrderedCollection new.
 	aMorph submorphsDo: [ :submorph | | bounds |
 		bounds := submorph fullBounds.
@@ -176,7 +167,7 @@ MorphicRoot >> intersectingMorphsWithin: aRect [
 	allMorphs := layeredMorphs copyWithFirst: self morph.
 	allMorphs do: [ :eachMorph |
 		eachMorph fullBounds = aRect ifTrue: [ ^ { eachMorph } ].
-	
+		
 		intersectingMorphs := OrderedCollection new.
 		eachMorph submorphsDo: [ :submorph | | bounds |
 			bounds := submorph fullBounds.
@@ -184,11 +175,10 @@ MorphicRoot >> intersectingMorphsWithin: aRect [
 				((bounds ~= aRect) and: [ bounds containsRect: aRect ])
 					ifTrue: [ intersectingMorphs addAll: (self intersectingMorphs: submorph within: aRect) ]
 					ifFalse: [ intersectingMorphs add: submorph ] ] ] ].
-	
 	aRect
 		allAreasOutsideList: (intersectingMorphs collect: [ :each | each fullBounds ])
 		do: [ :eachArea | ^ { self morph } ].
-		
+	
 	^ intersectingMorphs	reversed
 ]
 
@@ -259,12 +249,10 @@ MorphicRoot >> morph: aMorph [
 	"in this view, position of the morph is always 0@0"
 	morph position: 0@0.
 	"check for the need of steppiong stepping"
-	morph wantsSteps ifTrue: [ self startStepping: morph ].
+	morph wantsSteps ifTrue: [ miniWorld  startStepping: morph ].
 
 	container sizeRequest: aMorph extent.
-	
-	miniWorld  addSubmorph: morph .
-	
+	miniWorld  addSubmorphs: aMorph	.
 	self invalidate: needQueue
 	
 	
@@ -278,15 +266,17 @@ MorphicRoot >> morphResizable: aBoolean [
 
 { #category : #private }
 MorphicRoot >> needUpdate [
-
 	^ damageRecorder updateIsNeeded
 ]
 
 { #category : #compatibility }
 MorphicRoot >> paintMorph: aMorph [
 
-aMorph traceCr.
-(self world worldRenderer)  displayWorldState: (self world worldState) ofWorld: (self world).
+	"aMorph traceCr."
+
+	self worldRenderer
+		displayWorldState: self world worldState
+		ofWorld: self world
 ]
 
 { #category : #compatibility }
@@ -325,7 +315,7 @@ MorphicRoot >> removeAlarm: aSelector for: aTarget [
 { #category : #'world simulation' }
 MorphicRoot >> removeMorph: aMorph [ 
 	
-	(layeredMorphs includes: aMorph) ifFalse: ['maybe' traceCr. ^ self ].
+	(layeredMorphs includes: aMorph) ifFalse: [ ^ self ].
 	
 	layeredMorphs remove: aMorph.
 	
@@ -338,6 +328,26 @@ MorphicRoot >> sizeRequest: anExtent [
 	lastRequestedSize = anExtent ifTrue: [ ^ self ].
 	super sizeRequest: anExtent. 
 	lastRequestedSize := anExtent
+]
+
+{ #category : #'as yet unclassified' }
+MorphicRoot >> startStepping: aMorph at: scheduledTime selector: aSelector arguments: args stepTime: stepTime [
+	"Add the given morph to the step list. Do nothing if it is already being stepped."
+	| newStep |
+
+	self stopStepping: aMorph selector: aSelector.
+	
+	newStep := GtkStepMessage 
+		scheduledAt: scheduledTime
+		stepTime: stepTime
+		receiver: aMorph
+		selector: aSelector
+		arguments: args.
+		
+	steps ifNil: [ steps := Set new ].
+	steps add: newStep.
+	
+	newStep schedule
 ]
 
 { #category : #'world simulation' }
@@ -379,7 +389,6 @@ MorphicRoot >> theme [
 
 { #category : #'world simulation' }
 MorphicRoot >> transformFrom: aMorph [ 
-	
 	^ IdentityTransform new
 ]
 

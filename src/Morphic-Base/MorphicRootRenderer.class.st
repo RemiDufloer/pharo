@@ -14,8 +14,6 @@ MorphicRootRenderer class >> new: aMorph [
 	
 	renderer := self new.
 	renderer world: aMorph .
-	renderer traceCr.
-	renderer world traceCr.
 	^ 	renderer 	
 ]
 

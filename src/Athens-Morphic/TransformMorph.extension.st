@@ -15,7 +15,6 @@ TransformMorph >> clipDuring: aBlock canvas: aCanvas [
 TransformMorph >> drawSubmorphsOnAthensCanvas: anAthensCanvas [
 	| clip |
 	clip := self clippingBounds intersect: anAthensCanvas clipRect.
-	'clip' traceCr.
 	anAthensCanvas
 		transformBy: self transform
 		withClip: clip

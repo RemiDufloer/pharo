@@ -258,7 +258,7 @@ AbstractWorldRenderer >> doActivate [
 
 { #category : #rendering }
 AbstractWorldRenderer >> drawDuring: aBlock [
-
+	
 	self subclassResponsibility
 ]
 
