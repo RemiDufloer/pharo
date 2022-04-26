@@ -3108,6 +3108,7 @@ Morph >> handlesKeyStroke: evt [
 
 { #category : #'event handling' }
 Morph >> handlesKeyUp: evt [
+			
 	^self handlesKeyboard: evt
 ]
 
@@ -6595,7 +6596,9 @@ Morph >> veryDeepInner: deepCopier [
 
 { #category : #'base - worlds' }
 Morph >> viewBox [
-	^ self pasteUpMorph viewBox
+
+	thisContext stack inspect.
+	^ self world viewBox
 ]
 
 { #category : #drawing }

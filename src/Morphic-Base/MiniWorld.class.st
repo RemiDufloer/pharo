@@ -67,6 +67,22 @@ state := MiniWorldState new.
 
 ]
 
+{ #category : #recategorized }
+MiniWorld >> layoutChanged [
+	"Fixed to always flush layout cache - finally tracked down
+	layout anomalies due to cached extents in layout
+	policies not being flushed, the previous (incorrect) assumption being
+	that it did not matter if layout was to be recomputed (fullBounds being nil).
+	Recomputing of the layout apparently does not flush so must be done here."
+	
+	| layout |
+	fullBounds := nil.
+	layout := self layoutPolicy: StackLayout new.
+	layout ifNotNil:[layout flushLayoutCache].
+	owner ifNotNil: [owner layoutChanged].
+	"note: does not send #ownerChanged here - we'll do this when computing the new layout"
+]
+
 { #category : #'world simulation' }
 MiniWorld >> removeAlarm: aSelector for: aTarget [
 	
@@ -74,7 +90,7 @@ MiniWorld >> removeAlarm: aSelector for: aTarget [
 ]
 
 { #category : #accessing }
-MiniWorld >> root [ 
+MiniWorld >> root [
 
 	^ root
 ]
@@ -116,10 +132,16 @@ MiniWorld >> stopStepping: aMorph selector: aSelector [
 	
 ]
 
-{ #category : #accessing }
-MiniWorld >> world [ 
+{ #category : #'world simulation' }
+MiniWorld >> viewBox [
 
-^ self.
+	^ self worldRenderer viewBox
+]
+
+{ #category : #accessing }
+MiniWorld >> world [
+
+	^ self
 ]
 
 { #category : #accessing }
@@ -129,7 +151,7 @@ MiniWorld >> worldRenderer [
 ]
 
 { #category : #accessing }
-MiniWorld >> worldState [ 
+MiniWorld >> worldState [
 
-^ state
+	^ state
 ]
