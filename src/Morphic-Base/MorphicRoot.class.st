@@ -1,32 +1,19 @@
 "
-Please comment me using the following template inspired by Class Responsibility Collaborator (CRC) design:
+I represent root for all gtk morph.
 
-For the Class part:  State a one line summary. For example, ""I represent a paragraph of text"".
-
-For the Responsibility part: Three sentences about my main responsibilities - what I do, what I know.
-
-For the Collaborators Part: State my main collaborators and one line about how I interact with them. 
-
-
-Public API and Key Messages
-
-- message one   
-- message two 
-- (for bonus points) how to create instances.
-
-   One simple example is simply gorgeous.
+I know my world my renderer and my state. All Gtk morph know me. If a Gtk morph need information for the world he ask me and me ask the world.
  
 Internal Representation and Key Implementation Points.
 
     Instance Variables
-	activeHand:		<Object>
-	container:		<Object>
+	activeHand:			<Object>
+	container:			<Object>
 	damageRecorder:		<Object>
-	lastRequestedSize:		<Object>
+	lastRequestedSize:	<Object>
 	layeredMorphs:		<Object>
-	morph:		<Object>
+	morph:					<Object>
 	morphResizable:		<Object>
-	steps:		<Object>
+	steps:					<Object>
 
 
     Implementation Points
@@ -218,7 +205,7 @@ MorphicRoot >> kmDispatcher [
 ^ container kmDispatcher
 ]
 
-{ #category : #compatibility }
+{ #category : #layout }
 MorphicRoot >> layoutChanged [
 
 	"Empty for now, should we keep it?"
@@ -271,8 +258,6 @@ MorphicRoot >> needUpdate [
 
 { #category : #compatibility }
 MorphicRoot >> paintMorph: aMorph [
-
-	"aMorph traceCr."
 
 	self worldRenderer
 		displayWorldState: self world worldState
@@ -330,55 +315,12 @@ MorphicRoot >> sizeRequest: anExtent [
 	lastRequestedSize := anExtent
 ]
 
-{ #category : #'as yet unclassified' }
-MorphicRoot >> startStepping: aMorph at: scheduledTime selector: aSelector arguments: args stepTime: stepTime [
-	"Add the given morph to the step list. Do nothing if it is already being stepped."
-	| newStep |
-
-	self stopStepping: aMorph selector: aSelector.
-	
-	newStep := GtkStepMessage 
-		scheduledAt: scheduledTime
-		stepTime: stepTime
-		receiver: aMorph
-		selector: aSelector
-		arguments: args.
-		
-	steps ifNil: [ steps := Set new ].
-	steps add: newStep.
-	
-	newStep schedule
-]
-
 { #category : #'world simulation' }
 MorphicRoot >> stopStepping [
-	
+
 	steps ifNil: [ ^ self ].
-	
 	steps do: [ :each | each cancel ].
 	steps := nil
-]
-
-{ #category : #'world simulation' }
-MorphicRoot >> stopStepping: aMorph [
-
-	steps ifNil: [ ^ self ].
-
-	(steps removeAll: (steps select: [ :each | each receiver == aMorph ])) 
-		do: [ :each | each cancel ]
-]
-
-{ #category : #'world simulation' }
-MorphicRoot >> stopStepping: aMorph selector: aSelector [
-	
-	steps ifNil: [ ^ self ].
-	
-	(steps 
-		removeAll: (steps 
-			select:[ :each | 
-				each receiver == aMorph 
-				and: [ each selector == aSelector ] ]))
-		do: [ :each | each cancel ]
 ]
 
 { #category : #ui }

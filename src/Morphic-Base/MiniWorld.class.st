@@ -45,9 +45,11 @@ MiniWorld >> addAlarm: aSelector withArguments: argArray for: aTarget at: schedu
 ]
 
 { #category : #accessing }
-MiniWorld >> addSubmorphs:aMorph [
+MiniWorld >> addSubmorphs: aMorph [
 
-	submorphs add: aMorph  
+	aMorph hResizing: #spaceFill.
+	aMorph vResizing: #spaceFill.
+	submorphs add: aMorph
 ]
 
 { #category : #initialization }
@@ -56,31 +58,22 @@ MiniWorld >> becomeActiveDuring: aBlock [
 	aBlock value
 ]
 
-{ #category : #accessing }
-MiniWorld >> initialize [ 
+{ #category : #'world state' }
+MiniWorld >> displayWorld [
 
-		
-super initialize .
-submorphs := OrderedCollection new.
-worldRendered := MorphicRootRenderer new: self. 	
-state := MiniWorldState new.
-
+	state displayWorld: self .
 ]
 
-{ #category : #recategorized }
-MiniWorld >> layoutChanged [
-	"Fixed to always flush layout cache - finally tracked down
-	layout anomalies due to cached extents in layout
-	policies not being flushed, the previous (incorrect) assumption being
-	that it did not matter if layout was to be recomputed (fullBounds being nil).
-	Recomputing of the layout apparently does not flush so must be done here."
-	
-	| layout |
-	fullBounds := nil.
-	layout := self layoutPolicy: StackLayout new.
-	layout ifNotNil:[layout flushLayoutCache].
-	owner ifNotNil: [owner layoutChanged].
-	"note: does not send #ownerChanged here - we'll do this when computing the new layout"
+{ #category : #accessing }
+MiniWorld >> initialize [
+
+	super initialize.
+	submorphs := OrderedCollection new.
+	worldRendered := MorphicRootRenderer new: self.
+	state := WorldState  new.
+	self layoutPolicy: StackLayout new.
+	self hResizing: #shrinkWrap.
+	self vResizing: #shrinkWrap
 ]
 
 { #category : #'world simulation' }
@@ -115,7 +108,12 @@ MiniWorld >> startStepping: aMorph [
 { #category : #stepping }
 MiniWorld >> startStepping: aMorph at: scheduledTime selector: aSelector arguments: args stepTime: stepTime [
 
-	state startStepping: aMorph at: scheduledTime selector: aSelector arguments: args stepTime: stepTime
+	state
+		startStepping: aMorph
+		at: scheduledTime
+		selector: aSelector
+		arguments: args
+		stepTime: stepTime
 ]
 
 { #category : #stepping }
@@ -127,9 +125,7 @@ MiniWorld >> stopStepping: aMorph [
 { #category : #stepping }
 MiniWorld >> stopStepping: aMorph selector: aSelector [
 
-	state stopStepping: aMorph selector: aSelector.
-
-	
+	state stopStepping: aMorph selector: aSelector
 ]
 
 { #category : #'world simulation' }
