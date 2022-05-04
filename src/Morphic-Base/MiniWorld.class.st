@@ -48,7 +48,7 @@ MiniWorld >> addAlarm: aSelector withArguments: argArray for: aTarget at: schedu
 MiniWorld >> addSubmorphs: aMorph [
 
 	aMorph hResizing: #spaceFill.
-	aMorph vResizing: #spaceFill.
+	aMorph vResizing: #shrinkWrap.
 	submorphs add: aMorph
 ]
 
@@ -72,8 +72,8 @@ MiniWorld >> initialize [
 	worldRendered := MorphicRootRenderer new: self.
 	state := WorldState  new.
 	self layoutPolicy: StackLayout new.
-	self hResizing: #shrinkWrap.
-	self vResizing: #shrinkWrap
+	self hResizing: #spaceFill.
+	self vResizing: #shrinkWrap.
 ]
 
 { #category : #'world simulation' }
