@@ -2,54 +2,67 @@ Class {
 	#name : #WindowManager,
 	#superclass : #Morph,
 	#instVars : [
-		'allWorld',
-		'allWindowState',
-		'taskBar'
+		'taskBar',
+		'allWindow',
+		'taskBarWindow'
 	],
 	#category : #'Morphic-Base'
 }
 
-{ #category : #'add/remove' }
-WindowManager >> addWindow: aPresenter [ 
-	
-	aPresenter open.
-	"taskBar  addNewItem: aPresenter adapter widget children first world.
-	taskBar  openInWorld ."
-	allWorld add: aPresenter adapter widget children first world.
-	allWindowState add: (aPresenter ).
-	
-]
-
-{ #category : #states }
-WindowManager >> allWindowState [
-	
-	^ allWindowState
-]
-
 { #category : #accessing }
-WindowManager >> allWorld [
+WindowManager >> allWindow [ 
 
-	^ allWorld
+	^ allWindow 
 ]
 
 { #category : #'add/remove' }
 WindowManager >> deleteAWindow: aWindow [
 
 	| index |
-	aWindow delete.
-	index := allWindowState  indexOf: aWindow .
-	allWorld removeAt: ( index ).
-	allWindowState removeAt: ( index )
+	index := allWindow indexOf: aWindow.
+	allWindow removeAt: index.
+	taskBar removeMorph: aWindow.
 ]
 
 { #category : #'add/remove' }
 WindowManager >> initialize [
 
-	allWorld := OrderedCollection new.
-	allWindowState := OrderedCollection new.
-	taskBar :=  TaskbarMorph  new.
-	"toolBar openInExternalWindow  . "
-	"self addWindow: nil withWorld: self world"
+	allWindow := OrderedCollection new.
+	taskBar := TaskbarMorph new .
+	taskBarWindow := taskBar openInExternalWindow.
+]
+
+{ #category : #creation }
+WindowManager >> newWindowWithRoot: aMorph [
+
+	| newWindow |
+	newWindow := Window newWindow: aMorph manageBy: self.
+	allWindow add: newWindow.
+	taskBar addMorph: aMorph.
+	taskBarWindow changed.
+	^ newWindow
+]
+
+{ #category : #accessing }
+WindowManager >> numberOfOpenWindows [
+
+	^ allWindow size
+]
+
+{ #category : #accessing }
+WindowManager >> numberOfWindows [
+	^ allWindow size
+]
+
+{ #category : #open }
+WindowManager >> openNewWindowBackendGtkWithRoot: aMorph [ 
+	
+	^ (self newWindowWithRoot: aMorph ) openWithGtk .
+]
+
+{ #category : #accessing }
+WindowManager >> openNewWindowWithRoot: aMorph [ 
+	^ ( self newWindowWithRoot: aMorph ) open
 ]
 
 { #category : #accessing }
