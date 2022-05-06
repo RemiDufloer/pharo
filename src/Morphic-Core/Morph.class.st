@@ -4544,6 +4544,11 @@ Morph >> owner [
 	^ owner
 ]
 
+{ #category : #setter }
+Morph >> owner: aMiniWorld [ 
+	owner := aMiniWorld
+]
+
 { #category : #'debug and other' }
 Morph >> ownerChain [
 	"Answer a list of objects representing the receiver and all of its owners.   The first element is the receiver, and the last one is typically the world in which the receiver resides"

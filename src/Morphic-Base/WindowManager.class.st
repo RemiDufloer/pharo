@@ -4,7 +4,8 @@ Class {
 	#instVars : [
 		'taskBar',
 		'allWindow',
-		'taskBarWindow'
+		'taskBarWindow',
+		'miniWorld'
 	],
 	#category : #'Morphic-Base'
 }
@@ -27,9 +28,13 @@ WindowManager >> deleteAWindow: aWindow [
 { #category : #'add/remove' }
 WindowManager >> initialize [
 
+	| root |
 	allWindow := OrderedCollection new.
-	taskBar := TaskbarMorph new .
-	taskBarWindow := taskBar openInExternalWindow.
+	root := MorphicRoot new.
+	root container: GtkFormView new.
+	taskBar := TaskbarMorph new intoWorld: root world.
+	root morph: taskBar
+	"taskBarWindow := taskBar openInExternalWindow"
 ]
 
 { #category : #creation }

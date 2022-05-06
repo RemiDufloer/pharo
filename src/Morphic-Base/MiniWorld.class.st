@@ -35,6 +35,8 @@ MiniWorld class >> new: aObject [
 { #category : #structure }
 MiniWorld >> activeHand [
 	
+	'passeeee' traceCr.
+	root ifNil: [ 'sqdqsdqsd' traceCr  ].
 	^ root activeHand
 ]
 
@@ -50,6 +52,12 @@ MiniWorld >> addSubmorphs: aMorph [
 	aMorph hResizing: #spaceFill.
 	aMorph vResizing: #shrinkWrap.
 	submorphs add: aMorph
+]
+
+{ #category : #cursor }
+MiniWorld >> beCursorOwner [
+
+	root beCursorOwner
 ]
 
 { #category : #initialization }
@@ -70,10 +78,11 @@ MiniWorld >> initialize [
 	super initialize.
 	submorphs := OrderedCollection new.
 	worldRendered := MorphicRootRenderer new: self.
-	state := WorldState  new.
+	state := WorldState new.
+	state worldRenderer: worldRendered .
 	self layoutPolicy: StackLayout new.
 	self hResizing: #spaceFill.
-	self vResizing: #shrinkWrap.
+	self vResizing: #shrinkWrap
 ]
 
 { #category : #'world simulation' }
@@ -91,7 +100,8 @@ MiniWorld >> root [
 { #category : #accessing }
 MiniWorld >> root: aObject [
 
-	root := aObject .
+	aObject asString traceCr.
+	root := aObject
 ]
 
 { #category : #'world simulation' }

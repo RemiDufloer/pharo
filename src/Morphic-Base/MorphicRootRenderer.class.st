@@ -30,6 +30,10 @@ MorphicRootRenderer class >> new: aMorph [
 	^ 	renderer 	
 ]
 
+{ #category : #activation }
+MorphicRootRenderer >> activate [
+]
+
 { #category : #accessing }
 MorphicRootRenderer >> world: aMorph [
 

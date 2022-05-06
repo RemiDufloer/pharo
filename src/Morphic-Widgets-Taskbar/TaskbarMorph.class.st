@@ -185,7 +185,7 @@ TaskbarMorph >> initializeLayout [
 { #category : #initialization }
 TaskbarMorph >> intoWorld: aWorld [
 	"Stick to the bottom left now."
-	
+	self owner ifNil: [ self owner: aWorld  ].
 	self
 		setToAdhereToEdge: #bottomLeft;
 		updateBounds.
@@ -396,33 +396,32 @@ TaskbarMorph >> updateTaskButtons [
 
 { #category : #taskbar }
 TaskbarMorph >> updateTasks [
+
 	"Check for changes in the world's submorphs.
 	Note that if the task attributes change then a
 	task will be considered dead along with a new replacement."
 
 	| wm deadTasks newTasks taskbarTasksFromWorldMorph |
-	wm := self worldMorphs asOrderedCollection.
-	taskbarTasksFromWorldMorph := (wm collect: [ :m | m taskbarTask ])
-		reject: [ :m | m isNil ].
+	wm := self windows.
+	taskbarTasksFromWorldMorph := (wm collect: [ :m | m taskbarTask ]) 
+		                              reject: [ :m | m isNil ].
 	self tasks: taskbarTasksFromWorldMorph.
 	deadTasks := self orderedTasks difference: self tasks.
 	newTasks := self tasks difference: self orderedTasks.
-	(newTasks isEmpty and: [ deadTasks isEmpty ])
-		ifTrue: [ ^ self ].	"no changes"
-	newTasks copy
-		do: [ :t | 
-			self orderedTasks
-				detect: [ :ot | ot morph = t morph ]
-				ifFound: [ :ot | 
-					self orderedTasks replaceAll: ot with: t.
-					deadTasks remove: ot.
-					newTasks remove: t ] ].	"replace in order any changed tasks."
+	(newTasks isEmpty and: [ deadTasks isEmpty ]) ifTrue: [ ^ self ]. "no changes"
+	newTasks copy do: [ :t | 
+		self orderedTasks
+			detect: [ :ot | ot morph = t morph ]
+			ifFound: [ :ot | 
+				self orderedTasks replaceAll: ot with: t.
+				deadTasks remove: ot.
+				newTasks remove: t ] ]. "replace in order any changed tasks."
 	self orderedTasks
 		removeAll: deadTasks;
 		addAll: newTasks reversed.
 	self updateTaskButtons.
-	self
-		defer: [ "may have a different number of rows" self layoutChanged ]
+	self defer: [ "may have a different number of rows" 
+		self layoutChanged ]
 ]
 
 { #category : #accessing }
@@ -431,6 +430,12 @@ TaskbarMorph >> wantsToBeTopmost [
 	objects in its owner."
 	
 	^ true
+]
+
+{ #category : #taskbar }
+TaskbarMorph >> windows [
+	
+	^ self worldMorphs asOrderedCollection
 ]
 
 { #category : #taskbar }

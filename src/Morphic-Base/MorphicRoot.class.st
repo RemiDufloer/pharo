@@ -118,11 +118,12 @@ MorphicRoot >> extent: extent [
 ]
 
 { #category : #initialization }
-MorphicRoot >> initialize [ 
+MorphicRoot >> initialize [
 
-miniWorld := MiniWorld new: self.
-damageRecorder := DamageRecorder new.	
-layeredMorphs := OrderedCollection new: 1.
+	super initialize.
+	miniWorld := MiniWorld new: self.
+	damageRecorder := DamageRecorder new.
+	layeredMorphs := OrderedCollection new: 1
 ]
 
 { #category : #private }
