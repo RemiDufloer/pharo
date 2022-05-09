@@ -5,80 +5,73 @@ Class {
 }
 
 { #category : #tests }
-WindowManagerTest >> testAddWindow [
-
-	| manager |
-	manager := WindowManager new.
-	manager addWindowWithRoot: Morph new.
-
-	self assert: manager numberOfOpenWindows equals: 1
-
-]
-
-{ #category : #tests }
-WindowManagerTest >> testAllWindowState [
-
-	| manager newWorld presenter morph |
-	manager := WindowManager new.
-	newWorld := MiniWorld new.
-	presenter := SpPresenter new.
-	presenter application: (SpApplication new useBackend: #Gtk).
-	presenter layout: (SpPanedLayout newHorizontal 
-			 add: (morph := presenter newMorph);
-			 yourself).
-
-	manager addWindow: presenter.
-	self assert: manager allWorld size equals: 1 .
-	self assert: manager allWindowState size equals: 1 .			
-	
-]
-
-{ #category : #tests }
-WindowManagerTest >> testCreation [ 
-
-	| manager |
-	
-	manager := WindowManager new.
-	self assert: manager allWorld size equals: 0.
-	
-]
-
-{ #category : #tests }
 WindowManagerTest >> testDeleteAWindow [
 
 	| manager newWindow |
 	manager := WindowManager new.
-	newWindow := manager addWindowWithRoot: Morph new.
+	newWindow := manager openNewWindowWithRoot: Morph new.
 
 	newWindow delete.
-	
+
 	self assert: manager numberOfOpenWindows equals: 0
 ]
 
 { #category : #tests }
-WindowManagerTest >> testTaskBar [
+WindowManagerTest >> testDeleteAWindowAndTaskBarActualized [
 
-	| manager |
-	
+	| manager newWindow |
 	manager := WindowManager new.
-	self assert: manager taskBar submorphCount equals: 0.
+	newWindow := manager openNewWindowWithRoot: Morph new.
+
+	newWindow delete.
+
+	self assert: manager taskBar submorphs size equals: 0
+]
+
+{ #category : #tests }
+WindowManagerTest >> testNewWindowShouldBeSave [
+
+	| manager newWindow |
+	manager := WindowManager new.
+	newWindow := manager newWindowWithRoot: Morph new.
+
+	self assert: manager numberOfWindows equals: 1.
+
 	
 ]
 
 { #category : #tests }
-WindowManagerTest >> testTaskBarAdd [
+WindowManagerTest >> testNewWindowShouldBeSaveAndTaskBarHaveAnewWidget [
 
-	| manager presenter morph |
-	
+	| manager newWindow |
 	manager := WindowManager new.
-	presenter := SpPresenter new.
-	presenter application: (SpApplication new useBackend: #Gtk).
-	presenter layout: (SpPanedLayout newHorizontal
-			 add: (morph := presenter newMorph);
-			 yourself).
-	manager addWindow: presenter.
-	self assert: manager taskBar submorphCount equals: 1.
-	
+	newWindow := manager newWindowWithRoot: Morph new.
+
+	self assert: manager taskBar submorphs size equals: 1
+]
+
+{ #category : #tests }
+WindowManagerTest >> testOpenNewWindowShouldBeSave [
+
+	| manager newWindow |
+	manager := WindowManager new.
+	newWindow := manager openNewWindowWithRoot:
+		             ClyFullBrowserMorph onDefaultEnvironment.
+
+	self assert: manager numberOfOpenWindows equals: 1.
+	"newWindow delete"
+]
+
+{ #category : #tests }
+WindowManagerTest >> testOpenWithBackendGtkNewWindowShouldBeSave [
+
+	| manager newWindow |
+	manager := WindowManager new.
+	newWindow := manager openNewWindowBackendGtkWithRoot: Morph new.
+
+	self assert: manager numberOfOpenWindows equals: 1
+
+	"newWindow delete"
 ]
 
 { #category : #tests }
