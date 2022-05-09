@@ -46,7 +46,6 @@ TaskbarItemMorph >> disabledFillStyle [
 TaskbarItemMorph >> initialize [
 
 	super initialize.
-	1halt.
 	self borderStyle: (self theme taskbarItemNormalBorderStyleFor: self)
 ]
 
