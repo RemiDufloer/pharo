@@ -95,8 +95,7 @@ OSWorldRenderer >> deferUpdatesDuring: aBlock [
 OSWorldRenderer >> doActivate [
 
 	| attributes initialExtent |
-	
-	initialExtent := world worldState realWindowExtent ifNil: [976@665].
+	initialExtent := world extent.
 
 	attributes := OSWindowAttributes new.
 	attributes
