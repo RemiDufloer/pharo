@@ -1,3 +1,17 @@
+"
+I manage the native window, when i was create i open a window with a taskbar, if you create a window, the window is add at the taskbar.
+
+
+    Instance Variables
+	allWindow:		<Object>
+	allWindowState:		<Object>
+	allWorld:		<Object>
+	taskBar:		<Object>
+	taskBarWindow:		<Object>
+
+
+    Implementation Points
+"
 Class {
 	#name : #WindowManager,
 	#superclass : #Morph,
@@ -18,23 +32,45 @@ WindowManager >> allWindow [
 ]
 
 { #category : #accessing }
-WindowManager >> deleteAWindow: aWindow [
+WindowManager >> closeAllWindow [
+
+
+	(allWindow size) to: (1) by: (-1) do: [ :m | (allWindow at: m) delete  ].
+	taskBar updateTasks .
+]
+
+{ #category : #accessing }
+WindowManager >> closeAllWindowToLeft: aWindow [
 
 	| index |
 	index := allWindow indexOf: aWindow.
-	allWindow removeAt: index.
-	taskBar removeMorph: aWindow.
+	(index - 1 )  to: 1 by: (-1) do: [ :m | (allWindow at: m) delete  ].
+	taskBar updateTasks .
+]
+
+{ #category : #accessing }
+WindowManager >> closeAllWindowToRight: aWindow [
+
+	| index |
+	index := allWindow indexOf: aWindow.
+	(allWindow size) to: (index + 1) by: (-1) do: [ :m | (allWindow at: m) delete  ].
+	taskBar updateTasks .
+]
+
+{ #category : #accessing }
+WindowManager >> closeWindow: aWindow [
+
+	allWindow remove: aWindow.
+	taskBar updateTasks .
 ]
 
 { #category : #accessing }
 WindowManager >> initialize [
 
-	| root |
 	allWindow := OrderedCollection new.
-	root := MorphicRoot new.
-	taskBar := TaskbarMorph new intoWorld: root world.
-	root morph: taskBar
-	"taskBarWindow := taskBar openInExternalWindow"
+	taskBarWindow := Window newWindow: (TaskbarMorphForManager newByManager: self) manageBy: self.
+	taskBarWindow open.
+	taskBar := taskBarWindow window
 ]
 
 { #category : #accessing }
@@ -43,8 +79,6 @@ WindowManager >> newWindowWithRoot: aMorph [
 	| newWindow |
 	newWindow := Window newWindow: aMorph manageBy: self.
 	allWindow add: newWindow.
-	taskBar addMorph: aMorph.
-	taskBarWindow changed.
 	^ newWindow
 ]
 
@@ -67,21 +101,15 @@ WindowManager >> openNewWindowBackendGtkWithRoot: aMorph [
 
 { #category : #accessing }
 WindowManager >> openNewWindowWithRoot: aMorph [ 
-	^ ( self newWindowWithRoot: aMorph ) open
+
+	| newWindow |
+	newWindow := ( self newWindowWithRoot: aMorph ) open.
+	taskBar updateTasks .
+	^ newWindow
 ]
 
 { #category : #accessing }
 WindowManager >> taskBar [
 
 	^ taskBar 
-]
-
-{ #category : #accessing }
-WindowManager >> windowMaximize: aSpPresenter [ 
-	aSpPresenter owner maximize
-]
-
-{ #category : #accessing }
-WindowManager >> windowMinimize: aSpPresenter [ 
-	aSpPresenter owner minimize 
 ]

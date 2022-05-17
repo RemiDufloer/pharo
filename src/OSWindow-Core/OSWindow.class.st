@@ -249,6 +249,12 @@ OSWindow >> initWithAttributes: attributes eventHandler: anEventHandle [
 	self initialize
 ]
 
+{ #category : #accessing }
+OSWindow >> initialAttributes [
+
+	^ initialAttributes
+]
+
 { #category : #private }
 OSWindow >> invalidHandle [
 	self error: 'Invalid window handle'
@@ -273,13 +279,11 @@ OSWindow >> isVisible [
 
 { #category : #'window management' }
 OSWindow >> maximize [
-
 	self validHandle maximize.
 ]
 
 { #category : #'window management' }
 OSWindow >> minimize [
-
 	self validHandle minimize.
 ]
 
