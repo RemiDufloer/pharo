@@ -64,6 +64,32 @@ WindowManager >> closeWindow: aWindow [
 	taskBar updateTasks .
 ]
 
+{ #category : #closing }
+WindowManager >> deleteAll [
+
+	self closeAllWindow.
+
+	"Call doDelete because the taskbar window is not subscribed to manager"
+	taskBarWindow doDelete
+]
+
+{ #category : #accessing }
+WindowManager >> ensureCloseAllWindow [
+
+	allWindow size to: 1 by: -1 do: [ :m | 
+		(allWindow at: m) ensureDelete ].
+	taskBar updateTasks
+]
+
+{ #category : #closing }
+WindowManager >> ensureDeleteAll [
+
+	self ensureCloseAllWindow.
+
+	"Call doDelete because the taskbar window is not subscribed to manager"
+	taskBarWindow ensureDoDelete
+]
+
 { #category : #accessing }
 WindowManager >> initialize [
 
@@ -71,6 +97,12 @@ WindowManager >> initialize [
 	taskBarWindow := Window newWindow: (TaskbarMorphForManager newByManager: self) manageBy: self.
 	taskBarWindow open.
 	taskBar := taskBarWindow window
+]
+
+{ #category : #testing }
+WindowManager >> isTaskBarOpen [
+	
+	^ taskBarWindow isOpen
 ]
 
 { #category : #accessing }

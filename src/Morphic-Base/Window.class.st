@@ -84,9 +84,49 @@ Window >> closeAllWindowToRight [
 { #category : #'submorphs - add/remove' }
 Window >> delete [
 
-	window delete.
-	backend delete.
+	self doDelete.
 	manager closeWindow: self
+]
+
+{ #category : #'submorphs - add/remove' }
+Window >> doDelete [
+
+	"Low-level deletion method.
+	Do not use directly, otherwise the connection with the manager would be lost.
+
+	Use #delete instead"
+
+	self isOpen ifFalse: [ self error: 'Cannot delete non open window' ].
+	self ensureDoDelete
+]
+
+{ #category : #'submorphs - add/remove' }
+Window >> ensureDelete [
+
+	self ensureDoDelete.
+	manager closeWindow: self
+]
+
+{ #category : #'submorphs - add/remove' }
+Window >> ensureDoDelete [
+
+	"Low-level deletion method.
+	Do not use directly, otherwise the connection with the manager would be lost.
+
+	Use #ensureDelete instead.
+	
+	Do not fail if the window is not open"
+
+	self isOpen ifFalse: [ ^ self ].
+
+	window delete.
+	backend delete
+]
+
+{ #category : #testing }
+Window >> isClosed [
+	
+	^ self isOpen not
 ]
 
 { #category : #testing }
@@ -106,6 +146,13 @@ Window >> isNotRestored [
 	"Answer whether we are maximised or minimised."
 
 	^attributs  minimized or: [attributs maximized]
+]
+
+{ #category : #testing }
+Window >> isOpen [
+	
+	osWindow ifNil: [ ^ false ].
+	^ osWindow isVisible
 ]
 
 { #category : #'submorphs - add/remove' }
@@ -148,10 +195,10 @@ Window >> openWithGtk [
 			 add: (morph := presenter newMorph);
 			 yourself).
 	morph morph: window.
-	
+
 	presenter open.
-	
-backend := presenter .
+
+	backend := presenter
 ]
 
 { #category : #accessing }

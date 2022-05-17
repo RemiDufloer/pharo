@@ -1,14 +1,48 @@
 Class {
 	#name : #WindowManagerTest,
 	#superclass : #TestCase,
+	#instVars : [
+		'manager'
+	],
 	#category : #'Morphic-Tests'
 }
+
+{ #category : #running }
+WindowManagerTest >> setUp [
+	super setUp.
+	manager := WindowManager new.
+	
+]
+
+{ #category : #tests }
+WindowManagerTest >> tearDown [ 
+
+	manager ensureDeleteAll.
+	super tearDown
+
+	
+]
+
+{ #category : #tests }
+WindowManagerTest >> testDeleteANonOpenWindowFails [
+
+	| newWindow |
+	newWindow := manager newWindowWithRoot: Morph new.
+
+	[ 
+	newWindow delete.
+	self fail ]
+		on: Error
+		do: [ :err | 
+			self
+				assert: err messageText
+				equals: 'Cannot delete non open window' ]
+]
 
 { #category : #tests }
 WindowManagerTest >> testDeleteAWindow [
 
-	| manager newWindow |
-	manager := WindowManager new.
+	| newWindow |
 	newWindow := manager openNewWindowWithRoot: Morph new.
 
 	newWindow delete.
@@ -19,20 +53,30 @@ WindowManagerTest >> testDeleteAWindow [
 { #category : #tests }
 WindowManagerTest >> testDeleteAWindowAndTaskBarActualized [
 
-	| manager newWindow |
-	manager := WindowManager new.
+	| newWindow |
 	newWindow := manager openNewWindowWithRoot: Morph new.
 	
-	newWindow delete .
+	newWindow delete.
 
 	self assert: manager taskBar submorphs size equals: 0
 ]
 
 { #category : #tests }
+WindowManagerTest >> testDeleteAll [
+
+	| newWindow |
+	newWindow := manager openNewWindowWithRoot: Morph new.
+
+	manager deleteAll.
+
+	self assert: manager numberOfOpenWindows equals: 0.
+	self deny: manager isTaskBarOpen
+]
+
+{ #category : #tests }
 WindowManagerTest >> testDeleteAllWindow [
 
-	| manager newWindow |
-	manager := WindowManager new.
+	| newWindow |
 	newWindow := manager openNewWindowWithRoot: Morph new.
 	manager openNewWindowWithRoot: Morph new.
 	manager openNewWindowWithRoot: Morph new.
@@ -49,8 +93,7 @@ WindowManagerTest >> testDeleteAllWindow [
 { #category : #tests }
 WindowManagerTest >> testDeleteAllWindowToLeftOfAWindow [
 
-	| manager newWindow |
-	manager := WindowManager new.
+	| newWindow |
 	manager openNewWindowWithRoot: Morph new.
 	manager openNewWindowWithRoot: Morph new.
 	manager openNewWindowWithRoot: Morph new.
@@ -59,30 +102,24 @@ WindowManagerTest >> testDeleteAllWindowToLeftOfAWindow [
 	
 	newWindow closeAllWindowToLeft .
 
-	self assert: manager numberOfOpenWindows equals: 1.
-	
-	newWindow delete.
+	self assert: manager numberOfOpenWindows equals: 1
 ]
 
 { #category : #tests }
 WindowManagerTest >> testDeleteAllWindowToLeftOfAWindowWhenDontHaveWindowOnLeft [
 
-	| manager newWindow |
-	manager := WindowManager new.
+	| newWindow |
 	newWindow := manager openNewWindowWithRoot: Morph new.
 	
 	newWindow closeAllWindowToLeft .
 
-	self assert: manager numberOfOpenWindows equals: 1.
-	
-	newWindow delete.
+	self assert: manager numberOfOpenWindows equals: 1
 ]
 
 { #category : #tests }
 WindowManagerTest >> testDeleteAllWindowToRightOfAWindow [
 
-	| manager newWindow |
-	manager := WindowManager new.
+	| newWindow |
 	newWindow := manager openNewWindowWithRoot: Morph new.
 	manager openNewWindowWithRoot: Morph new.
 	manager openNewWindowWithRoot: Morph new.
@@ -91,42 +128,34 @@ WindowManagerTest >> testDeleteAllWindowToRightOfAWindow [
 	
 	newWindow closeAllWindowToRight .
 
-	self assert: manager numberOfOpenWindows equals: 1.
-	
-	newWindow delete.
+	self assert: manager numberOfOpenWindows equals: 1
 ]
 
 { #category : #tests }
 WindowManagerTest >> testDeleteAllWindowToRightOfAWindowWhenDontHaveWindowOnRight [
 
-	| manager newWindow |
-	manager := WindowManager new.
+	| newWindow |
 	newWindow := manager openNewWindowWithRoot: Morph new.
 	
 	newWindow closeAllWindowToRight .
 
-	self assert: manager numberOfOpenWindows equals: 1.
-	
-	newWindow delete.
+	self assert: manager numberOfOpenWindows equals: 1
 ]
 
 { #category : #tests }
 WindowManagerTest >> testNewWindowShouldBeSave [
 
-	| manager newWindow |
+	| newWindow |
 	manager := WindowManager new.
 	newWindow := manager newWindowWithRoot: Morph new.
 
-	self assert: manager numberOfWindows equals: 1.
-
-	
+	self assert: manager numberOfWindows equals: 1
 ]
 
 { #category : #tests }
 WindowManagerTest >> testNewWindowShouldBeSaveAndTaskBarHaveAnewWidget [
 
-	| manager newWindow |
-	manager := WindowManager new.
+	| newWindow |
 	newWindow := manager newWindowWithRoot: SystemWindow  new.
 
 	self assert: manager taskBar submorphs size equals: 1
@@ -135,22 +164,17 @@ WindowManagerTest >> testNewWindowShouldBeSaveAndTaskBarHaveAnewWidget [
 { #category : #tests }
 WindowManagerTest >> testOpenNewWindowShouldBeSave [
 
-	| manager newWindow |
-	manager := WindowManager new.
+	| newWindow |
 	newWindow := manager openNewWindowWithRoot:
 		             ClyFullBrowserMorph onDefaultEnvironment.
-	self assert: manager numberOfOpenWindows equals: 1.
-	newWindow delete
+	self assert: manager numberOfOpenWindows equals: 1
 ]
 
 { #category : #tests }
 WindowManagerTest >> testOpenWithBackendGtkNewWindowShouldBeSave [
 
-	| manager newWindow |
-	manager := WindowManager new.
+	| newWindow |
 	newWindow := manager openNewWindowBackendGtkWithRoot: SystemWindow  new.
 
 	self assert: manager numberOfOpenWindows equals: 1
-
-	"newWindow delete"
 ]
