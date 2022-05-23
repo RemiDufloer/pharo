@@ -1,27 +1,8 @@
 Class {
 	#name : #WindowManagerTest,
-	#superclass : #TestCase,
-	#instVars : [
-		'manager'
-	],
+	#superclass : #AbstractWindowManagerTest,
 	#category : #'Morphic-Tests'
 }
-
-{ #category : #running }
-WindowManagerTest >> setUp [
-	super setUp.
-	manager := WindowManager new.
-	
-]
-
-{ #category : #tests }
-WindowManagerTest >> tearDown [ 
-
-	manager ensureDeleteAll.
-	super tearDown
-
-	
-]
 
 { #category : #tests }
 WindowManagerTest >> testDeleteANonOpenWindowFails [
@@ -177,4 +158,131 @@ WindowManagerTest >> testOpenWithBackendGtkNewWindowShouldBeSave [
 	newWindow := manager openNewWindowBackendGtkWithRoot: SystemWindow  new.
 
 	self assert: manager numberOfOpenWindows equals: 1
+]
+
+{ #category : #tests }
+WindowManagerTest >> testWindowShouldBeOpenAfterStartupWithGoodMorph [
+
+	manager openNewWindowWithRoot: Morph new.
+	manager openNewWindowWithRoot: Morph new.
+	manager openNewWindowWithRoot: Morph new.
+	
+	manager saveAllRoot.
+	
+	manager deleteAll.
+	
+	manager startupRoot.
+	
+	self assert: manager numberOfWindows  equals: 3.
+	
+
+	
+
+]
+
+{ #category : #tests }
+WindowManagerTest >> testWindowShouldBeOpenAfterStartupWithGoodMorphWhenNoMorphIsSave [
+
+	manager saveAllRoot.
+	
+	manager deleteAll.
+	
+	manager startupRoot.
+	
+	self assert: manager numberOfWindows  equals: 0.
+	
+
+	
+
+]
+
+{ #category : #tests }
+WindowManagerTest >> testWindowShouldBeOpenAfterStartupWithGoodMorphWithGoodAttribus [
+
+	| newWindow |
+	newWindow := manager openNewWindowWithRoot: Morph new.
+
+	
+	manager saveAllRoot.
+	manager saveAllAttributes .
+	
+	manager deleteAll.
+	
+	manager startupRoot.
+	manager startupOpenWithAttributs.
+	
+	
+	self assert: manager allWindow first attributs  equals: newWindow attributs .
+	
+
+	
+
+]
+
+{ #category : #tests }
+WindowManagerTest >> testWindowShouldBeOpenAfterStartupWithtaskBar [
+
+	
+	manager deleteAll.
+	
+	manager startupTaskbar.
+	
+	self assert: manager isTaskBarOpen 
+	
+
+	
+
+]
+
+{ #category : #tests }
+WindowManagerTest >> testWindowShouldBeSaveBeforeShutDownSaveAttributes [
+
+	manager openNewWindowWithRoot: Morph new.
+	manager saveAllAttributes.
+	
+	self assert: manager numberOfAttributesSave equals: 1.
+	
+
+	
+
+]
+
+{ #category : #tests }
+WindowManagerTest >> testWindowShouldBeSaveBeforeShutDownSaveAttributesButNoRoot [
+
+	manager saveAllAttributes.
+	
+	self assert: manager numberOfAttributesSave equals: 0.
+	
+
+	
+
+]
+
+{ #category : #tests }
+WindowManagerTest >> testWindowShouldBeSaveBeforeShutDownSaveRoot [
+
+
+   manager openNewWindowWithRoot:  Morph new.
+   manager openNewWindowWithRoot: Morph new.
+
+	manager saveAllRoot.
+	
+	self assert: manager numberOfRootSave equals: 2.
+	
+
+	
+
+]
+
+{ #category : #tests }
+WindowManagerTest >> testWindowShouldBeSaveBeforeShutDownSaveRootButHaveNotRoot [
+
+	manager saveAllRoot.
+	
+	self assert: manager numberOfRootSave equals: 0.
+	
+
+	
+
 ]

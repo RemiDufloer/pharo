@@ -18,3 +18,16 @@ ClyFullBrowserMorph >> openInExternalWindow [
 	].
 	^ world open
 ]
+
+{ #category : #'*OSWindow-Core' }
+ClyFullBrowserMorph >> settingWorld [ 
+	| world |
+	world := OSWindowWorldMorph new extent: self fullBounds extent.
+	world
+		layoutPolicy: StackLayout new;
+		clipSubmorphs: true.
+
+	self hResizing: #spaceFill; vResizing: #spaceFill.
+	^world
+	
+]

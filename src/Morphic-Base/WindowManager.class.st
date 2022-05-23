@@ -16,14 +16,25 @@ Class {
 	#name : #WindowManager,
 	#superclass : #Morph,
 	#instVars : [
-		'allWorld',
-		'allWindowState',
 		'taskBar',
 		'allWindow',
-		'taskBarWindow'
+		'taskBarWindow',
+		'rootSave',
+		'allAttributes'
 	],
 	#category : #'Morphic-Base'
 }
+
+{ #category : #accessing }
+WindowManager >> allAttributes [
+	^ allAttributes
+]
+
+{ #category : #accessing }
+WindowManager >> allSaveRoot [
+	
+	^ rootSave 
+]
 
 { #category : #accessing }
 WindowManager >> allWindow [ 
@@ -53,8 +64,9 @@ WindowManager >> closeAllWindowToRight: aWindow [
 
 	| index |
 	index := allWindow indexOf: aWindow.
-	(allWindow size) to: (index + 1) by: (-1) do: [ :m | (allWindow at: m) delete  ].
-	taskBar updateTasks .
+	allWindow size to: index + 1 by: -1 do: [ :m | 
+	(allWindow at: m) delete ].
+	taskBar updateTasks
 ]
 
 { #category : #accessing }
@@ -94,9 +106,7 @@ WindowManager >> ensureDeleteAll [
 WindowManager >> initialize [
 
 	allWindow := OrderedCollection new.
-	taskBarWindow := Window newWindow: (TaskbarMorphForManager newByManager: self) manageBy: self.
-	taskBarWindow open.
-	taskBar := taskBarWindow window
+	self startupTaskbar .
 ]
 
 { #category : #testing }
@@ -114,10 +124,22 @@ WindowManager >> newWindowWithRoot: aMorph [
 	^ newWindow
 ]
 
+{ #category : #size }
+WindowManager >> numberOfAttributesSave [
+	
+	^ allAttributes size
+]
+
 { #category : #accessing }
 WindowManager >> numberOfOpenWindows [
 
 	^ allWindow size
+]
+
+{ #category : #accessing }
+WindowManager >> numberOfRootSave [
+	
+	^ rootSave size 
 ]
 
 { #category : #accessing }
@@ -138,6 +160,37 @@ WindowManager >> openNewWindowWithRoot: aMorph [
 	newWindow := ( self newWindowWithRoot: aMorph ) open.
 	taskBar updateTasks .
 	^ newWindow
+]
+
+{ #category : #saving }
+WindowManager >> saveAllAttributes [
+	
+	allAttributes := allWindow collect: [  :w | w attributsSave ].
+]
+
+{ #category : #saving }
+WindowManager >> saveAllRoot [
+	
+	rootSave := allWindow collect: [ :m | m window ]
+]
+
+{ #category : #startup }
+WindowManager >> startupOpenWithAttributs [
+	1 to: allAttributes  size do: [ :a | (allWindow  at: a) openWithAttributs: (allAttributes at: a)  ]
+]
+
+{ #category : #'startup - shutdown' }
+WindowManager >> startupRoot [
+	
+	1 to: rootSave size do: [ :r | self newWindowWithRoot:  (rootSave at: r) ]
+]
+
+{ #category : #startup }
+WindowManager >> startupTaskbar [
+	
+	taskBarWindow := Window newWindow: (TaskbarMorphForManager newByManager: self) manageBy: self.
+	taskBarWindow open.
+	taskBar := taskBarWindow window
 ]
 
 { #category : #accessing }

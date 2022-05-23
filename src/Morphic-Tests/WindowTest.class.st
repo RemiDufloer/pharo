@@ -1,6 +1,6 @@
 Class {
 	#name : #WindowTest,
-	#superclass : #TestCase,
+	#superclass : #AbstractWindowManagerTest,
 	#instVars : [
 		'window'
 	],
@@ -9,28 +9,29 @@ Class {
 
 { #category : #running }
 WindowTest >> setUp [
+
 	super setUp.
-	
-	window := Window newWindow: Morph new manageBy: WindowManager new.
+
+	window := manager newWindowWithRoot: Morph new
 ]
 
 { #category : #tests }
 WindowTest >> testMaximizeWindow [
 
-	window open .
-	window maximize .
-	
-	self assert: window isMaximized equals: true  .
+	window open.
+	window maximize.
+
+	self assert: window isMaximized equals: true
 ]
 
 { #category : #tests }
 WindowTest >> testMinimizeWindow [
 
-	window open .
-	
-	window minimize .
-	
-	self assert: window isNotMinimized  equals: true  .
+	window open.
+
+	window minimize.
+
+	self assert: window isMinimized
 ]
 
 { #category : #tests }
@@ -44,9 +45,9 @@ WindowTest >> testNewWindowDefaultsIsNotMaximize [
 { #category : #tests }
 WindowTest >> testNewWindowDefaultsIsNotMinimized [
 
-	window open .
-	
-	self assert: window isNotMinimized equals: true  .
+	window open.
+
+	self assert: window isNotMinimized
 ]
 
 { #category : #tests }

@@ -74,6 +74,15 @@ OSWindowWorldMorph >> openInWorld [
 	^ self open
 ]
 
+{ #category : #'instance creation' }
+OSWindowWorldMorph >> openWithAttributs: aAttributes [
+
+	self worldState worldRenderer: ((OSWorldRenderer forWorld: self withAttributs: aAttributes  )
+		windowCloseAction: [self osWindowCloseButtonPressed]).
+	self changed.
+	self class addExtraWorld: self.
+]
+
 { #category : #events }
 OSWindowWorldMorph >> osWindowCloseButtonPressed [
 	self delete

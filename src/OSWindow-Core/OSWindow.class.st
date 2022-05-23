@@ -107,7 +107,7 @@ OSWindow >> backendWindow [
 
 { #category : #accessing }
 OSWindow >> borderless [
-	^ self validHandle borderless
+	^ self initialAttributes borderless: (self validHandle borderless)
 ]
 
 { #category : #accessing }
@@ -117,7 +117,7 @@ OSWindow >> borderless: aBoolean [
 
 { #category : #accessing }
 OSWindow >> bounds [
-	^ self validHandle bounds
+	^ self initialAttributes bounds: (self validHandle bounds)
 ]
 
 { #category : #accessing }
@@ -201,7 +201,7 @@ OSWindow >> eventHandler: anObject [
 
 { #category : #accessing }
 OSWindow >> extent [
-	^ self validHandle extent
+	^ self initialAttributes extent: (self validHandle extent)
 ]
 
 { #category : #accessing }
@@ -314,7 +314,7 @@ OSWindow >> platformSpecificHandle [
 
 { #category : #accessing }
 OSWindow >> position [
-	^ self validHandle position
+	^ self initialAttributes position: (self validHandle position)
 ]
 
 { #category : #accessing }
@@ -426,7 +426,7 @@ OSWindow >> stopTextInput [
 
 { #category : #accessing }
 OSWindow >> title [
-	^ self validHandle title
+	^ initialAttributes title: (self validHandle title)
 ]
 
 { #category : #accessing }

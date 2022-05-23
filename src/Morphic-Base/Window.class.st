@@ -56,6 +56,16 @@ Window >> attributs [
 	^ attributs
 ]
 
+{ #category : #'submorphs - add/remove' }
+Window >> attributsSave [
+
+	osWindow position.
+	osWindow title.
+	osWindow bounds.
+	
+	^ attributs 
+]
+
 { #category : #accessing }
 Window >> backend [
 
@@ -136,6 +146,12 @@ Window >> isMaximized [
 ]
 
 { #category : #testing }
+Window >> isMinimized [
+
+	^ attributs minimized
+]
+
+{ #category : #testing }
 Window >> isNotMinimized [
 
 	^ attributs minimized not
@@ -183,6 +199,15 @@ Window >> open [
 	attributs := self backend worldState worldRenderer osWindow initialAttributes.
 	osWindow := self backend worldState worldRenderer osWindow.
 	
+]
+
+{ #category : #open }
+Window >> openWithAttributs: aAttributs [ 
+	
+
+	backend := window openInExternalWindowWithAttributs: aAttributs .
+	attributs := self backend worldState worldRenderer osWindow initialAttributes.
+	osWindow := self backend worldState worldRenderer osWindow.
 ]
 
 { #category : #'submorphs - add/remove' }

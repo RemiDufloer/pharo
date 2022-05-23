@@ -3,12 +3,7 @@ Extension { #name : #Morph }
 { #category : #'*OSWindow-Core' }
 Morph >> openInExternalWindow [
 	| world |
-	world := OSWindowWorldMorph new extent: self fullBounds extent.
-	world
-		layoutPolicy: ProportionalLayout new;
-		clipSubmorphs: true.
-
-	self hResizing: #spaceFill; vResizing: #spaceFill.
+	world := self settingWorld .
 	self openInWorld: world.
 	self onAnnouncement: MorphDeleted do: [ :announce |
 		world ifNotNil: [
@@ -38,4 +33,20 @@ Morph >> openInExternalWindowModalCallback: aBlock [
 		world := nil.
 	].
 	^ world open
+]
+
+{ #category : #'*OSWindow-Core' }
+Morph >> openInExternalWindowWithAttributs: aAttributs [
+	
+	| world |
+	world := self settingWorld .
+	
+	self openInWorld: world.
+	self onAnnouncement: MorphDeleted do: [ :announce |
+		world ifNotNil: [
+			world delete
+		].
+		world := nil.
+	].
+	^ world openWithAttributs: aAttributs  .
 ]
