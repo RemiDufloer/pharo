@@ -18,7 +18,8 @@ Class {
 	#instVars : [
 		'worldRendered',
 		'state',
-		'root'
+		'root',
+		'backgroundMorph'
 	],
 	#category : #'Morphic-Base'
 }
@@ -35,7 +36,7 @@ MiniWorld class >> new: aObject [
 { #category : #structure }
 MiniWorld >> activeHand [
 	
-	^ root activeHand
+	^ self worldState activeHand
 ]
 
 { #category : #stepping }
@@ -52,10 +53,25 @@ MiniWorld >> addSubmorphs: aMorph [
 	submorphs add: aMorph
 ]
 
+{ #category : #'world simulation' }
+MiniWorld >> backgroundMorph [
+
+	^ backgroundMorph
+]
+
+{ #category : #'submorphs - add/remove' }
+MiniWorld >> beCursorOwner [
+]
+
 { #category : #initialization }
 MiniWorld >> becomeActiveDuring: aBlock [
 	
 	aBlock value
+]
+
+{ #category : #'submorphs - add/remove' }
+MiniWorld >> delete [
+	self worldState worldRenderer deactivate.
 ]
 
 { #category : #'world state' }
@@ -64,12 +80,24 @@ MiniWorld >> displayWorld [
 	state displayWorld: self .
 ]
 
+{ #category : #'world simulation' }
+MiniWorld >> fullRepaintNeeded [
+
+	self worldState doFullRepaint.
+]
+
+{ #category : #'world simulation' }
+MiniWorld >> handsDo: aBlock [
+
+	^ self worldState handsDo: aBlock
+]
+
 { #category : #accessing }
 MiniWorld >> initialize [
 
 	super initialize.
 	submorphs := OrderedCollection new.
-	worldRendered := MorphicRootRenderer new: self.
+	worldRendered := OSWorldRenderer forWorld: self.
 	state := WorldState  new.
 	self layoutPolicy: StackLayout new.
 	self hResizing: #spaceFill.
@@ -77,9 +105,31 @@ MiniWorld >> initialize [
 ]
 
 { #category : #'world simulation' }
+MiniWorld >> open [
+
+	self worldState worldRenderer: ((OSWorldRenderer forWorld: self)
+		windowCloseAction: [self delete ]).
+	self changed.
+]
+
+{ #category : #'world simulation' }
 MiniWorld >> removeAlarm: aSelector for: aTarget [
 	
 	^ root removeAlarm: aSelector for: aTarget
+]
+
+{ #category : #'world simulation' }
+MiniWorld >> resizeBackgroundMorph [
+
+	" maybe not need"
+	
+	self backgroundMorph ifNotNil: [ self backgroundMorph extent: self extent ]
+]
+
+{ #category : #'world simulation' }
+MiniWorld >> restoreMorphicDisplay [
+
+	^ self worldRenderer restoreMorphicDisplay 
 ]
 
 { #category : #accessing }
@@ -132,6 +182,19 @@ MiniWorld >> stopStepping: aMorph selector: aSelector [
 MiniWorld >> viewBox [
 
 	^ self worldRenderer viewBox
+]
+
+{ #category : #'world simulation' }
+MiniWorld >> viewBox: newViewBox [
+	"I am now displayed within newViewBox; react."
+
+	(self viewBox isNil or: [ self viewBox extent ~= newViewBox extent ])
+		ifTrue: [ self worldState invalidate ].
+
+	self position: newViewBox topLeft.
+	fullBounds := bounds := newViewBox.
+	self worldState handsDo: [ :hand | hand releaseKeyboardFocus ].
+	self worldState doFullRepaint.
 ]
 
 { #category : #accessing }

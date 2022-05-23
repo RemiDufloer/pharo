@@ -5493,6 +5493,22 @@ Morph >> setToAdhereToEdge: anEdge [
 	self setProperty: #edgeToAdhereTo toValue: anEdge.
 ]
 
+{ #category : #'as yet unclassified' }
+Morph >> settingWorld [
+
+	| world |
+	world := MiniWorld new.
+
+	world
+		layoutPolicy: StackLayout new;
+		clipSubmorphs: true.
+
+	self
+		hResizing: #spaceFill;
+		vResizing: #spaceFill.
+	^ world
+]
+
 { #category : #'drop shadows' }
 Morph >> shadowColor [
 	^self valueOfProperty: #shadowColor ifAbsent:[Color black]
