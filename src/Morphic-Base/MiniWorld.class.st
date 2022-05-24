@@ -1,24 +1,11 @@
-"
-I represent a litlle world for an other window open out of the pharo window
-
-I create a new world and i know my render, my state and my root.
-
-    Instance Variables
-	root:		MorphicRoot
-	state:		WorldState
-	submorph:		morphe
-	worldRendered:		worldrendered
-
-
-    Implementation Points
-"
 Class {
 	#name : #MiniWorld,
 	#superclass : #Morph,
 	#instVars : [
 		'worldRendered',
 		'state',
-		'root'
+		'root',
+		'backgroundMorph'
 	],
 	#category : #'Morphic-Base'
 }
@@ -35,13 +22,23 @@ MiniWorld class >> new: aObject [
 { #category : #structure }
 MiniWorld >> activeHand [
 	
-	^ root activeHand
+	^ state activeHand
 ]
 
 { #category : #stepping }
 MiniWorld >> addAlarm: aSelector withArguments: argArray for: aTarget at: scheduledTime [
 	"Add a new alarm with the given set of parameters"
-	root addAlarm: aSelector withArguments: argArray for: aTarget at: scheduledTime.
+	state addAlarm: aSelector withArguments: argArray for: aTarget at: scheduledTime.
+]
+
+{ #category : #'API - opening' }
+MiniWorld >> addHand: aHandMorph [
+	"Add the given hand to the list of hands for this world."
+
+	aHandMorph owner ifNotNil: [ aHandMorph owner removeHand: aHandMorph ].
+	state addHand: aHandMorph.
+	aHandMorph privateOwner: self.
+	^ aHandMorph
 ]
 
 { #category : #accessing }
@@ -52,6 +49,32 @@ MiniWorld >> addSubmorphs: aMorph [
 	submorphs add: aMorph
 ]
 
+{ #category : #background }
+MiniWorld >> backgroundMorph [
+	"Answer the background morph if any."
+	
+	^backgroundMorph
+]
+
+{ #category : #background }
+MiniWorld >> backgroundMorph: aMorph [
+
+	"Set the background morph.
+	Probably best if locked prior to adding."
+
+	self backgroundMorph ifNotNil: [ self backgroundMorph delete ].
+	backgroundMorph := aMorph.
+	aMorph
+		ifNotNil: [ aMorph bounds: self bounds.
+			self addMorphBack: aMorph
+			]
+]
+
+{ #category : #cursor }
+MiniWorld >> beCursorOwner [
+	
+]
+
 { #category : #initialization }
 MiniWorld >> becomeActiveDuring: aBlock [
 	
@@ -59,9 +82,32 @@ MiniWorld >> becomeActiveDuring: aBlock [
 ]
 
 { #category : #'world state' }
+MiniWorld >> currentCursor [
+	^ state currentCursor
+]
+
+{ #category : #accessing }
+MiniWorld >> currentCursor: aCursor [
+	^ state currentCursor: aCursor
+]
+
+{ #category : #'world state' }
 MiniWorld >> displayWorld [
 
 	state displayWorld: self .
+]
+
+{ #category : #display }
+MiniWorld >> fullRepaintNeeded [
+
+	state doFullRepaint.
+	self windowsSatisfying: [:w | w makeMeVisible. false]
+]
+
+{ #category : #'world state' }
+MiniWorld >> handsDo: aBlock [
+
+	^  state handsDo: aBlock
 ]
 
 { #category : #accessing }
@@ -76,10 +122,35 @@ MiniWorld >> initialize [
 	self vResizing: #shrinkWrap.
 ]
 
+{ #category : #'API - opening' }
+MiniWorld >> open [
+	worldRendered:= OSWorldRenderer forWorld: self.
+	self worldState worldRenderer: ((worldRendered)
+		windowCloseAction: [self worldRenderer deactivate. ]).
+	self changed.
+	state activeHand: (self addHand: HandMorph new).
+	 
+	
+]
+
 { #category : #'world simulation' }
 MiniWorld >> removeAlarm: aSelector for: aTarget [
 	
-	^ root removeAlarm: aSelector for: aTarget
+	^ state removeAlarm: aSelector for: aTarget
+]
+
+{ #category : #display }
+MiniWorld >> resizeBackgroundMorph [
+
+	"Resize the background morph to fit the world."
+
+	self backgroundMorph ifNotNil: [ self backgroundMorph extent: self extent ]
+]
+
+{ #category : #display }
+MiniWorld >> restoreMorphicDisplay [
+
+	state worldRenderer restoreMorphicDisplay
 ]
 
 { #category : #accessing }
@@ -132,6 +203,33 @@ MiniWorld >> stopStepping: aMorph selector: aSelector [
 MiniWorld >> viewBox [
 
 	^ self worldRenderer viewBox
+]
+
+{ #category : #'world state' }
+MiniWorld >> viewBox: newViewBox [
+	"I am now displayed within newViewBox; react."
+
+	(self viewBox isNil or: [ self viewBox extent ~= newViewBox extent ])
+		ifTrue: [ state invalidate ].
+
+	self position: newViewBox topLeft.
+	fullBounds := bounds := newViewBox.
+	
+	state handsDo: [ :hand | hand releaseKeyboardFocus ].
+	self fullRepaintNeeded
+]
+
+{ #category : #'world state' }
+MiniWorld >> windowsSatisfying: windowBlock [
+
+	| windows |
+	windows := OrderedCollection new.
+	self submorphs do: [:m | 
+		m embeddedWindowOrNil ifNotNil: [ 
+			(windowBlock value: m) 
+				ifTrue: [ windows addLast: m ] ] ].
+		
+	^ windows.
 ]
 
 { #category : #accessing }
