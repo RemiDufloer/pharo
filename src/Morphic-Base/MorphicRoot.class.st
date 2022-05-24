@@ -1,23 +1,3 @@
-"
-I represent root for all gtk morph.
-
-I know my world my renderer and my state. All Gtk morph know me. If a Gtk morph need information for the world he ask me and me ask the world.
- 
-Internal Representation and Key Implementation Points.
-
-    Instance Variables
-	activeHand:			<Object>
-	container:			<Object>
-	damageRecorder:		<Object>
-	lastRequestedSize:	<Object>
-	layeredMorphs:		<Object>
-	morph:					<Object>
-	morphResizable:		<Object>
-	steps:					<Object>
-
-
-    Implementation Points
-"
 Class {
 	#name : #MorphicRoot,
 	#superclass : #Object,

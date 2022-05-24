@@ -1,16 +1,3 @@
-"
-I'm just a renderer for a specific world.
-
-I know just my world.
-
-For more information go to view my superclass .
-
-
-    Instance Variables
-	miniWorld:		<Object>
-
-
-"
 Class {
 	#name : #MorphicRootRenderer,
 	#superclass : #OSWorldRenderer,
