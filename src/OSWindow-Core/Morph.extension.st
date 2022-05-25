@@ -3,7 +3,11 @@ Extension { #name : #Morph }
 { #category : #'*OSWindow-Core' }
 Morph >> openInExternalWindow [
 	| world |
-	world := self settingWorld .
+	world := MiniWorld new.
+	world
+		layoutPolicy: StackLayout  new;
+		clipSubmorphs: true.
+	self hResizing: #spaceFill; vResizing: #spaceFill.
 	self openInWorld: world.
 	self onAnnouncement: MorphDeleted do: [ :announce |
 		world ifNotNil: [

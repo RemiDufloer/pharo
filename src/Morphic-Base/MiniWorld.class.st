@@ -36,7 +36,7 @@ MiniWorld class >> new: aObject [
 { #category : #structure }
 MiniWorld >> activeHand [
 	
-	^ self worldState activeHand
+	^ state activeHand
 ]
 
 { #category : #stepping }
@@ -53,6 +53,34 @@ MiniWorld >> addHand: aHandMorph [
 	state addHand: aHandMorph.
 	aHandMorph privateOwner: self.
 	^ aHandMorph
+]
+
+{ #category : #'submorphs - add/remove' }
+MiniWorld >> addMorph: aMorph [
+
+	
+	"I will be the owner (and I will act as a world)"
+	aMorph privateOwner: self.
+	"in this view, position of the morph is always 0@0"
+	aMorph position: 0@0.
+	"check for the need of steppiong stepping"
+	aMorph wantsSteps ifTrue: [ self  startStepping: aMorph ].
+
+	self  addSubmorphs: aMorph	.
+]
+
+{ #category : #'world state' }
+MiniWorld >> addMorphFront: aMorph [
+
+	^self addMorphInFrontOfLayer: aMorph
+]
+
+{ #category : #'submorphs - add/remove' }
+MiniWorld >> addMorphInFrontOfLayer: aMorph [
+
+	
+	self addMorph: aMorph .
+	aMorph privateOwner: self.
 ]
 
 { #category : #accessing }
@@ -146,7 +174,6 @@ MiniWorld >> open [
 	worldRendered:= OSWorldRenderer forWorld: self.
 	self worldState worldRenderer: ((worldRendered)
 		windowCloseAction: [self worldRenderer deactivate. ]).
-	self changed.
 	state activeHand: (self addHand: HandMorph new).
 	 
 	
@@ -186,7 +213,6 @@ MiniWorld >> root: aObject [
 
 { #category : #'world simulation' }
 MiniWorld >> startStepping: aMorph [
-
 	self 
 		startStepping: aMorph 
 		at: Time millisecondClockValue 
@@ -197,6 +223,7 @@ MiniWorld >> startStepping: aMorph [
 
 { #category : #stepping }
 MiniWorld >> startStepping: aMorph at: scheduledTime selector: aSelector arguments: args stepTime: stepTime [
+
 
 	state
 		startStepping: aMorph
