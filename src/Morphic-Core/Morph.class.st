@@ -6906,6 +6906,6 @@ Morph >> yellowButtonActivity: shiftState [
 	menu
 		addTitle: self externalName
 		icon: (self iconOrThumbnailOfSize: 28).
-	menu popUpInWorld: self currentWorld.
+	menu popUpInWorld: self world.
 	^ true
 ]

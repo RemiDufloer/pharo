@@ -1134,7 +1134,7 @@ FTTableMorph >> showMenuForIndex: aTuple [
 		
 	(menu isNil or: [ menu isInWorld ]) ifTrue: [ ^ self ].
 	
-	menu popUpInWorld: self currentWorld
+	menu popUpInWorld: self world
 ]
 
 { #category : #menu }

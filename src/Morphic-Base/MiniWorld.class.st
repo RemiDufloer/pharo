@@ -99,8 +99,13 @@ MiniWorld >> addMorphFront: aMorph [
 { #category : #'submorphs - add/remove' }
 MiniWorld >> addMorphInFrontOfLayer: aMorph [
 
-	self addMorph: aMorph.
-	aMorph privateOwner: self
+	"I will be the owner (and I will act as a world)"
+	aMorph privateOwner: self.
+
+	"check for the need of steppiong stepping"
+	aMorph wantsSteps ifTrue: [ self  startStepping: aMorph ].
+
+	submorphs addFirst: aMorph
 ]
 
 { #category : #accessing }
