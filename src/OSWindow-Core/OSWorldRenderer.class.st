@@ -244,7 +244,8 @@ OSWorldRenderer >> screenScaleFactor [
 OSWorldRenderer >> setAttributesDefault [
 
 	| initialExtent |
-	initialExtent := world extent.
+	initialExtent := world worldState realWindowExtent ifNil: [976@665].
+
 
 	attributes := OSWindowAttributes new.
 	attributes

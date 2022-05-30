@@ -24,6 +24,20 @@ Class {
 	#category : #'Morphic-Base'
 }
 
+{ #category : #'initialize-release' }
+MiniWorld class >> doOneCycle [
+
+	WorldState doDrawCycleWith: [ 
+		| extraWorldsToDraw |
+		extraWorldsToDraw := WorldMorph extraWorldListMutex  critical: [ 
+			                     WorldMorph  extraWorldList ].
+		extraWorldsToDraw do: [ :world | world doOneCycle ].
+
+		(self currentWorld isNotNil and: [ 
+			 (extraWorldsToDraw includes: self currentWorld) not ]) ifTrue: [ 
+			self currentWorld doOneCycle ] ]
+]
+
 { #category : #'instance creation' }
 MiniWorld class >> new: aObject [
 
@@ -35,18 +49,25 @@ MiniWorld class >> new: aObject [
 
 { #category : #structure }
 MiniWorld >> activeHand [
-	
+
 	^ state activeHand
 ]
 
 { #category : #stepping }
 MiniWorld >> addAlarm: aSelector withArguments: argArray for: aTarget at: scheduledTime [
+
 	"Add a new alarm with the given set of parameters"
-	state addAlarm: aSelector withArguments: argArray for: aTarget at: scheduledTime.
+
+	state
+		addAlarm: aSelector
+		withArguments: argArray
+		for: aTarget
+		at: scheduledTime
 ]
 
 { #category : #'API - opening' }
 MiniWorld >> addHand: aHandMorph [
+
 	"Add the given hand to the list of hands for this world."
 
 	aHandMorph owner ifNotNil: [ aHandMorph owner removeHand: aHandMorph ].
@@ -72,30 +93,31 @@ MiniWorld >> addMorph: aMorph [
 { #category : #'world state' }
 MiniWorld >> addMorphFront: aMorph [
 
-	^self addMorphInFrontOfLayer: aMorph
+	^ self addMorphInFrontOfLayer: aMorph
 ]
 
 { #category : #'submorphs - add/remove' }
 MiniWorld >> addMorphInFrontOfLayer: aMorph [
 
-	
-	self addMorph: aMorph .
-	aMorph privateOwner: self.
+	self addMorph: aMorph.
+	aMorph privateOwner: self
 ]
 
 { #category : #accessing }
 MiniWorld >> addSubmorphs: aMorph [
 
-	aMorph hResizing: #spaceFill.
-	aMorph vResizing: #shrinkWrap.
+	"aMorph hResizing: #spaceFill.
+	aMorph vResizing: #shrinkWrap."
+
 	submorphs add: aMorph
 ]
 
 { #category : #background }
 MiniWorld >> backgroundMorph [
+
 	"Answer the background morph if any."
-	
-	^backgroundMorph
+
+	^ backgroundMorph
 ]
 
 { #category : #background }
@@ -106,15 +128,14 @@ MiniWorld >> backgroundMorph: aMorph [
 
 	self backgroundMorph ifNotNil: [ self backgroundMorph delete ].
 	backgroundMorph := aMorph.
-	aMorph
-		ifNotNil: [ aMorph bounds: self bounds.
-			self addMorphBack: aMorph
-			]
+	aMorph ifNotNil: [ 
+		aMorph bounds: self bounds.
+		self addMorphBack: aMorph ]
 ]
 
 { #category : #cursor }
 MiniWorld >> beCursorOwner [
-	
+	"nil actually"
 ]
 
 { #category : #initialization }
@@ -125,36 +146,64 @@ MiniWorld >> becomeActiveDuring: aBlock [
 
 { #category : #'world state' }
 MiniWorld >> currentCursor [
+
 	^ state currentCursor
 ]
 
 { #category : #accessing }
 MiniWorld >> currentCursor: aCursor [
+
 	^ state currentCursor: aCursor
 ]
 
 { #category : #'submorphs - add/remove' }
 MiniWorld >> delete [
+
 	self worldState worldRenderer deactivate.
+	WorldMorph removeExtraWorld: self.
 ]
 
-{ #category : #'world state' }
+{ #category : #display }
 MiniWorld >> displayWorld [
 
 	state displayWorld: self .
+	self fullRepaintNeeded
+
+]
+
+{ #category : #state }
+MiniWorld >> displayWorldSafely [
+
+	state displayWorldSafely: self
+]
+
+{ #category : #display }
+MiniWorld >> doOneCycle [
+
+	self doOneCycleNow
+]
+
+{ #category : #display }
+MiniWorld >> doOneCycleNow [
+
+	"see the comment in doOneCycleNowFor:"
+
+	state doOneCycleFor: self
 ]
 
 { #category : #display }
 MiniWorld >> fullRepaintNeeded [
 
 	state doFullRepaint.
-	self windowsSatisfying: [:w | w makeMeVisible. false]
+	self windowsSatisfying: [ :w | 
+		w makeMeVisible.
+		false ]
 ]
 
 { #category : #'world state' }
 MiniWorld >> handsDo: aBlock [
 
-	^  state handsDo: aBlock
+	^ state handsDo: aBlock
 ]
 
 { #category : #accessing }
@@ -162,26 +211,25 @@ MiniWorld >> initialize [
 
 	super initialize.
 	submorphs := OrderedCollection new.
-	worldRendered := OSWorldRenderer forWorld: self.
-	state := WorldState  new.
+	worldRendered := MorphicRootRenderer new: self.
+	state := WorldState new.
 	self layoutPolicy: StackLayout new.
-	self hResizing: #spaceFill.
-	self vResizing: #shrinkWrap.
+	self color: Color veryLightGray
 ]
 
 { #category : #'API - opening' }
 MiniWorld >> open [
-	worldRendered:= OSWorldRenderer forWorld: self.
-	self worldState worldRenderer: ((worldRendered)
-		windowCloseAction: [self worldRenderer deactivate. ]).
+
+	worldRendered := OSWorldRenderer forWorld: self.
+	self worldState worldRenderer:
+		(worldRendered windowCloseAction: [ self worldRenderer deactivate ]).
 	state activeHand: (self addHand: HandMorph new).
-	 
-	
+	WorldMorph addExtraWorld: self
 ]
 
 { #category : #'world simulation' }
 MiniWorld >> removeAlarm: aSelector for: aTarget [
-	
+
 	^ state removeAlarm: aSelector for: aTarget
 ]
 
@@ -190,7 +238,8 @@ MiniWorld >> resizeBackgroundMorph [
 
 	"Resize the background morph to fit the world."
 
-	self backgroundMorph ifNotNil: [ self backgroundMorph extent: self extent ]
+	self backgroundMorph ifNotNil: [ 
+		self backgroundMorph extent: self extent ]
 ]
 
 { #category : #display }
@@ -211,19 +260,25 @@ MiniWorld >> root: aObject [
 	root := aObject .
 ]
 
+{ #category : #'submorphs - add/remove' }
+MiniWorld >> runStepMethods [
+
+	state runStepMethodsIn: self
+]
+
 { #category : #'world simulation' }
 MiniWorld >> startStepping: aMorph [
-	self 
-		startStepping: aMorph 
-		at: Time millisecondClockValue 
-		selector: #stepAt: 
-		arguments: nil 
+
+	self
+		startStepping: aMorph
+		at: Time millisecondClockValue
+		selector: #stepAt:
+		arguments: nil
 		stepTime: nil
 ]
 
 { #category : #stepping }
 MiniWorld >> startStepping: aMorph at: scheduledTime selector: aSelector arguments: args stepTime: stepTime [
-
 
 	state
 		startStepping: aMorph
@@ -270,12 +325,11 @@ MiniWorld >> windowsSatisfying: windowBlock [
 
 	| windows |
 	windows := OrderedCollection new.
-	self submorphs do: [:m | 
+	self submorphs do: [ :m | 
 		m embeddedWindowOrNil ifNotNil: [ 
-			(windowBlock value: m) 
-				ifTrue: [ windows addLast: m ] ] ].
-		
-	^ windows.
+			(windowBlock value: m) ifTrue: [ windows addLast: m ] ] ].
+
+	^ windows
 ]
 
 { #category : #accessing }
