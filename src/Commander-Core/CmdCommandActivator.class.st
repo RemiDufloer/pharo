@@ -124,7 +124,6 @@ CmdCommandActivator >> context: anObject [
 
 { #category : #execution }
 CmdCommandActivator >> executeCommand [
-
 	[self prepareCommandForExecution.
 	context executeCommand: command by: self.
 	self applyCommandResult] 

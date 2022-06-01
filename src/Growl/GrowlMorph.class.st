@@ -119,6 +119,21 @@ GrowlMorph class >> openWithLabel: aString contents: contentString backgroundCol
 ]
 
 { #category : #'instance creation' }
+GrowlMorph class >> openWithLabel: aString contents: contentString backgroundColor: aColor labelColor: aLabelColor inWorld: aWorld [
+	
+	^ self type = #window 
+		ifTrue: [ MessageDialogWindow new message: contentString ]
+		ifFalse: [ 
+			| anInstance |
+			anInstance := self label: aString contents: contentString.
+			aColor ifNotNil: [ anInstance backgroundColor: aColor ].
+			aLabelColor ifNotNil: [ 
+				anInstance labelColor: aLabelColor.
+				anInstance contentsColor: aLabelColor ].
+			anInstance openInWorld: aWorld ]
+]
+
+{ #category : #'instance creation' }
 GrowlMorph class >> openWithLabel: aString contents: contentString color: aColor [
 	
 	^ self openWithLabel: aString 
@@ -344,9 +359,16 @@ GrowlMorph >> nextColorStep: aColor [
 ]
 
 { #category : #opening }
+GrowlMorph >> position: position [
+
+	self halt.
+	super position: position
+]
+
+{ #category : #opening }
 GrowlMorph >> preOpenInWorld: aWorld [
 
-	self position: self unoccupiedPosition
+	self position: (self unoccupiedPositionBottomLeft: aWorld)
 ]
 
 { #category : #internal }
@@ -407,6 +429,23 @@ GrowlMorph >> unoccupiedPositionBottomLeft [
 	
 	startPos := 10 negated @ (self height + 10).
 	area := self currentWorld clearArea.
+	rect := (area bottomLeft - startPos) extent: self extent.
+	
+	morphs := self activeGrowlMorphs.
+	[self is: rect saneWithRespectTo: morphs] whileFalse: [
+		rect := rect translateBy: 0@(-10).
+		rect top < 0 ifTrue: [^ area bottomLeft - startPos]
+	].
+	^ rect origin
+]
+
+{ #category : #position }
+GrowlMorph >> unoccupiedPositionBottomLeft: world [
+
+	| startPos area rect morphs |
+	
+	startPos := 10 negated @ (self height + 10).
+	area := world clearArea.
 	rect := (area bottomLeft - startPos) extent: self extent.
 	
 	morphs := self activeGrowlMorphs.

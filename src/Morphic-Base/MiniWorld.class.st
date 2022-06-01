@@ -79,15 +79,13 @@ MiniWorld >> addHand: aHandMorph [
 { #category : #'submorphs - add/remove' }
 MiniWorld >> addMorph: aMorph [
 
-	
 	"I will be the owner (and I will act as a world)"
 	aMorph privateOwner: self.
-	"in this view, position of the morph is always 0@0"
-	aMorph position: 0@0.
+	
 	"check for the need of steppiong stepping"
 	aMorph wantsSteps ifTrue: [ self  startStepping: aMorph ].
 
-	self  addSubmorphs: aMorph	.
+	self addSubmorphs: aMorph	.
 ]
 
 { #category : #'world state' }
@@ -166,6 +164,12 @@ MiniWorld >> delete [
 
 	self worldState worldRenderer deactivate.
 	WorldMorph removeExtraWorld: self.
+]
+
+{ #category : #settings }
+MiniWorld >> displayScaleFactor [
+
+	^ WorldMorph displayScaleFactor
 ]
 
 { #category : #display }
@@ -265,6 +269,12 @@ MiniWorld >> root: aObject [
 	root := aObject .
 ]
 
+{ #category : #stepping }
+MiniWorld >> runLocalStepMethods [
+	1haltOnce.
+	state runLocalStepMethodsIn: self
+]
+
 { #category : #'submorphs - add/remove' }
 MiniWorld >> runStepMethods [
 
@@ -291,6 +301,12 @@ MiniWorld >> startStepping: aMorph at: scheduledTime selector: aSelector argumen
 		selector: aSelector
 		arguments: args
 		stepTime: stepTime
+]
+
+{ #category : #stepping }
+MiniWorld >> step [
+	owner ifNotNil: [ ^ self runLocalStepMethods ].
+	^ super step
 ]
 
 { #category : #stepping }

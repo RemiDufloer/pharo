@@ -550,6 +550,12 @@ AthensCairoSurface >> getFreetypeFontRendererFor: aFreetypeFont [
 	^ ftFontRenderer font: aFreetypeFont; advance: 0@0; yourself
 ]
 
+{ #category : #accessing }
+AthensCairoSurface >> getHandle [
+	
+	^ handle 
+]
+
 { #category : #'text support' }
 AthensCairoSurface >> getStrikeFontRendererFor: aStrikeFont [ 
 	"answer the same instance, just reset it's font and advance"

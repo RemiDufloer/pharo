@@ -4,6 +4,9 @@ I am a root of hierarchy of commands to run any kind of tests
 Class {
 	#name : #ClyTestCommand,
 	#superclass : #CmdCommand,
+	#instVars : [
+		'toolContext'
+	],
 	#category : #'Calypso-SystemPlugins-SUnit-Browser-Commands'
 }
 
@@ -39,12 +42,20 @@ ClyTestCommand >> notifyUserAboutResults: testResult with: message [
 		ifTrue: [ color := TestResult defaultColorBackGroundForFailureTest ].
 	testResult hasErrors
 		ifTrue: [ color := TestResult defaultColorBackGroundForErrorTest ].
-		
+	
 	GrowlMorph 
 		openWithLabel: message
 		contents: testResult printString
 		backgroundColor: color
 		labelColor: Color black
+		inWorld: toolContext tool
+]
+
+{ #category : #execution }
+ClyTestCommand >> readParametersFromContext: aToolContext [
+	super readParametersFromContext: aToolContext.
+
+	toolContext := aToolContext.
 ]
 
 { #category : #tests }

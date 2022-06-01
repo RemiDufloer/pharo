@@ -2201,7 +2201,7 @@ Morph >> doLayoutIn: layoutBounds [
 { #category : #opening }
 Morph >> doOpenInWorld: aWorld [
 
-	aWorld addMorph: self
+	aWorld addMorphInFrontOfLayer: self
 ]
 
 { #category : #'submorphs - accessing' }
@@ -4431,15 +4431,6 @@ Morph >> onAnnouncement: anAnnouncement do: aValuable [
 { #category : #announcements }
 Morph >> onAnnouncement: anAnnouncement send: aMessageSelector to: anObject [
 	self announcer when: anAnnouncement send: aMessageSelector to: anObject.
-]
-
-{ #category : #showing }
-Morph >> openCenteredInWorld [
-	"Open me in the center of current world"
-	self 
-		fullBounds;
-		openInWorld;
-		center: self world clearArea center
 ]
 
 { #category : #showing }

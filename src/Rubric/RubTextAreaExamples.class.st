@@ -176,7 +176,7 @@ RubTextAreaExamples class >> presentationInput [
 								onAnnouncement: MorphLostFocus
 									do: [ :ann | ann morph delete ];
 								font: (LogicalFont familyName: 'Source Sans Pro' pointSize: 20);
-								openCenteredInWorld ]))
+								openInWorld ]))
 ]
 
 { #category : #examples }
