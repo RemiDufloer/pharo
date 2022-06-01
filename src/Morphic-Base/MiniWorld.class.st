@@ -155,8 +155,14 @@ MiniWorld >> currentCursor [
 
 { #category : #accessing }
 MiniWorld >> currentCursor: aCursor [
-
 	^ state currentCursor: aCursor
+]
+
+{ #category : #state }
+MiniWorld >> currentWindow [
+
+	self flag: 'todo'.
+	^ self
 ]
 
 { #category : #'submorphs - add/remove' }
@@ -164,6 +170,12 @@ MiniWorld >> delete [
 
 	self worldState worldRenderer deactivate.
 	WorldMorph removeExtraWorld: self.
+]
+
+{ #category : #display }
+MiniWorld >> displayArea [
+
+	^ self worldState worldRenderer usableArea.
 ]
 
 { #category : #settings }
@@ -176,7 +188,7 @@ MiniWorld >> displayScaleFactor [
 MiniWorld >> displayWorld [
 
 	state displayWorld: self .
-	self fullRepaintNeeded
+
 
 ]
 
@@ -226,6 +238,13 @@ MiniWorld >> initialize [
 	self color: Color veryLightGray
 ]
 
+{ #category : #'change reporting' }
+MiniWorld >> invalidRect: damageRect from: aMorph [
+	"Clip damage reports to my bounds, since drawing is clipped to my bounds."
+
+	state recordDamagedRect: (damageRect intersect: self bounds ifNone: [ ^ self ])
+]
+
 { #category : #'API - opening' }
 MiniWorld >> open [
 
@@ -271,7 +290,6 @@ MiniWorld >> root: aObject [
 
 { #category : #stepping }
 MiniWorld >> runLocalStepMethods [
-	1haltOnce.
 	state runLocalStepMethodsIn: self
 ]
 
