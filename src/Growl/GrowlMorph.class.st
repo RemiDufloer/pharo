@@ -361,7 +361,6 @@ GrowlMorph >> nextColorStep: aColor [
 { #category : #opening }
 GrowlMorph >> position: position [
 
-	self halt.
 	super position: position
 ]
 

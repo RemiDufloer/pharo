@@ -101,7 +101,6 @@ ClyBrowserSearchDialogWindow >> openOn: aQuery selecting: items withTitle: dialo
 	self showItemsOf: aQuery.
 	self title: dialogTitle.
 	itemsView selection selectItems: (itemsView findItemsWith: items).
-
 	browser window openModal: self.
 
 	^["Following two lines should prevent special condition 

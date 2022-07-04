@@ -41,11 +41,11 @@ SycRenamePackageCommand >> execute [
 { #category : #execution }
 SycRenamePackageCommand >> prepareFullExecutionInContext: aToolContext [
 	super prepareFullExecutionInContext: aToolContext.
-	
 	package := aToolContext lastSelectedPackage.	
 	newName := UIManager default 
 		request: 'New name of the package' 
 		initialAnswer: package name 
-		title: 'Rename a package'.
+		title: 'Rename a package'
+		inWorld: aToolContext tool world.
 	newName isEmptyOrNil | (newName = package name) ifTrue: [ ^ CmdCommandAborted signal ]
 ]

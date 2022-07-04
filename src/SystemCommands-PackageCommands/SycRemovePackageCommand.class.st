@@ -37,6 +37,6 @@ SycRemovePackageCommand >> prepareFullExecutionInContext: aToolContext [
 	packagesWithClasses ifNotEmpty: [ 	
 		names := (packagesWithClasses collect: [:package | package name ]) joinUsing: ', '.
 		answer := UIManager default confirm: (
-			'Are you sure you want to delete the selection(s)?', String cr, names, ' still contains classes.').
+			'Are you sure you want to delete the selection(s)?', String cr, names, ' still contains classes.') inWorld: (aToolContext tool world).
 		answer ifFalse: [ CmdCommandAborted signal ]]
 ]

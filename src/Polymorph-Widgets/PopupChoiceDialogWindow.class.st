@@ -163,13 +163,13 @@ PopupChoiceDialogWindow >> handlesKeyboard: evt [
 
 { #category : #initialization }
 PopupChoiceDialogWindow >> initialize [
-	"Initialize the receiver."
 
+	"Initialize the receiver."
 	super initialize.
 	updatingFilter := false.
 	self
-		labels: #();
-		lines: #();
+		labels: #(  );
+		lines: #(  );
 		filter: ''
 ]
 

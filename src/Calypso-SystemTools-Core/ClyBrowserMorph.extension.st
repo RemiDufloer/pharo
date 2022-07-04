@@ -113,7 +113,8 @@ ClyBrowserMorph >> requestRemoveClassStrategyFor: classes [
 		          chooseFrom:
 		          (strategies collect: [ :each | each userRequestString ])
 		          values: strategies
-		          title: title.
+		          title: title
+					on: self world.
 
 	^ result ifNil: [ SycNotRemoveClassStrategy new ]
 ]

@@ -10,7 +10,7 @@ SystemWindow >> openModal: aSystemWindow [
 	
 	keyboardFocus := self activeHand keyboardFocus.
 	self modalLockTo: aSystemWindow.
-	[ aSystemWindow openModal ] ensure: [
+	[ aSystemWindow openModalInWorld: owner ] ensure: [
 		self modalUnlockFrom: aSystemWindow.
 		self activeHand newKeyboardFocus: keyboardFocus ].
 	^aSystemWindow

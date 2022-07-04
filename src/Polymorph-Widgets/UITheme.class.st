@@ -1132,6 +1132,20 @@ UITheme >> chooseIn: aThemedMorph title: title labels: labels values: values lin
 ]
 
 { #category : #services }
+UITheme >> chooseIn: aThemedMorph title: title labels: labels values: values lines: lines on: aWorld [ 
+	"Answer the result of a popup choice with the given title, labels, values and lines."
+
+	| dialog |
+	dialog := (PopupChoiceDialogWindow newWithTheme: aThemedMorph theme)
+		title: (title isEmpty ifTrue: ['Choose' translated] ifFalse: [title asString]);
+		labels: labels;
+		lines: (lines ifNil: [#()]);
+		model: values.
+	(dialog openInWorld: aWorld) .
+	^ dialog  choice.
+]
+
+{ #category : #services }
 UITheme >> chooseIn: aThemedMorph title: title message: aMessage labels: labels values: values lines: lines [
 	"Answer the result of a popup choice with the given title, labels, values and lines."
 
@@ -4783,6 +4797,17 @@ UITheme >> questionWithoutCancelIn: aThemedMorph text: aStringOrText title: aStr
 			text: aStringOrText) openModal answer
 ]
 
+{ #category : #services }
+UITheme >> questionWithoutCancelIn: aThemedMorph text: aStringOrText title: aString inWorld: aWorld [
+	"Answer the result of a question dialog with the given label and title."
+
+	self questionSound play.
+	^(((QuestionWithoutCancelDialogWindow newWithTheme: aThemedMorph theme)
+			textFont: self textFont;
+			title: aString;
+			text: aStringOrText) openInWorld: aWorld ) answer
+]
+
 { #category : #'border-styles - buttons' }
 UITheme >> radioButtonCornerStyleFor: aRadioButton [
 	"Answer the corner style for radio buttons.
@@ -5777,6 +5802,17 @@ UITheme >> textEntryIn: aThemedMorph text: aStringOrText title: aString entryTex
 			text: aStringOrText;
 			entryText: defaultEntryText;
 			entryCompletion: anEntryCompletion) openModal entryText
+]
+
+{ #category : #services }
+UITheme >> textEntryIn: aThemedMorph text: aStringOrText title: aString entryText: defaultEntryText inWorld: aWorld [
+
+	self questionSound play.
+	^ ((TextEntryDialogWindow new
+		   textFont: self textFont;
+		   title: aString;
+		   text: aStringOrText;
+		   entryText: defaultEntryText) openInWorld: aWorld) entryText
 ]
 
 { #category : #'border-styles' }

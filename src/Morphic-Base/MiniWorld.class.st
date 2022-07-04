@@ -112,7 +112,7 @@ MiniWorld >> addSubmorphs: aMorph [
 	"aMorph hResizing: #spaceFill.
 	aMorph vResizing: #shrinkWrap."
 
-	submorphs add: aMorph
+	submorphs addFirst:  aMorph
 ]
 
 { #category : #background }
@@ -134,6 +134,12 @@ MiniWorld >> backgroundMorph: aMorph [
 	aMorph ifNotNil: [ 
 		aMorph bounds: self bounds.
 		self addMorphBack: aMorph ]
+]
+
+{ #category : #accessing }
+MiniWorld >> basicLabel [
+
+	^ nil	
 ]
 
 { #category : #cursor }
@@ -245,6 +251,26 @@ MiniWorld >> invalidRect: damageRect from: aMorph [
 	state recordDamagedRect: (damageRect intersect: self bounds ifNone: [ ^ self ])
 ]
 
+{ #category : #modal }
+MiniWorld >> modalLockTo: aSystemWindow [
+	"Lock the receiver as a modal owner of the given window."
+
+	aSystemWindow setProperty: #modalOwner toValue: self.
+	self setProperty: #modalChild toValue: aSystemWindow.
+	
+	
+]
+
+{ #category : #modal }
+MiniWorld >> modalUnlockFrom: aSystemWindow [
+	"Unlock the receiver as a modal owner of the given window."
+
+	aSystemWindow removeProperty: #modalOwner.
+	self removeProperty: #modalChild.
+	self removeProperty: #preModalCloseEnabled.
+	self activate
+]
+
 { #category : #'API - opening' }
 MiniWorld >> open [
 
@@ -253,6 +279,28 @@ MiniWorld >> open [
 		(worldRendered windowCloseAction: [ self worldRenderer deactivate ]).
 	state activeHand: (self addHand: HandMorph new).
 	WorldMorph addExtraWorld: self
+]
+
+{ #category : #'opening/closing' }
+MiniWorld >> openInWindow: aMorph [
+
+aMorph openInExternalWindow 
+]
+
+{ #category : #opening }
+MiniWorld >> openModal: aSystemWindow [
+	"Open the given window locking the receiver until it is dismissed.
+	Answer the system window.
+	Restore the original keyboard focus when closed."
+
+	| keyboardFocus |
+	
+	keyboardFocus := self activeHand keyboardFocus.
+	self modalLockTo: aSystemWindow.
+	[ aSystemWindow openModalInWorld: self ] ensure: [
+		self modalUnlockFrom: aSystemWindow.
+		self activeHand newKeyboardFocus: keyboardFocus ].
+	^aSystemWindow
 ]
 
 { #category : #'world simulation' }
@@ -297,6 +345,11 @@ MiniWorld >> runLocalStepMethods [
 MiniWorld >> runStepMethods [
 
 	state runStepMethodsIn: self
+]
+
+{ #category : #setter }
+MiniWorld >> setLabel: aString [ 
+	
 ]
 
 { #category : #'world simulation' }
@@ -357,6 +410,12 @@ MiniWorld >> viewBox: newViewBox [
 	
 	state handsDo: [ :hand | hand releaseKeyboardFocus ].
 	self fullRepaintNeeded
+]
+
+{ #category : #accessing }
+MiniWorld >> window [ 
+
+	^ self
 ]
 
 { #category : #'world state' }

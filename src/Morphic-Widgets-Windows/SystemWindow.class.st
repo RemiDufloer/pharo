@@ -1477,6 +1477,16 @@ SystemWindow >> offerWindowMenu [
 	aMenu popUpEvent: self currentEvent in: self world
 ]
 
+{ #category : #'opening/closing' }
+SystemWindow >> openInWindow: aMorph [
+
+	| window |
+	window := aMorph openInWindow.
+	window model: self.
+	aMorph updateWindowTitle.
+	window minimumExtent: 650@500.0
+]
+
 { #category : #'open/close' }
 SystemWindow >> openModal [
 	self openInWorld.
@@ -1493,10 +1503,17 @@ SystemWindow >> openModal: aSystemWindow [
 	
 	keyboardFocus := self activeHand keyboardFocus.
 	self modalLockTo: aSystemWindow.
-	[ aSystemWindow openModal ] ensure: [
+	[ aSystemWindow openModalInWorld: owner ] ensure: [
 		self modalUnlockFrom: aSystemWindow.
 		self activeHand newKeyboardFocus: keyboardFocus ].
 	^aSystemWindow
+]
+
+{ #category : #'open/close' }
+SystemWindow >> openModalInWorld: aWorld [
+
+	self openInWorld: aWorld.
+	MorphicRenderLoop new doOneCycleWhile: [ self isInWorld ]
 ]
 
 { #category : #panes }

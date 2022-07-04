@@ -505,7 +505,17 @@ ClyBrowserMorph >> open [
 
 { #category : #'opening/closing' }
 ClyBrowserMorph >> openAnotherBrowser: aBrowser [
-	aBrowser open
+	aBrowser openBy: self owner
+]
+
+{ #category : #'API - opening' }
+ClyBrowserMorph >> openBy: aWindow [ 
+	
+	| window |
+	
+	self ensureInitialState.
+	aWindow openInWindow: self.
+	
 ]
 
 { #category : #'opening/closing' }

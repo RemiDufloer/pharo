@@ -136,6 +136,25 @@ MorphicUIManager >> chooseFrom: labelList values: valueList lines: linesArray ti
 		lines: linesArray
 ]
 
+{ #category : #'ui request' }
+MorphicUIManager >> chooseFrom: labelList values: valueList lines: linesArray title: aString on: aWorld [
+	"Choose an item from the given list. Answer the selected item."
+	
+	|modalMorph|
+	
+	(ProvideAnswerNotification signal: aString) ifNotNil: [:answer |
+		^answer].
+	
+	modalMorph := self modalMorph.
+	^modalMorph theme  
+		chooseIn: modalMorph
+		title: aString
+		labels: labelList
+		values: valueList
+		lines: linesArray
+		on: aWorld
+]
+
 { #category : #'ui requests' }
 MorphicUIManager >> chooseFullFileNameMatching: patterns label: label [
 	"Let the user choose a file matching the given patterns"
@@ -190,6 +209,17 @@ MorphicUIManager >> confirm: aStringOrText [
 	^ self confirm: aStringOrText label: 'Question' translated.
 ]
 
+{ #category : #'ui request' }
+MorphicUIManager >> confirm: aStringOrText inWorld: aWorld [ 
+	"Put up a question dialog (without cancel).
+	Answer true if the response is yes, false if no.
+	This is a modal question--the user must respond yes or no."
+	
+	^ self confirm: aStringOrText label: ('Question' translated) inWorld: aWorld .
+
+
+]
+
 { #category : #'ui requests' }
 MorphicUIManager >> confirm: questionStringOrText label: labelStringOrText [
 	"Put up a question dialog (without cancel).
@@ -204,6 +234,23 @@ MorphicUIManager >> confirm: questionStringOrText label: labelStringOrText [
 		questionWithoutCancelIn: modalMorph
 		text: questionStringOrText
 		title: labelStringOrText.
+]
+
+{ #category : #'ui request' }
+MorphicUIManager >> confirm: questionStringOrText label: labelStringOrText inWorld: aWorld [
+	"Put up a question dialog (without cancel).
+	Answer true if the response is yes, false if no.
+	This is a modal question--the user must respond yes or no."
+	
+	|modalMorph|
+	(ProvideAnswerNotification signal: questionStringOrText) ifNotNil: [:answer |
+		^answer].
+	modalMorph := self modalMorph.
+	^modalMorph theme 
+		questionWithoutCancelIn: modalMorph
+		text: questionStringOrText
+		title: labelStringOrText
+		inWorld: aWorld.
 ]
 
 { #category : #services }
@@ -599,6 +646,23 @@ MorphicUIManager >> request: aStringOrText initialAnswer: defaultAnswer title: a
 		title: aTitle
 		entryText: defaultAnswer
 		entryCompletion: anEntryCompletion)
+]
+
+{ #category : #'ui request' }
+MorphicUIManager >> request: aStringOrText initialAnswer: defaultAnswer title: aTitle inWorld: aWorld [
+
+	| modalMorph |
+	(ProvideAnswerNotification signal: aStringOrText) ifNotNil: [ :answer | 
+		^ answer == #default
+			  ifTrue: [ defaultAnswer ]
+			  ifFalse: [ answer ] ].
+	modalMorph := self modalMorph.
+	^ modalMorph theme
+		  textEntryIn: modalMorph
+		  text: aStringOrText
+		  title: aTitle
+		  entryText: defaultAnswer
+		  inWorld: aWorld
 ]
 
 { #category : #'ui requests' }
