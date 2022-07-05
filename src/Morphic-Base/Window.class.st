@@ -196,6 +196,7 @@ Window >> minimize [
 { #category : #'submorphs - add/remove' }
 Window >> open [
 	backend := window openInExternalWindow.
+	backend manager: manager .
 	attributs := self backend worldState worldRenderer osWindow initialAttributes.
 	osWindow := self backend worldState worldRenderer osWindow.
 	

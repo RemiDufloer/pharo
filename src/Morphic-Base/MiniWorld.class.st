@@ -19,7 +19,8 @@ Class {
 		'worldRendered',
 		'state',
 		'root',
-		'backgroundMorph'
+		'backgroundMorph',
+		'manager'
 	],
 	#category : #'Morphic-Base'
 }
@@ -167,7 +168,6 @@ MiniWorld >> currentCursor: aCursor [
 { #category : #state }
 MiniWorld >> currentWindow [
 
-	self flag: 'todo'.
 	^ self
 ]
 
@@ -251,6 +251,11 @@ MiniWorld >> invalidRect: damageRect from: aMorph [
 	state recordDamagedRect: (damageRect intersect: self bounds ifNone: [ ^ self ])
 ]
 
+{ #category : #setter }
+MiniWorld >> manager: aWindowManager [ 
+	manager := aWindowManager
+]
+
 { #category : #modal }
 MiniWorld >> modalLockTo: aSystemWindow [
 	"Lock the receiver as a modal owner of the given window."
@@ -284,7 +289,8 @@ MiniWorld >> open [
 { #category : #'opening/closing' }
 MiniWorld >> openInWindow: aMorph [
 
-aMorph openInExternalWindow 
+	manager ifNotNil: [  manager openNewWindowWithRoot: aMorph . ^ self  ].
+	aMorph openInExternalWindow 
 ]
 
 { #category : #opening }

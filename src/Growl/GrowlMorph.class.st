@@ -288,7 +288,6 @@ GrowlMorph >> handlesMouseDown: evt [
 GrowlMorph >> initialize [
 	super initialize.
  	self  borderStyle: (BorderStyle color: self defaultBorderColor width: 1).
-	
 	self setProperty: #autoFitContents toValue: false.
  
 	self initializeLabelAttributes.

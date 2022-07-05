@@ -434,6 +434,20 @@ MorphicUIManager >> inform: aStringOrText [
 ]
 
 { #category : #'ui requests' }
+MorphicUIManager >> inform: aStringOrText inWindow: aWorld [
+	"Display a message for the user to read and then dismiss."
+	
+	(ProvideAnswerNotification signal: aStringOrText) ifNotNil: [:answer |
+		^true].
+	GrowlMorph 
+		openWithLabel: 'Information' translated 
+		contents: aStringOrText
+		backgroundColor: nil
+		labelColor: nil 
+		inWorld: aWorld.
+]
+
+{ #category : #'ui requests' }
 MorphicUIManager >> informUserDuring: aBlock [
 	"Display a message as progress	during execution of the given block."
 	"UIManager default informUserDuring: [:bar|
