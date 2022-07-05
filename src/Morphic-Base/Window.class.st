@@ -99,6 +99,12 @@ Window >> delete [
 ]
 
 { #category : #'submorphs - add/remove' }
+Window >> deleteByCross [ 
+
+	manager ifNotNil: [ manager closeWindow: self ] 
+]
+
+{ #category : #'submorphs - add/remove' }
 Window >> doDelete [
 
 	"Low-level deletion method.
@@ -199,6 +205,7 @@ Window >> open [
 	backend manager: manager .
 	attributs := self backend worldState worldRenderer osWindow initialAttributes.
 	osWindow := self backend worldState worldRenderer osWindow.
+	osWindow  announcer weak when: AnnouncementMiniWorld send: #deleteByCross to: self
 	
 ]
 

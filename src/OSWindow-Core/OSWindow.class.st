@@ -46,7 +46,8 @@ Class {
 		'initialAttributes',
 		'eventHandler',
 		'currentCursor',
-		'backendWindow'
+		'backendWindow',
+		'announcer'
 	],
 	#classVars : [
 		'TraceEvents'
@@ -98,6 +99,11 @@ OSWindow class >> newWithNullDriver [
 { #category : #tracing }
 OSWindow class >> traceEvents: aBoolean [
 	TraceEvents := aBoolean
+]
+
+{ #category : #'accessing - arguments' }
+OSWindow >> announcer [
+	^ announcer
 ]
 
 { #category : #accessing }
@@ -177,9 +183,11 @@ OSWindow >> deliverGlobalEvent: aGlobalEvent [
 
 { #category : #private }
 OSWindow >> destroy [
+	announcer  announce: AnnouncementMiniWorld .
 	self validHandle destroy.
 	backendWindow := nil.
 	eventHandler := nil.
+	
 ]
 
 { #category : #accessing }
@@ -253,6 +261,12 @@ OSWindow >> initWithAttributes: attributes eventHandler: anEventHandle [
 OSWindow >> initialAttributes [
 
 	^ initialAttributes
+]
+
+{ #category : #initialization }
+OSWindow >> initialize [
+
+	announcer := Announcer new.
 ]
 
 { #category : #private }

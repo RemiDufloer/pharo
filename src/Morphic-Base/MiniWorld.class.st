@@ -173,9 +173,14 @@ MiniWorld >> currentWindow [
 
 { #category : #'submorphs - add/remove' }
 MiniWorld >> delete [
-
-	self worldState worldRenderer deactivate.
+	"self worldState worldRenderer deactivate."
 	WorldMorph removeExtraWorld: self.
+]
+
+{ #category : #'submorphs - add/remove' }
+MiniWorld >> deleteByCross [
+	WorldMorph removeExtraWorld: self.
+	
 ]
 
 { #category : #display }
@@ -241,7 +246,8 @@ MiniWorld >> initialize [
 	worldRendered := MorphicRootRenderer new: self.
 	state := WorldState new.
 	self layoutPolicy: StackLayout new.
-	self color: Color veryLightGray
+	self color: Color veryLightGray.
+	
 ]
 
 { #category : #'change reporting' }
@@ -283,7 +289,8 @@ MiniWorld >> open [
 	self worldState worldRenderer:
 		(worldRendered windowCloseAction: [ self worldRenderer deactivate ]).
 	state activeHand: (self addHand: HandMorph new).
-	WorldMorph addExtraWorld: self
+	WorldMorph addExtraWorld: self.
+	worldRendered osWindow  announcer weak when: AnnouncementMiniWorld send: #deleteByCross to: self
 ]
 
 { #category : #'opening/closing' }

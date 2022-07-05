@@ -120,7 +120,9 @@ WorldMorph class >> initialize [
 { #category : #'extra worlds' }
 WorldMorph class >> removeExtraWorld: aWorld [
 	ExtraWorldListMutex critical: [
+		ExtraWorldList size traceCr.
 		ExtraWorldList := self extraWorldList copyWithout: aWorld.
+		ExtraWorldList size traceCr.
 	].
 	CursorOwnerWorld == aWorld ifTrue: [ CursorOwnerWorld := nil ].
 ]

@@ -72,7 +72,7 @@ WindowManager >> closeAllWindowToRight: aWindow [
 { #category : #accessing }
 WindowManager >> closeWindow: aWindow [
 
-	allWindow remove: aWindow.
+	( allWindow  includes: aWindow )ifTrue:[allWindow remove: aWindow ].
 	taskBar updateTasks .
 ]
 

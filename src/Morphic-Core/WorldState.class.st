@@ -751,7 +751,7 @@ WorldState >> runLocalStepMethodsIn: aWorld [
 	now := Time millisecondClockValue.
 	priorWorld := ActiveWorld.
 	ActiveWorld := aWorld.
-	ActiveWorld traceCr.
+
 	self triggerAlarmsBefore: now.
 	stepList isEmpty 
 		ifTrue: 
