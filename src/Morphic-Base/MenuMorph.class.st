@@ -887,8 +887,8 @@ MenuMorph >> invokeModal [
 	menu invokeModal."
 	
   ^ self
-		invokeAt: self currentWorld activeHand position
-		in: self currentWorld
+		invokeAt: (self owner world) activeHand position
+		in: (self owner world)
 ]
 
 { #category : #invoking }
