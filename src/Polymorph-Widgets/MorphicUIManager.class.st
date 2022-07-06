@@ -105,6 +105,21 @@ MorphicUIManager >> chooseFrom: aList lines: linesArray title: aString [
 		title: aString) ifNil: [0]
 ]
 
+{ #category : #default }
+MorphicUIManager >> chooseFrom: aList lines: linesArray title: aString world: aWorld [ 
+"Choose an item from the given list. Answer the index of the selected item."
+	
+	^(self
+		chooseFrom: aList
+		values: nil
+		lines: linesArray
+		title: aString
+		world:  aWorld) ifNil: [0]
+
+
+
+]
+
 { #category : #services }
 MorphicUIManager >> chooseFrom: labelList values: valueList lines: linesArray message: messageString title: aString [
 	"Choose an item from the given list. Answer the selected item."

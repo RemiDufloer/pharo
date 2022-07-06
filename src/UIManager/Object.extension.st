@@ -8,7 +8,7 @@ Object >> confirm: queryString [
 
 	"nil confirm: 'Are you hungry?'"
 
-	^ UIManager default confirm: queryString inWorld: self world
+	^ UIManager default confirm: queryString
 ]
 
 { #category : #'*UIManager' }

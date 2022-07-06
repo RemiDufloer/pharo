@@ -148,7 +148,7 @@ OCUndeclaredVariableWarning >> node: aVariableNode [
 
 { #category : #correcting }
 OCUndeclaredVariableWarning >> openMenuIn: aBlock [
-	| alternatives labels actions lines caption choice name interval requestor |
+	| alternatives labels actions lines caption choice name interval requestor world |
 	
 	"Turn off suggestions when in RubSmalltalkCommentMode
  	This is a workaround, the plan is to not do this as part of the exception"
@@ -200,7 +200,8 @@ OCUndeclaredVariableWarning >> openMenuIn: aBlock [
 	lines add: labels size.
 	labels add: 'Cancel'.
 	caption := 'Unknown variable: ' , name , ' please correct, or cancel:'.
-	choice := aBlock value: labels value: lines value: caption.
+	world := requestor world.
+	choice := aBlock value: labels value: lines value: caption value: world.
 	^choice ifNotNil: [ self resume: (actions at: choice ifAbsent: [ compilationContext failBlock value ]) value ]
 ]
 
