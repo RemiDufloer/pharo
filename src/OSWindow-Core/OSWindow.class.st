@@ -150,6 +150,7 @@ OSWindow >> clipboardText [
 { #category : #'clipboard handling' }
 OSWindow >> clipboardText: aString [
 	^ self validHandle clipboardText: aString
+	
 ]
 
 { #category : #private }
@@ -294,11 +295,13 @@ OSWindow >> isVisible [
 { #category : #'window management' }
 OSWindow >> maximize [
 	self validHandle maximize.
+	initialAttributes maximized: true.
 ]
 
 { #category : #'window management' }
 OSWindow >> minimize [
 	self validHandle minimize.
+	initialAttributes minimized: true.
 ]
 
 { #category : #'instance creation' }

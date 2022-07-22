@@ -257,6 +257,11 @@ MiniWorld >> invalidRect: damageRect from: aMorph [
 	state recordDamagedRect: (damageRect intersect: self bounds ifNone: [ ^ self ])
 ]
 
+{ #category : #testing }
+MiniWorld >> isCursorOwner [
+	^ self class cursorOwnerWorld == self
+]
+
 { #category : #setter }
 MiniWorld >> manager: aWindowManager [ 
 	manager := aWindowManager
@@ -314,6 +319,17 @@ MiniWorld >> openModal: aSystemWindow [
 		self modalUnlockFrom: aSystemWindow.
 		self activeHand newKeyboardFocus: keyboardFocus ].
 	^aSystemWindow
+]
+
+{ #category : #opening }
+MiniWorld >> openWithAttributs: aAttributes [
+
+	worldRendered := (OSWorldRenderer forWorld: self withAttributs: aAttributes  ).
+	self worldState worldRenderer:
+		(worldRendered windowCloseAction: [ self worldRenderer deactivate ]).
+	state activeHand: (self addHand: HandMorph new).
+	WorldMorph addExtraWorld: self.
+	worldRendered osWindow  announcer weak when: AnnouncementMiniWorld send: #deleteByCross to: self
 ]
 
 { #category : #'world simulation' }

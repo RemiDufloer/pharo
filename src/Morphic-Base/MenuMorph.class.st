@@ -208,6 +208,7 @@ MenuMorph >> activeSubmenu: aSubmenu [
 	activeSubMenu
 		ifNotNil: [activeSubMenu delete].
 	activeSubMenu := aSubmenu.
+	self world fullRepaintNeeded .
 ]
 
 { #category : #construction }
@@ -686,15 +687,6 @@ MenuMorph >> detachSubMenu: evt [
 	].
 ]
 
-{ #category : #control }
-MenuMorph >> displayAt: aPoint during: aBlock [
-	"Add this menu to the Morphic world during the execution of the given block."
-	self currentWorld addMorph: self centeredNear: aPoint.
-	self world displayWorld.  "show myself"
-	aBlock value.
-	self delete
-]
-
 { #category : #'keyboard control' }
 MenuMorph >> displayFiltered: evt [
 	| matchStr matches feedbackMorph |
@@ -990,9 +982,9 @@ MenuMorph >> keyDown: evt [
 MenuMorph >> keyStroke: evt [
 	"Handle keboard item matching."
 
-	| matchString char asc help |
-	help := self theme builder newBalloonHelp: 'Enter text to\narrow selection down\to matching items ' withCRs for: self corner: #topLeft.
-	help popUpForHand: self activeHand.
+	| matchString char asc "help" |
+"	help := self theme builder newBalloonHelp: 'Enter text to\narrow selection down\to matching items ' withCRs for: self corner: #topLeft.
+	help popUpForHand: self activeHand."
 
 	(self rootMenu hasProperty: #hasUsedKeyboard)
 		ifFalse: [ self rootMenu setProperty: #hasUsedKeyboard toValue: true.
@@ -1091,7 +1083,9 @@ MenuMorph >> mouseDown: evt [
 	"Handle a mouse down event."
 	"Overridden to not grab on mouse down"
 	(stayUp or:[self fullContainsPoint: evt position]) 
-		ifFalse:[^self deleteIfPopUp: evt]. "click outside"
+		ifFalse:[
+			owner traceCr.
+			^self deleteIfPopUp: evt]. "click outside"
 	self comeToFront
 ]
 

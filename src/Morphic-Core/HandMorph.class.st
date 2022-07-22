@@ -286,10 +286,6 @@ HandMorph >> deleteBalloonTarget: aMorph [
 	"Delete any existing balloon help.  This is now done unconditionally, whether or not the morph supplied is the same as the current balloon target"
 	
 	self balloonHelp: nil
-
-"	| h |
-	h := self balloonHelp ifNil: [^ self].
-	h balloonOwner == aMorph ifTrue: [self balloonHelp: nil]"
 ]
 
 { #category : #drawing }
@@ -996,6 +992,7 @@ HandMorph >> removeMouseListener: anObject [
 { #category : #'balloon help' }
 HandMorph >> removePendingBalloonFor: aMorph [
 	"Get rid of pending balloon help."
+	1haltOnce.
 	self removeAlarm: #spawnBalloonFor:.
 	self deleteBalloonTarget: aMorph.
 ]

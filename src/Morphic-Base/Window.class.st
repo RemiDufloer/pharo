@@ -136,7 +136,8 @@ Window >> ensureDoDelete [
 	self isOpen ifFalse: [ ^ self ].
 
 	window delete.
-	backend delete
+	osWindow destroy .
+	manager closeWindow: self.
 ]
 
 { #category : #testing }

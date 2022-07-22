@@ -45,7 +45,7 @@ WindowManager >> allWindow [
 { #category : #accessing }
 WindowManager >> closeAllWindow [
 
-
+	
 	(allWindow size) to: (1) by: (-1) do: [ :m | (allWindow at: m) delete  ].
 	taskBar updateTasks .
 ]
@@ -73,7 +73,7 @@ WindowManager >> closeAllWindowToRight: aWindow [
 WindowManager >> closeWindow: aWindow [
 
 	( allWindow  includes: aWindow )ifTrue:[allWindow remove: aWindow ].
-	taskBar updateTasks .
+	taskBar ifNotNil:  [taskBar  updateTasks] .
 ]
 
 { #category : #closing }
@@ -82,7 +82,8 @@ WindowManager >> deleteAll [
 	self closeAllWindow.
 
 	"Call doDelete because the taskbar window is not subscribed to manager"
-	taskBarWindow doDelete
+	taskBarWindow doDelete.
+
 ]
 
 { #category : #accessing }
@@ -176,6 +177,7 @@ WindowManager >> saveAllRoot [
 
 { #category : #startup }
 WindowManager >> startupOpenWithAttributs [
+	
 	1 to: allAttributes  size do: [ :a | (allWindow  at: a) openWithAttributs: (allAttributes at: a)  ]
 ]
 

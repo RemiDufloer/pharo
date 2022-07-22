@@ -47,10 +47,11 @@ WindowManagerTest >> testDeleteAll [
 
 	| newWindow |
 	newWindow := manager openNewWindowWithRoot: Morph new.
-
+	
 	manager deleteAll.
-
+	
 	self assert: manager numberOfOpenWindows equals: 0.
+	
 	self deny: manager isTaskBarOpen
 ]
 
@@ -134,15 +135,6 @@ WindowManagerTest >> testNewWindowShouldBeSave [
 ]
 
 { #category : #tests }
-WindowManagerTest >> testNewWindowShouldBeSaveAndTaskBarHaveAnewWidget [
-
-	| newWindow |
-	newWindow := manager newWindowWithRoot: SystemWindow  new.
-
-	self assert: manager taskBar submorphs size equals: 1
-]
-
-{ #category : #tests }
 WindowManagerTest >> testOpenNewWindowShouldBeSave [
 
 	| newWindow |
@@ -152,28 +144,21 @@ WindowManagerTest >> testOpenNewWindowShouldBeSave [
 ]
 
 { #category : #tests }
-WindowManagerTest >> testOpenWithBackendGtkNewWindowShouldBeSave [
-
-	| newWindow |
-	newWindow := manager openNewWindowBackendGtkWithRoot: SystemWindow  new.
-
-	self assert: manager numberOfOpenWindows equals: 1
-]
-
-{ #category : #tests }
-WindowManagerTest >> testWindowShouldBeOpenAfterStartupWithGoodMorph [
+WindowManagerTest >> testWindowShouldBeCreateAfterStartupWithGoodMorph [
 
 	manager openNewWindowWithRoot: Morph new.
 	manager openNewWindowWithRoot: Morph new.
 	manager openNewWindowWithRoot: Morph new.
 	
 	manager saveAllRoot.
-	
+	manager saveAllAttributes .
 	manager deleteAll.
 	
 	manager startupRoot.
-	
+
 	self assert: manager numberOfWindows  equals: 3.
+	
+	manager startupOpenWithAttributs.
 	
 
 	
