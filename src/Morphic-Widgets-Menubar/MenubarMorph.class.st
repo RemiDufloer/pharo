@@ -80,6 +80,16 @@ MenubarMorph class >> open [
 		open.
 ]
 
+{ #category : #'instance creation' }
+MenubarMorph class >> openInWorld: aWorld [
+	
+	self showMenubar ifFalse: [ ^ self ].
+
+	self new
+		menuBarItems:  self currentWorld  worldState menuBuilder menuSpec items;
+		openInWorld: aWorld.
+]
+
 { #category : #'class initialization' }
 MenubarMorph class >> reset [
 
@@ -163,6 +173,23 @@ MenubarMorph >> open [
 	self
 		adhereToTop;
 		openInWorld
+]
+
+{ #category : #accessing }
+MenubarMorph >> openInWorld: aWorld [
+	self menuBarItems
+		do: [ :each | 
+			self
+				add: each label
+				icon: each icon
+				help: each help
+				subMenu: (each subMenu ifNotNil: #asMenubarMenuMorph)
+				action: each action
+				keyText: each keyText.
+			each separator
+				ifTrue: [ self addSeparator ] ].
+	self adhereToTop.
+	aWorld addMorphFront: self.
 ]
 
 { #category : #recategorized }

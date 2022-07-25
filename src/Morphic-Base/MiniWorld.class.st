@@ -291,11 +291,13 @@ MiniWorld >> modalUnlockFrom: aSystemWindow [
 MiniWorld >> open [
 
 	worldRendered := OSWorldRenderer forWorld: self.
-	self worldState worldRenderer:
-		(worldRendered windowCloseAction: [ self worldRenderer deactivate ]).
+	worldRendered windowCloseAction: [ self worldRenderer deactivate ].
 	state activeHand: (self addHand: HandMorph new).
 	WorldMorph addExtraWorld: self.
-	worldRendered osWindow  announcer weak when: AnnouncementMiniWorld send: #deleteByCross to: self
+	worldRendered osWindow announcer weak
+		when: AnnouncementMiniWorld
+		send: #deleteByCross
+		to: self.
 ]
 
 { #category : #'opening/closing' }

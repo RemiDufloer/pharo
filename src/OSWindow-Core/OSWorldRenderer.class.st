@@ -244,7 +244,8 @@ OSWorldRenderer >> screenScaleFactor [
 OSWorldRenderer >> setAttributesDefault [
 
 	| initialExtent |
-	initialExtent := world worldState realWindowExtent ifNil: [976@665].
+	initialExtent := world worldState realWindowExtent ifNil: [ 
+		                 976 @ 665 ].
 
 
 	attributes := OSWindowAttributes new.
@@ -255,10 +256,12 @@ OSWorldRenderer >> setAttributesDefault [
 		icon: (self iconNamed: #pharoBig).
 
 	display := Form extent: initialExtent depth: 32.
-	world extent: initialExtent.
 
 	driver := self pickMostSuitableWindowDriver.
 	attributes preferableDriver: driver.
+
+	world worldState worldRenderer: self.
+	world extent: initialExtent
 ]
 
 { #category : #operations }

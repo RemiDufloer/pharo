@@ -992,7 +992,6 @@ HandMorph >> removeMouseListener: anObject [
 { #category : #'balloon help' }
 HandMorph >> removePendingBalloonFor: aMorph [
 	"Get rid of pending balloon help."
-	1haltOnce.
 	self removeAlarm: #spawnBalloonFor:.
 	self deleteBalloonTarget: aMorph.
 ]

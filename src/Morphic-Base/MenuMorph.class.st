@@ -208,7 +208,7 @@ MenuMorph >> activeSubmenu: aSubmenu [
 	activeSubMenu
 		ifNotNil: [activeSubMenu delete].
 	activeSubMenu := aSubmenu.
-	self world fullRepaintNeeded .
+	self world ifNotNil: [ self world fullRepaintNeeded ] .
 ]
 
 { #category : #construction }

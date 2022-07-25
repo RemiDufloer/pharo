@@ -159,14 +159,14 @@ DestkopMorph >> discoveredWorldMenu [
 { #category : #accessing }
 DestkopMorph >> displayArea [
 
-	^ self worldState worldRenderer usableArea.
+	^ owner worldState worldRenderer usableArea.
 ]
 
 { #category : #geometry }
 DestkopMorph >> extent: aPoint [
 	super extent: aPoint.
-	worldState viewBox ifNotNil: [ 
-		worldState invalidate ]
+	owner worldState  viewBox ifNotNil: [ 
+		owner worldState invalidate ]
 ]
 
 { #category : #'geometry - testing' }
@@ -177,49 +177,24 @@ DestkopMorph >> fullContainsPoint: pt [
 { #category : #'world state' }
 DestkopMorph >> haloMorphs [
 
-	^ self hands collect: [ :h | h halo ] thenSelect: [ :halo | halo notNil ]
+	^ owner hands collect: [ :h | h halo ] thenSelect: [ :halo | halo notNil ]
 ]
 
 { #category : #initialization }
 DestkopMorph >> initialize [ 
-	worldState := WorldState new.
- 	super initialize.
-	SystemAnnouncer uniqueInstance weak when: FullscreenAnnouncement send: #fullscreenChanged: to: self
-]
-
-{ #category : #'world menu' }
-DestkopMorph >> isEasySelecting [
-	"This is to isolate easySelection predicate. 
-	Selectors in holders make no sense so we are limiting easy
-	selection to the worldMorph.
-	It would also make sense in playfield so feel free to adjust this
-	predicate. Selection can always be forced by using the shift
-	before mouse down."
-	^ worldState isEasySelecting
+ 	| taskBarWindow |
+	super initialize.
+	SystemAnnouncer uniqueInstance weak when: FullscreenAnnouncement send: #fullscreenChanged: to: self.
+	MenubarMorph openInWorld: self.
+	taskBarWindow := (TaskbarMorph  new) .
+	taskBarWindow  setToAdhereToEdge: #bottomLeft.
+	self addMorphFront:  taskBarWindow .
 ]
 
 { #category : #'meta-actions' }
 DestkopMorph >> isWorldMorph [
 
 	^ true
-]
-
-{ #category : #'alarms - scheduler' }
-DestkopMorph >> removeAlarm: aSelector for: aTarget [
-	"Remove the alarm with the given selector"
-	
-	worldState removeAlarm: aSelector for: aTarget
-]
-
-{ #category : #'world state' }
-DestkopMorph >> removeHand: aHandMorph [
-	"Remove the given hand from the list of hands for this world."
-
-	(worldState hands includes: aHandMorph)
-		ifFalse: [ ^ self ].
-	aHandMorph dropMorphs.
-	self invalidRect: aHandMorph fullBounds.
-	worldState removeHand: aHandMorph
 ]
 
 { #category : #accessing }
@@ -237,18 +212,6 @@ DestkopMorph >> veryDeepCopyWith: deepCopier [
 	"never copy the World"
 
 	^ self
-]
-
-{ #category : #'project state' }
-DestkopMorph >> viewBox [
-
-	^ owner viewBox
-]
-
-{ #category : #'world state' }
-DestkopMorph >> viewBox: newViewBox [
-	
-	owner viewBox: newViewBox
 ]
 
 { #category : #'halos and balloon help' }
@@ -277,13 +240,6 @@ DestkopMorph >> wantsWindowEvent: anEvent [
 
 { #category : #'world menu' }
 DestkopMorph >> worldMenu [
-	'ici ' traceCr .
-	owner fullRepaintNeeded .
-	^ worldState worldMenu
-]
-
-{ #category : #accessing }
-DestkopMorph >> worldState [
 	
-	^ worldState
+	^ owner worldState  worldMenu
 ]
