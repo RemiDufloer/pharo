@@ -118,6 +118,12 @@ Morph >> openInWindowLabeled: aString inWorld: aWorld [
 ]
 
 { #category : #'*Morphic-Widgets-Windows' }
+Morph >> openInWindowOnWorld: aWorld [
+
+	^self openInWindowLabeled: self defaultLabel inWorld: aWorld
+]
+
+{ #category : #'*Morphic-Widgets-Windows' }
 Morph >> previousMorphInWindow [
 	"Answer the next morph in the window. Traverse
 	from the receiver to its previous sibling's last submorph (recursive)

@@ -638,6 +638,7 @@ PasteUpMorph >> invokeWorldMenu: evt [
 	
 	self bringTopmostsToFront.
 	"put up screen menu"
+	1haltOnce.
 	(menu := self worldMenu) popUpEvent: evt in: self.
 	^ menu
 ]

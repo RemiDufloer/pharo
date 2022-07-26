@@ -180,7 +180,6 @@ PragmaMenuAndShortcutRegistration >> iconName: aSymbol [
 PragmaMenuAndShortcutRegistration >> initialize [
 
 	super initialize.
-
 	items := OrderedCollection new.
 ]
 

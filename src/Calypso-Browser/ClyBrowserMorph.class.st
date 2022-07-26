@@ -495,12 +495,7 @@ ClyBrowserMorph >> okToChange [
 { #category : #'opening/closing' }
 ClyBrowserMorph >> open [
 	| window |
-	
-	self ensureInitialState.
-	window := self openInWindow.
-	window model: self.
-	self updateWindowTitle.
-	window minimumExtent: 650@500.0
+	self openInWorld: ActiveWorld
 ]
 
 { #category : #'opening/closing' }
@@ -512,7 +507,6 @@ ClyBrowserMorph >> openAnotherBrowser: aBrowser [
 ClyBrowserMorph >> openBy: aWindow [ 
 	
 	| window |
-	
 	self ensureInitialState.
 	aWindow openInWindow: self.
 	
@@ -521,12 +515,23 @@ ClyBrowserMorph >> openBy: aWindow [
 { #category : #'opening/closing' }
 ClyBrowserMorph >> openInWindow: aWindow [
 	| groupWindow myWindow |
+
 	groupWindow := self createWindowGroupFrom: aWindow.
 	
 	myWindow := self buildWindow.
 	groupWindow addWindow: myWindow.
 	myWindow activate.
 	myWindow announceOpened
+]
+
+{ #category : #'opening/closing' }
+ClyBrowserMorph >> openInWorld: aWorld [
+	| window |
+	self ensureInitialState.
+	window := self openInWindowOnWorld: aWorld.
+	window model: self.
+	self updateWindowTitle.
+	window minimumExtent: 650@500.0
 ]
 
 { #category : #accessing }

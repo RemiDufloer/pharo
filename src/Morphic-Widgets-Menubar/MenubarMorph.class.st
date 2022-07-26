@@ -86,7 +86,7 @@ MenubarMorph class >> openInWorld: aWorld [
 	self showMenubar ifFalse: [ ^ self ].
 
 	self new
-		menuBarItems:  self currentWorld  worldState menuBuilder menuSpec items;
+		menuBarItems:  aWorld worldMenu menuSpec items;
 		openInWorld: aWorld.
 ]
 
@@ -159,20 +159,7 @@ MenubarMorph >> newMenuItem [
 
 { #category : #accessing }
 MenubarMorph >> open [
-	self menuBarItems
-		do: [ :each | 
-			self
-				add: each label
-				icon: each icon
-				help: each help
-				subMenu: (each subMenu ifNotNil: #asMenubarMenuMorph)
-				action: each action
-				keyText: each keyText.
-			each separator
-				ifTrue: [ self addSeparator ] ].
-	self
-		adhereToTop;
-		openInWorld
+	self openInWorld: self currentWorld .
 ]
 
 { #category : #accessing }

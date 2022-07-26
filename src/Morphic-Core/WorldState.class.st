@@ -831,6 +831,13 @@ WorldState >> stopStepping: aMorph selector: aSelector [
 	stepList removeAll: (stepList select:[:stepMsg| stepMsg receiver == aMorph and:[stepMsg selector == aSelector]]).
 ]
 
+{ #category : #accessing }
+WorldState >> tools [
+
+	Smalltalk tools world: self currentWorld .
+	^ Smalltalk tools
+]
+
 { #category : #alarms }
 WorldState >> triggerAlarmsBefore: nowTime [
 	"Trigger all pending alarms that are to be executed before nowTime."

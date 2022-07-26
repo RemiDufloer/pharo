@@ -42,7 +42,8 @@ Class {
 	#superclass : #Object,
 	#instVars : [
 		'tools',
-		'announcer'
+		'announcer',
+		'world'
 	],
 	#category : #'Tool-Registry'
 }
@@ -148,7 +149,7 @@ ToolRegistry >> menuItems [
 
 { #category : #menu }
 ToolRegistry >> openClassBrowser [
-	^ self browser open
+	 ^ self browser openInWorld: world
 ]
 
 { #category : #menu }
@@ -247,4 +248,10 @@ ToolRegistry >> whenToolRegistered: aBlock [
 ToolRegistry >> whenToolUnregistered: aBlock [
 
 	self announcer weak when: ToolRegistryToolUnregistered do: aBlock 
+]
+
+{ #category : #world }
+ToolRegistry >> world: aWorld [ 
+	
+	world := aWorld .
 ]

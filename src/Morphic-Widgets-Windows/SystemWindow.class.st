@@ -1157,6 +1157,7 @@ SystemWindow >> initialize [
 	"Initialize a system window. Add label, stripes, etc., if desired"
 	
 	super initialize.
+	1haltOnce.  
 	labelString ifNil: [labelString := 'Untitled Window'].
 	isCollapsed := false.
 	paneMorphs := Array new.

@@ -6604,7 +6604,6 @@ Morph >> veryDeepInner: deepCopier [
 { #category : #'base - worlds' }
 Morph >> viewBox [
 
-	thisContext stack inspect.
 	^ self world viewBox
 ]
 

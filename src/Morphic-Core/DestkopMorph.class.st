@@ -1,6 +1,9 @@
 Class {
 	#name : #DestkopMorph,
 	#superclass : #PasteUpMorph,
+	#instVars : [
+		'tools'
+	],
 	#classInstVars : [
 		'displayScaleFactor'
 	],
@@ -182,13 +185,36 @@ DestkopMorph >> haloMorphs [
 
 { #category : #initialization }
 DestkopMorph >> initialize [ 
- 	| taskBarWindow |
+ 	| taskBarWindow  |
 	super initialize.
+	self initializeTools.
 	SystemAnnouncer uniqueInstance weak when: FullscreenAnnouncement send: #fullscreenChanged: to: self.
-	MenubarMorph openInWorld: self.
+	MenubarMorph openInWorld: self  .
 	taskBarWindow := (TaskbarMorph  new) .
 	taskBarWindow  setToAdhereToEdge: #bottomLeft.
 	self addMorphFront:  taskBarWindow .
+]
+
+{ #category : #initialization }
+DestkopMorph >> initializeTools [
+
+	tools := PharoCommonTools new.
+	tools world: self.
+]
+
+{ #category : #'world menu' }
+DestkopMorph >> invokeWorldMenu: evt [
+	"Put up the world menu, triggered by the passed-in event."
+	| menu |
+	
+	"If the user does not want a world menu, do not invoke it."
+	self class shouldShowWorldMenu ifFalse: [ ^ self ].
+	
+	self bringTopmostsToFront.
+	"put up screen menu"
+	
+	(menu := self worldMenu  menuEntitled: 'World') popUpEvent: evt in: self.
+	^ menu
 ]
 
 { #category : #'meta-actions' }
@@ -200,6 +226,12 @@ DestkopMorph >> isWorldMorph [
 { #category : #accessing }
 DestkopMorph >> scaleFactor: newScaleFactor [
 	self setProperty: #scaleFactor toValue: newScaleFactor
+]
+
+{ #category : #initialization }
+DestkopMorph >> tools [
+
+	^ tools
 ]
 
 { #category : #'menu & halo' }
@@ -240,6 +272,12 @@ DestkopMorph >> wantsWindowEvent: anEvent [
 
 { #category : #'world menu' }
 DestkopMorph >> worldMenu [
-	
-	^ owner worldState  worldMenu
+
+	| menu |
+	menu := (PragmaMenuBuilder
+		   pragmaKeyword: #worldMenu
+		   model: self).
+	menu menuSpec.
+	^ menu
+		  
 ]
