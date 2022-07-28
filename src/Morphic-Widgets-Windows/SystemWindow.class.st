@@ -656,7 +656,7 @@ SystemWindow >> announceDeActivated [
 SystemWindow >> announceOpened [
 
 	super announceOpened.
-	self currentWorld announcer
+	self world announcer
 		announce: (WindowOpened new
 						window: self;
 						yourself).
@@ -1157,7 +1157,6 @@ SystemWindow >> initialize [
 	"Initialize a system window. Add label, stripes, etc., if desired"
 	
 	super initialize.
-	1haltOnce.  
 	labelString ifNil: [labelString := 'Untitled Window'].
 	isCollapsed := false.
 	paneMorphs := Array new.
@@ -1482,7 +1481,7 @@ SystemWindow >> offerWindowMenu [
 SystemWindow >> openInWindow: aMorph [
 
 	| window |
-	window := aMorph openInWindow.
+	window := aMorph openInWindowOnWorld: self world.
 	window model: self.
 	aMorph updateWindowTitle.
 	window minimumExtent: 650@500.0

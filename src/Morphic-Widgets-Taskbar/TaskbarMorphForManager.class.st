@@ -1,3 +1,6 @@
+"
+is same of taskBarMorph but just for the manager
+"
 Class {
 	#name : #TaskbarMorphForManager,
 	#superclass : #TaskbarMorph,

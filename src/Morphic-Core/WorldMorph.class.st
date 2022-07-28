@@ -27,13 +27,6 @@ WorldMorph class >> addExtraWorld: aWorld [
 ]
 
 { #category : #accessing }
-WorldMorph class >> allowDropFiles [
-	"If this option is set to false, the world morph will no longer be able to receive droped files. This help to protect private code while deploying an application."
-	
-	^ AllowDropFiles ifNil: [ AllowDropFiles := true ]
-]
-
-{ #category : #accessing }
 WorldMorph class >> allowDropFiles: anObject [
 	AllowDropFiles := anObject
 ]

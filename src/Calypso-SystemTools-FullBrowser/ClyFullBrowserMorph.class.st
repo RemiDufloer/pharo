@@ -72,7 +72,6 @@ ClyFullBrowserMorph class >> openInWorld: aWorld [
 ClyFullBrowserMorph class >> openOn: aNavigationEnvironment [
 
 	| browser |
-	1halt.
 	browser := self on: aNavigationEnvironment.
 	browser open.	
 	^browser
@@ -115,7 +114,6 @@ ClyFullBrowserMorph class >> openOnClass: aClass selector: aSymbol [
 ClyFullBrowserMorph class >> openOnClass: aClass selector: aSymbol highlight: aString [
 
 	| browser |
-	1halt.
 	browser := self openOnClass: aClass selector: aSymbol.
 	browser withTool: ClyMethodCodeEditorToolMorph do: [ :editor | 
 		editor selectAnyString: { aString }].
@@ -131,7 +129,6 @@ ClyFullBrowserMorph class >> openOnMethod: aMethod [
 { #category : #opening }
 ClyFullBrowserMorph class >> openOnPackage: aPackage [
 
-	1halt.
 	^self openWithState: [:browser | browser selectPackage: aPackage]
 ]
 

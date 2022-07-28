@@ -10,6 +10,13 @@ Class {
 	#category : #'Morphic-Core-Worlds'
 }
 
+{ #category : #accessing }
+DestkopMorph class >> allowDropFiles [
+	"If this option is set to false, the world morph will no longer be able to receive droped files. This help to protect private code while deploying an application."
+	 
+	^ AllowDropFiles ifNil: [ AllowDropFiles := true ]
+]
+
 { #category : #'startup - shutdown' }
 DestkopMorph class >> cleanUp [
 	self currentWorld cleanseOtherworldlySteppers
@@ -57,12 +64,6 @@ DestkopMorph class >> scaleFactor [
 DestkopMorph class >> scaleFactor: aValue [
 	
 	World scaleFactor: aValue
-]
-
-{ #category : #operations }
-DestkopMorph >> activateCursor: aCursor withMask: maskForm [
-
-	worldState worldRenderer activateCursor: aCursor withMask: maskForm
 ]
 
 { #category : #menus }
@@ -190,9 +191,9 @@ DestkopMorph >> initialize [
 	self initializeTools.
 	SystemAnnouncer uniqueInstance weak when: FullscreenAnnouncement send: #fullscreenChanged: to: self.
 	MenubarMorph openInWorld: self  .
-	taskBarWindow := (TaskbarMorph  new) .
-	taskBarWindow  setToAdhereToEdge: #bottomLeft.
+	taskBarWindow := (TaskbarMorphForDesktop  newWithDesktop: self) .
 	self addMorphFront:  taskBarWindow .
+	taskBarWindow  intoWorld: self.
 ]
 
 { #category : #initialization }

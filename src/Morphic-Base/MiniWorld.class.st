@@ -48,6 +48,12 @@ MiniWorld class >> new: aObject [
 	^ world
 ]
 
+{ #category : #operations }
+MiniWorld >> activateCursor: aCursor withMask: maskForm [
+
+	state worldRenderer activateCursor: aCursor withMask: maskForm
+]
+
 { #category : #structure }
 MiniWorld >> activeHand [
 
@@ -179,7 +185,8 @@ MiniWorld >> delete [
 
 { #category : #'submorphs - add/remove' }
 MiniWorld >> deleteByCross [
-	WorldMorph removeExtraWorld: self.
+
+	self delete
 	
 ]
 
@@ -245,7 +252,6 @@ MiniWorld >> initialize [
 	submorphs := OrderedCollection new.
 	worldRendered := MorphicRootRenderer new: self.
 	state := WorldState new.
-	self layoutPolicy: StackLayout new.
 	self color: Color veryLightGray.
 	
 ]
@@ -259,7 +265,8 @@ MiniWorld >> invalidRect: damageRect from: aMorph [
 
 { #category : #testing }
 MiniWorld >> isCursorOwner [
-	^ self class cursorOwnerWorld == self
+	self currentCursor ifNotNil: [ ^ true ].
+	^ false
 ]
 
 { #category : #setter }
