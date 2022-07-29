@@ -262,7 +262,6 @@ DestkopMorph >> wantsDropFiles: anEvent [
 
 { #category : #private }
 DestkopMorph >> wantsDroppedMorph: aMorph event: evt [
-	
 	^ true
 ]
 

@@ -1084,7 +1084,6 @@ MenuMorph >> mouseDown: evt [
 	"Overridden to not grab on mouse down"
 	(stayUp or:[self fullContainsPoint: evt position]) 
 		ifFalse:[
-			owner traceCr.
 			^self deleteIfPopUp: evt]. "click outside"
 	self comeToFront
 ]

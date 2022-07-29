@@ -119,7 +119,7 @@ Morph >> openInWindowLabeled: aString inWorld: aWorld [
 
 { #category : #'*Morphic-Widgets-Windows' }
 Morph >> openInWindowOnWorld: aWorld [
-
+	self ensureInitialState.
 	^self openInWindowLabeled: self defaultLabel inWorld: aWorld
 ]
 

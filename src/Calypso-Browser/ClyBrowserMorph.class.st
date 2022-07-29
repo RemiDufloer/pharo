@@ -123,7 +123,8 @@ Class {
 		'navigationStarted',
 		'plugins',
 		'navigationEnvironment',
-		'systemScope'
+		'systemScope',
+		'announcer'
 	],
 	#category : #'Calypso-Browser-UI'
 }
@@ -196,6 +197,12 @@ ClyBrowserMorph >> allNavigationScopes [
 	^self systemScope = defaultScope 
 		ifTrue: [ {self systemScope} ]
 		ifFalse: [ { self systemScope. defaultScope } ]
+]
+
+{ #category : #accessing }
+ClyBrowserMorph >> announcer [ 
+
+	^ announcer ifNil:  [ announcer := Announcer new. ]
 ]
 
 { #category : #'opening/closing' }
@@ -368,7 +375,7 @@ ClyBrowserMorph >> initialize [
 	self changeProportionalLayout.
 	self initializeToolsPanel.
 	self initializeNavigationPanel.
-	self addPaneSplitters
+	self addPaneSplitters.
 ]
 
 { #category : #initialization }
@@ -502,8 +509,8 @@ ClyBrowserMorph >> okToChange [
 
 { #category : #'opening/closing' }
 ClyBrowserMorph >> open [
-	| window |
-	self openInWorld: ActiveWorld
+
+	self openInWindowOnWorld:  ActiveWorld
 ]
 
 { #category : #'opening/closing' }
@@ -536,16 +543,6 @@ ClyBrowserMorph >> openInWindow: aWindow inWorld: aWorld [
 	groupWindow addWindow: myWindow.
 	myWindow activate.
 	myWindow announceOpened
-]
-
-{ #category : #'opening/closing' }
-ClyBrowserMorph >> openInWorld: aWorld [
-	| window |
-	self ensureInitialState.
-	window := self openInWindowOnWorld: aWorld.
-	window model: self.
-	self updateWindowTitle.
-	window minimumExtent: 650@500.0
 ]
 
 { #category : #accessing }
@@ -705,14 +702,15 @@ ClyBrowserMorph >> update [
 
 { #category : #updating }
 ClyBrowserMorph >> updateWindowTitle [
-
+	
 	self window ifNotNil: [ :w | 
 		self setWindowTitle: self newWindowTitle in: w.
 		"in the case when window is managed as tab by window group
 		we should set up top group window label too"
 		(self ownerThatIsA: GroupWindowMorph) ifNotNil: [:group | 
 			group window ifNotNil: [:mainWindow |
-				self setWindowTitle: w labelString in: mainWindow]]
+				self setWindowTitle: w labelString in: mainWindow]].
+		 self announcer announce: (AnnouncementWindow title: self newWindowTitle ).
 	]
 ]
 

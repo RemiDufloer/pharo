@@ -82,7 +82,7 @@ ClyFullBrowserMorph class >> openOn: aNavigationEnvironment inWorld: aWorld [
 
 	| browser |
 	browser := self on: aNavigationEnvironment.
-	browser openInWorld: aWorld.	
+	browser openInWindowOnWorld:   aWorld.	
 	^browser
 ]
 
@@ -542,7 +542,6 @@ ClyFullBrowserMorph >> newWindowTitle [
 	newTitle := self buildTitleFromSelections.
 	self systemScope isCurrentImage ifFalse: [ 
 		newTitle := newTitle , ' in ', self systemScope description ].
-	
 	^newTitle
 ]
 

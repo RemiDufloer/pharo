@@ -206,8 +206,9 @@ Window >> open [
 	backend manager: manager .
 	attributs := self backend worldState worldRenderer osWindow initialAttributes.
 	osWindow := self backend worldState worldRenderer osWindow.
-	osWindow  announcer weak when: AnnouncementMiniWorld send: #deleteByCross to: self
-	
+	osWindow  announcer weak when: AnnouncementMiniWorld send: #deleteByCross to: self.
+	window announcer  weak when: AnnouncementWindow  send: #windowTitleChanged: to:  self
+	 
 ]
 
 { #category : #open }
@@ -369,4 +370,10 @@ Window >> window [
 { #category : #'submorphs - add/remove' }
 Window >> window: aWindow [
 	window := aWindow
+]
+
+{ #category : #'as yet unclassified' }
+Window >> windowTitleChanged: anAnnouncement [
+
+	osWindow title: anAnnouncement title
 ]

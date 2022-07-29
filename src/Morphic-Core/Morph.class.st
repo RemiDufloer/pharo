@@ -2774,6 +2774,7 @@ Morph >> handleDropFiles: anEvent [
 Morph >> handleDropMorph: anEvent [
 	"Handle a dropping morph."
 	| aMorph localPt |
+	
 	aMorph := anEvent contents.
 	"Do a symmetric check if both morphs like each other"
 	((self wantsDroppedMorph: aMorph event: anEvent)	"I want her"

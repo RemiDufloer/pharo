@@ -169,8 +169,7 @@ AbstractWorldRenderer class >> stopProfilingRenderingTime [
 { #category : #activation }
 AbstractWorldRenderer >> activate [
 
-	alreadyActivated ifTrue: [ 
-		"Maybe I need to change the title of the window after saving the image"
+	alreadyActivated ifTrue: [ "Maybe I need to change the title of the window after saving the image" 
 		^ self updateWindowTitle ].
 
 	self doActivate.

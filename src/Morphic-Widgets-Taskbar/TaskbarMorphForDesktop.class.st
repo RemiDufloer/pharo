@@ -32,8 +32,6 @@ TaskbarMorphForDesktop >> desktop: aMorph [
 TaskbarMorphForDesktop >> worldMorphs [
 	"Answer the world's submorphs plus those in hand.
 	Nasty case since hand removes the morph before dropping"
-	'mon monde est ' traceCr .
-	self world traceCr.
 	^self desktop submorphs, 
 		((self tasks
 			select: [:t | t morph owner = self world activeHand])

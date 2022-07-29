@@ -268,7 +268,7 @@ ClyQueryBrowserMorph >> newWindowTitle [
 ClyQueryBrowserMorph >> openAnotherBrowser: aBrowser [
 	(aBrowser isKindOf: ClyQueryBrowserMorph)
 		ifTrue: [ aBrowser openInWindow: self window inWorld: self world]
-		ifFalse: [ aBrowser openInWorld: self world ]
+		ifFalse: [ aBrowser openInWindowOnWorld:  self world ]
 ]
 
 { #category : #initialization }
