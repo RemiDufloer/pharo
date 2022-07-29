@@ -337,6 +337,12 @@ Window >> taskbarButtonMenu: aMenu [
 	^menu
 ]
 
+{ #category : #icons }
+Window >> taskbarIcon [
+
+ ^ window class taskbarIcon
+]
+
 { #category : #'taskbar-required' }
 Window >> taskbarLabel [
 	"Answer the label to use for a taskbar button for the receiver."
