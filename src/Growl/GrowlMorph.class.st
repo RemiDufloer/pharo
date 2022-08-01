@@ -188,6 +188,12 @@ GrowlMorph >> actionBlock: aBlock [
 	actionBlock := aBlock
 ]
 
+{ #category : #internal }
+GrowlMorph >> activeGrowlMorphsInWorld: aWorld [
+	
+	^aWorld submorphs select: [ :morph | morph isKindOf: GrowlMorph ].
+]
+
 { #category : #accessing }
 GrowlMorph >> alpha [
 	^ alpha
