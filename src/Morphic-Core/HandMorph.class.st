@@ -116,14 +116,6 @@ HandMorph class >> settingsOn: aBuilder [
 "HandMorph eventStats inspect"'
 ]
 
-{ #category : #utilities }
-HandMorph class >> showEvents: aBool [
-	"HandMorph showEvents: true"
-	"HandMorph showEvents: false"
-	ShowEvents := aBool.
-	aBool ifFalse: [ self currentWorld invalidRect: (0@0 extent: 500@120) ].
-]
-
 { #category : #accessing }
 HandMorph class >> upperHandLimit [
 
@@ -715,7 +707,7 @@ HandMorph >> needsToBeDrawn [
 		ifTrue: [ ^ true ].
 	"Switch from one hardware cursor to another, if needed."
 	cursor := hardwareCursor ifNil: [Cursor normal].
-	self currentCursor == cursor ifFalse: [cursor show].
+	self currentCursor == cursor ifFalse: [cursor showIn: self world].
 	^ false
 ]
 

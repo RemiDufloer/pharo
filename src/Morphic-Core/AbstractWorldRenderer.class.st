@@ -309,7 +309,7 @@ AbstractWorldRenderer >> restoreMorphicDisplay [
 		submorphsDo: [ :each | each displayExtentChanged ];
 		fullRepaintNeeded.
 		
-	world defer: [Cursor normal show].
+	world defer: [Cursor normal showIn: world].
 		
 	world layoutChanged.
 ]

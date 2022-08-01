@@ -834,7 +834,7 @@ WorldState >> stopStepping: aMorph selector: aSelector [
 { #category : #accessing }
 WorldState >> tools [
 
-	Smalltalk tools world: self currentWorld .
+	Smalltalk tools world: self worldRenderer world .
 	^ Smalltalk tools
 ]
 

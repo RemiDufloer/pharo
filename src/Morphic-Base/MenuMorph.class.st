@@ -1252,13 +1252,6 @@ MenuMorph >> popUpInWorld: aWorld [
 	^self popUpAt: aWorld primaryHand position forHand: aWorld primaryHand in: aWorld
 ]
 
-{ #category : #control }
-MenuMorph >> popUpNoKeyboard [
-	"Present this menu in the current World, *not* allowing keyboard input into the menu"
-
-	^ self popUpAt: self activeHand position forHand: self activeHand in: self currentWorld allowKeyboard: false
-]
-
 { #category : #accessing }
 MenuMorph >> popUpOwner [
 	"Return the current pop-up owner that is the menu item that automatically initiated the receiver."

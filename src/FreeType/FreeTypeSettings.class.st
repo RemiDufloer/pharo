@@ -174,22 +174,6 @@ FreeTypeSettings >> hintingSymbol [
 ]
 
 { #category : #accessing }
-FreeTypeSettings >> hintingSymbol: aSymbol [
-	"#Full, #Light, #Normal or #None"
-
-	monoHinting := aSymbol = #Full.
-	lightHinting := aSymbol = #Light.
-	hinting := monoHinting or: [ lightHinting or: [ aSymbol = #Normal ] ].
-	FreeTypeCache current removeAll.
-	FreeTypeFont allSubInstances do:[:each | each clearCachedMetrics ].
-	
-	self flag: #DEPENDENCY. "This is a hidden dependency on morphic :("
-	self class environment 
-		at: #Paragraph
-		ifPresent: [ :aClass | aClass refreshAllCompositions ]
-]
-
-{ #category : #accessing }
 FreeTypeSettings >> lcdHinting [
 	^lcdHinting ifNil:[lcdHinting := false]
 ]
@@ -266,25 +250,6 @@ FreeTypeSettings >> setGamma: aFloat [
 						gammaTable at: i + 1 put: g.
 						gammaInverseTable at: i + 1 put: ug]].
 				self currentWorld restoreMorphicDisplay]
-]
-
-{ #category : #accessing }
-FreeTypeSettings >> setSubPixelFilter: ratiosArray [
-	"Set the subPixelFilters from ratiosArray.
-	the ratiosArray can specify the red, green, and blue filter ratios separately.
-	e.g. #((1 3 5 3 1) (1 4 7 4 1) (1 2 3 2 1))
-	or, as single set of ratios e.g. #(1 3 5 3 1)" 
-	
-	| validArray newFilters |
-	validArray := ratiosArray.
-	(ratiosArray size = 5)
-		ifTrue:[validArray := {ratiosArray. ratiosArray. ratiosArray}].
-	newFilters := self subPixelFiltersFromRatios: validArray. 
-	(newFilters = subPixelFilters)
-		ifFalse:[
-			subPixelFilters := newFilters.
-			FreeTypeCache current removeAllForType: FreeTypeCacheGlyphLCD.
-			self currentWorld restoreMorphicDisplay]
 ]
 
 { #category : #accessing }

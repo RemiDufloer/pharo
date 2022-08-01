@@ -713,13 +713,11 @@ MorphicUIManager >> requestPassword: aStringOrText [
 
 { #category : #'ui requests' }
 MorphicUIManager >> restoreDisplay [
-
 	self currentWorld fullRepaintNeeded
 ]
 
 { #category : #'ui requests' }
 MorphicUIManager >> restoreDisplayAfter: aBlock [
-
 	aBlock value.
 	self currentWorld activeHand waitButton.
 	self currentWorld fullRepaintNeeded.

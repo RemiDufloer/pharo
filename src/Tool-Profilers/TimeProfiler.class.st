@@ -85,7 +85,6 @@ TimeProfiler class >> menuCommandOn: aBuilder [
 { #category : #'world menu' }
 TimeProfiler class >> menuProfilingOn: aBuilder [
 	<worldMenu>
-
 	(aBuilder item: #'Start profiling all Processes')
 		parent: #Profiling;
 		help: 'Profile all Pharo processes.';

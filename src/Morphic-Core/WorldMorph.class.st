@@ -584,7 +584,6 @@ WorldMorph >> wantsDropFiles: anEvent [
 
 { #category : #private }
 WorldMorph >> wantsDroppedMorph: aMorph event: evt [
-	1haltOnce .
 	^ true
 ]
 

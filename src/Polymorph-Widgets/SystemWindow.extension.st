@@ -319,7 +319,6 @@ SystemWindow >> allowedToClose [
 { #category : #'*Polymorph-Widgets' }
 SystemWindow >> animateClose [
 	"Animate closing."
-	
 	| smallRect restoredRect rects steps|
 	self isMinimized ifTrue: [^self].
 	restoredRect := self bounds.
@@ -328,7 +327,7 @@ SystemWindow >> animateClose [
 	steps := self theme numberOfStepsForAnimations.
 	rects := ((steps - 1)/steps to: 0 by: -1/steps) collect: [:x |
 		smallRect interpolateTo: restoredRect at: (20 raisedTo: x) - 1 / 19].
-	self currentWorld displayWorldSafely.
+	self world displayWorldSafely.
 	self fastAnimateRectangles: rects
 ]
 

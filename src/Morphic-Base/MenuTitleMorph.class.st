@@ -189,7 +189,6 @@ MenuTitleMorph >> wantsRoundedCorners [
 
 { #category : #construction }
 MenuTitleMorph >> withCloseBox [
-
 	closeBox ifNotNil: [ closeBox delete ].	
 		
 	closeBox := self 

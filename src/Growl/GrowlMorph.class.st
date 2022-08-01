@@ -188,12 +188,6 @@ GrowlMorph >> actionBlock: aBlock [
 	actionBlock := aBlock
 ]
 
-{ #category : #internal }
-GrowlMorph >> activeGrowlMorphs [
-
-	^self currentWorld submorphs select: [ :morph | morph isKindOf: GrowlMorph ].
-]
-
 { #category : #accessing }
 GrowlMorph >> alpha [
 	^ alpha
@@ -407,37 +401,6 @@ GrowlMorph >> streamDo: aBlock [
 ]
 
 { #category : #position }
-GrowlMorph >> unoccupiedPosition [
-
-	self class position = #bottomLeft
-		ifTrue: [ ^ self unoccupiedPositionBottomLeft ].
-	self class position = #topRight
-		ifTrue: [ ^ self unoccupiedPositionTopRight ].
-	self class position = #bottomRight
-		ifTrue: [ ^ self unoccupiedPositionBottomRight ].
-	self class position = #topLeft
-		ifTrue: [ ^ self unoccupiedPositionTopLeft ].
-	^ 0@0
-]
-
-{ #category : #position }
-GrowlMorph >> unoccupiedPositionBottomLeft [
-
-	| startPos area rect morphs |
-	
-	startPos := 10 negated @ (self height + 10).
-	area := self currentWorld clearArea.
-	rect := (area bottomLeft - startPos) extent: self extent.
-	
-	morphs := self activeGrowlMorphs.
-	[self is: rect saneWithRespectTo: morphs] whileFalse: [
-		rect := rect translateBy: 0@(-10).
-		rect top < 0 ifTrue: [^ area bottomLeft - startPos]
-	].
-	^ rect origin
-]
-
-{ #category : #position }
 GrowlMorph >> unoccupiedPositionBottomLeft: world [
 
 	| startPos area rect morphs |
@@ -446,63 +409,11 @@ GrowlMorph >> unoccupiedPositionBottomLeft: world [
 	area := world clearArea.
 	rect := (area bottomLeft - startPos) extent: self extent.
 	
-	morphs := self activeGrowlMorphs.
+	morphs := self activeGrowlMorphsInWorld: world world.
 	[self is: rect saneWithRespectTo: morphs] whileFalse: [
 		rect := rect translateBy: 0@(-10).
 		rect top < 0 ifTrue: [^ area bottomLeft - startPos]
 	].
-	^ rect origin
-]
-
-{ #category : #position }
-GrowlMorph >> unoccupiedPositionBottomRight [
-
-	| startPos area rect morphs |
-	
-	startPos := (self width + 10 ) @ (self height + 10).
-	area := self currentWorld clearArea.
-	rect := (area bottomRight - startPos) extent: self extent.
-	
-	morphs := self activeGrowlMorphs.	
-	[self is: rect saneWithRespectTo: morphs] whileFalse: [
-		rect := rect translateBy: 0@(-10).
-		rect top < 0 ifTrue: [^ area bottomRight - startPos ]
-	].
-	^ rect origin
-]
-
-{ #category : #position }
-GrowlMorph >> unoccupiedPositionTopLeft [
-
-	| startPos area rect morphs |
-	
-	startPos := 10@10.
-	area := self currentWorld clearArea.
-	rect := area topLeft + (startPos) extent: self extent.
-	
-	morphs := self activeGrowlMorphs.
-	[self is: rect saneWithRespectTo: morphs] whileFalse: [
-		rect := rect translateBy: 0@10.
-		rect bottom > area height ifTrue: [^ area topLeft + startPos ]
-	].
-	^ rect origin
-]
-
-{ #category : #position }
-GrowlMorph >> unoccupiedPositionTopRight [
-
-	| startPos area rect morphs |
-	
-	startPos := (self width + 10 @ 10 negated).
-	area := self currentWorld clearArea.
-	rect := (area topRight - startPos) extent: self extent.
-	
-	morphs := self activeGrowlMorphs.	
-	[self is: rect saneWithRespectTo: morphs] whileFalse: [
-		rect := rect translateBy: 0@10.
-		rect bottom > area height ifTrue: [^ (area topRight - startPos) ]
-	].
-
 	^ rect origin
 ]
 

@@ -281,12 +281,6 @@ ClyBrowserMorph >> createCommandContext [
 ]
 
 { #category : #'opening/closing' }
-ClyBrowserMorph >> createWindowGroupFrom: currentWindow [
-  	
-	^ self createWindowGroupFrom: currentWindow  inWorld: self currentWorld .
-]
-
-{ #category : #'opening/closing' }
 ClyBrowserMorph >> createWindowGroupFrom: currentWindow inWorld: aWorld [
   | group pos ext |
 	(currentWindow ownerThatIsA: GroupWindowMorph) ifNotNil: [:existing | ^existing].

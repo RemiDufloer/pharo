@@ -419,8 +419,9 @@ MenuItemMorph >> invokeWithEvent: evt [
 				[selArgCount = arguments size
 					ifTrue: [target perform: selector withArguments: arguments]
 					ifFalse: [target perform: selector withArguments: (arguments copyWith: evt)]].
-		self showShortcut.
-		self changed].
+		w traceCr .
+		self showShortcutInWorld: w.
+		self changed] inWorld: w.
 ]
 
 { #category : #accessing }
@@ -646,9 +647,8 @@ MenuItemMorph >> shouldBeHighlighted [
 ]
 
 { #category : #events }
-MenuItemMorph >> showShortcut [
-
-	ShortcutReminder showShortcut: self
+MenuItemMorph >> showShortcutInWorld: aWorld [
+	ShortcutReminder showShortcut: self inWorld: aWorld
 ]
 
 { #category : #accessing }
