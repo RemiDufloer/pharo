@@ -68,6 +68,7 @@ DestkopMorph class >> scaleFactor: aValue [
 
 { #category : #menus }
 DestkopMorph >> addStandardHaloMenuItemsTo: aMenu hand: aHandMorph [
+
 	"Add standard halo items to the menu"
 
 	self addWorldHaloMenuItemsTo: aMenu hand: aHandMorph
@@ -75,33 +76,20 @@ DestkopMorph >> addStandardHaloMenuItemsTo: aMenu hand: aHandMorph [
 
 { #category : #accessing }
 DestkopMorph >> announcer [
+
 	WorldAnnouncer ifNil: [ WorldAnnouncer := Announcer new ].
 	^ WorldAnnouncer
 ]
 
 { #category : #cursor }
 DestkopMorph >> beCursorOwner [
-	owner beCursorOwner 
-]
 
-{ #category : #initialization }
-DestkopMorph >> becomeActiveDuring: aBlock [
-	"Make the receiver the ActiveWorld during the evaluation of aBlock.
-	Note that this method does deliberately *not* use #ensure: to prevent
-	re-installation of the world on project switches."
-
-	| priorWorld |
-	priorWorld := ActiveWorld.
-	ActiveWorld := owner.
-	aBlock
-		on: Error
-		do: [ :ex | 
-			ActiveWorld := priorWorld.
-			ex pass ]
+	owner beCursorOwner
 ]
 
 { #category : #'meta-actions' }
 DestkopMorph >> buildMetaMenu: evt [
+
 	| menu |
 	menu := UIManager default newMenuIn: self for: self.
 	self addStandardHaloMenuItemsTo: menu hand: evt hand.
@@ -110,53 +98,52 @@ DestkopMorph >> buildMetaMenu: evt [
 
 { #category : #'menu & halo' }
 DestkopMorph >> contentsMenu: aMenu [
+
 	"Build the menu used from PopUpContentsMenu:"
 
 	| expanded collapsed |
 	expanded := self windowsSatisfying: [ :w | w isCollapsed not ].
 	collapsed := self windowsSatisfying: [ :w | w isCollapsed ].
-	(expanded asSortedCollection: [ :w1 :w2 | w1 label caseInsensitiveLessOrEqual: w2 label ])
-		do: [ :w | 
-			aMenu add: (self truncatedMenuLabelFor: w label) target: w selector: #activateAndForceLabelToShow.
-			aMenu lastItem icon: w taskbarIcon.
-			w model canDiscardEdits 
-				ifFalse: [ aMenu lastItem color: Color red ] ].
+	(expanded asSortedCollection: [ :w1 :w2 | 
+		 w1 label caseInsensitiveLessOrEqual: w2 label ]) do: [ :w | 
+		aMenu
+			add: (self truncatedMenuLabelFor: w label)
+			target: w
+			selector: #activateAndForceLabelToShow.
+		aMenu lastItem icon: w taskbarIcon.
+		w model canDiscardEdits ifFalse: [ aMenu lastItem color: Color red ] ].
 	aMenu addLine.
-	(collapsed asSortedCollection: [ :w1 :w2 | w1 label caseInsensitiveLessOrEqual: w2 label ])
-		do: [ :w | 
-			aMenu add: (self truncatedMenuLabelFor: w label) target: w selector: #collapseOrExpand.
-			aMenu lastItem icon: w taskbarIcon.
-			w model canDiscardEdits
-				ifFalse: [ aMenu lastItem color: Color red ] ].
+	(collapsed asSortedCollection: [ :w1 :w2 | 
+		 w1 label caseInsensitiveLessOrEqual: w2 label ]) do: [ :w | 
+		aMenu
+			add: (self truncatedMenuLabelFor: w label)
+			target: w
+			selector: #collapseOrExpand.
+		aMenu lastItem icon: w taskbarIcon.
+		w model canDiscardEdits ifFalse: [ aMenu lastItem color: Color red ] ].
 	aMenu addLine.
-	((self submorphs reject: [ :sm | (expanded includes: sm) or: [ collapsed includes: sm ] ])
-		asSortedCollection: [ :w1 :w2 | w1 class name caseInsensitiveLessOrEqual: w2 class name ])
-		do: [ :w | 
-			aMenu add: (self truncatedMenuLabelFor: w class name) target: w selector: #comeToFront.
-			aMenu lastItem icon: w taskbarIcon ].
-		
+	((self submorphs reject: [ :sm | 
+		  (expanded includes: sm) or: [ collapsed includes: sm ] ]) 
+		 asSortedCollection: [ :w1 :w2 | 
+		 w1 class name caseInsensitiveLessOrEqual: w2 class name ]) do: [ :w | 
+		aMenu
+			add: (self truncatedMenuLabelFor: w class name)
+			target: w
+			selector: #comeToFront.
+		aMenu lastItem icon: w taskbarIcon ].
+
 	^ aMenu
 ]
 
 { #category : #'menu & halo' }
 DestkopMorph >> contentsMenuTitle [
+
 	^ 'World contents' translated
-]
-
-{ #category : #'world state' }
-DestkopMorph >> defaultWorldColor [
-	^ self class defaultWorldColor
-]
-
-{ #category : #'menu & halo' }
-DestkopMorph >> deleteBalloonTarget: aMorph [
-	"Delete the balloon help targeting the given morph"
-
-	self handsDo: [ :h | h deleteBalloonTarget: aMorph ]
 ]
 
 { #category : #'world menu' }
 DestkopMorph >> discoveredWorldMenu [
+
 	^ worldState discoveredWorldMenu
 ]
 
@@ -168,14 +155,15 @@ DestkopMorph >> displayArea [
 
 { #category : #geometry }
 DestkopMorph >> extent: aPoint [
+
 	super extent: aPoint.
-	owner worldState  viewBox ifNotNil: [ 
-		owner worldState invalidate ]
+	owner worldState viewBox ifNotNil: [ owner worldState invalidate ]
 ]
 
 { #category : #'geometry - testing' }
 DestkopMorph >> fullContainsPoint: pt [
-	^bounds containsPoint: pt
+
+	^ bounds containsPoint: pt
 ]
 
 { #category : #'world state' }
@@ -185,15 +173,22 @@ DestkopMorph >> haloMorphs [
 ]
 
 { #category : #initialization }
-DestkopMorph >> initialize [ 
- 	| taskBarWindow  |
+DestkopMorph >> initialize [
+
+	| taskBarWindow |
 	super initialize.
 	self initializeTools.
-	SystemAnnouncer uniqueInstance weak when: FullscreenAnnouncement send: #fullscreenChanged: to: self.
-	MenubarMorph openInWorld: self  .
-	taskBarWindow := (TaskbarMorphForDesktop  newWithDesktop: self) .
-	self addMorphFront:  taskBarWindow .
-	taskBarWindow  intoWorld: self.
+	self color: Color veryLightGray.
+	
+	SystemAnnouncer uniqueInstance weak
+		when: FullscreenAnnouncement
+		send: #fullscreenChanged:
+		to: self.
+		
+	MenubarMorph openInWorld: self.
+	taskBarWindow := TaskbarMorphForDesktop newWithDesktop: self.
+	self addMorphFront: taskBarWindow.
+	taskBarWindow intoWorld: self
 ]
 
 { #category : #initialization }
@@ -226,6 +221,7 @@ DestkopMorph >> isWorldMorph [
 
 { #category : #accessing }
 DestkopMorph >> scaleFactor: newScaleFactor [
+
 	self setProperty: #scaleFactor toValue: newScaleFactor
 ]
 
@@ -237,14 +233,8 @@ DestkopMorph >> tools [
 
 { #category : #'menu & halo' }
 DestkopMorph >> truncatedMenuLabelFor: aWindowLabel [
+
 	^ aWindowLabel truncateWithElipsisTo: 47
-]
-
-{ #category : #copying }
-DestkopMorph >> veryDeepCopyWith: deepCopier [
-	"never copy the World"
-
-	^ self
 ]
 
 { #category : #'halos and balloon help' }
@@ -274,10 +264,7 @@ DestkopMorph >> wantsWindowEvent: anEvent [
 DestkopMorph >> worldMenu [
 
 	| menu |
-	menu := (PragmaMenuBuilder
-		   pragmaKeyword: #worldMenu
-		   model: self).
+	menu := PragmaMenuBuilder pragmaKeyword: #worldMenu model: self.
 	menu menuSpec.
 	^ menu
-		  
 ]

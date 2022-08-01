@@ -135,7 +135,6 @@ MiniWorld >> backgroundMorph: aMorph [
 
 	"Set the background morph.
 	Probably best if locked prior to adding."
-
 	self backgroundMorph ifNotNil: [ self backgroundMorph delete ].
 	backgroundMorph := aMorph.
 	aMorph ifNotNil: [ 
@@ -168,6 +167,7 @@ MiniWorld >> currentCursor [
 
 { #category : #accessing }
 MiniWorld >> currentCursor: aCursor [
+
 	^ state currentCursor: aCursor
 ]
 
@@ -179,8 +179,17 @@ MiniWorld >> currentWindow [
 
 { #category : #'submorphs - add/remove' }
 MiniWorld >> delete [
+
 	"self worldState worldRenderer deactivate."
-	WorldMorph removeExtraWorld: self.
+
+	WorldMorph removeExtraWorld: self
+]
+
+{ #category : #'balloon help' }
+MiniWorld >> deleteBalloonTarget: aMorph [
+	"Delete the balloon help targeting the given morph"
+
+	self handsDo: [ :h | h deleteBalloonTarget: aMorph ]
 ]
 
 { #category : #'submorphs - add/remove' }
@@ -259,7 +268,6 @@ MiniWorld >> initialize [
 { #category : #'change reporting' }
 MiniWorld >> invalidRect: damageRect from: aMorph [
 	"Clip damage reports to my bounds, since drawing is clipped to my bounds."
-
 	state recordDamagedRect: (damageRect intersect: self bounds ifNone: [ ^ self ])
 ]
 
@@ -439,7 +447,6 @@ MiniWorld >> viewBox [
 { #category : #'world state' }
 MiniWorld >> viewBox: newViewBox [
 	"I am now displayed within newViewBox; react."
-
 	(self viewBox isNil or: [ self viewBox extent ~= newViewBox extent ])
 		ifTrue: [ state invalidate ].
 
