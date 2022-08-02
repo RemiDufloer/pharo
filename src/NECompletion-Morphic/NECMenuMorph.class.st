@@ -41,8 +41,8 @@ NECMenuMorph class >> convertToSHSymbol: aSymbol [
 ]
 
 { #category : #'instance creation' }
-NECMenuMorph class >> engine: aCompletionEngine position: aPoint [ 
-	^ self new engine: aCompletionEngine position: aPoint
+NECMenuMorph class >> engine: aCompletionEngine position: aPoint inWorld: aWorld [
+	^ self new engine: aCompletionEngine position: aPoint inWorld: aWorld
 ]
 
 { #category : #'help text' }
@@ -408,13 +408,13 @@ NECMenuMorph >> end [
 ]
 
 { #category : #initialization }
-NECMenuMorph >> engine: aCompletionEngine position: aPoint [
+NECMenuMorph >> engine: aCompletionEngine position: aPoint inWorld: aWorld [
 	engine := aCompletionEngine.
 	context := engine context.
 	self position: aPoint - (20 @ 0).
 	self refreshSelection.
 	self createTitle.
-	self openInWorld
+	self openInWorld: aWorld
 ]
 
 { #category : #private }

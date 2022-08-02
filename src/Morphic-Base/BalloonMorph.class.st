@@ -46,12 +46,13 @@ BalloonMorph class >> defaultBalloonColor [
 
 { #category : #private }
 BalloonMorph class >> getBestLocation: vertices for: morph corner: cornerName [
-	| rect maxArea verts rectCorner morphPoint mbc a mp dir bestVerts result usableArea |
+	| rect maxArea verts rectCorner morphPoint mbc a mp dir bestVerts result usableArea w|
 	"Choose rect independantly of vertice order or size. Would be nice it this took into account curveBounds but it does not." 
+	w := morph world.
 	rect := Rectangle encompassing: vertices.  
 	maxArea := -1.
 	verts := vertices.
-	usableArea := (morph world ifNil: [self currentWorld]) viewBox.
+	usableArea := w viewBox.
 	1 to: 4 do: [:i |
 		dir := #(vertical horizontal) atWrap: i.
 		verts := verts collect: [:p | p flipBy: dir centerAt: rect center].

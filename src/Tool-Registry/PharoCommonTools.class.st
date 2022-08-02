@@ -114,7 +114,7 @@ PharoCommonTools class >> worldMenuOn: aBuilder [
 		keyText: 'o, i';
 		help:
 			'Iceberg is a set of tools that allow one to handle git repositories directly from a Pharo image.';
-		action: [ (Smalltalk at: #IceTipRepositoriesBrowser) new openInWorld: aBuilder model ]
+		action: [ (Smalltalk at: #IceTipRepositoriesBrowser) new open ]
 ]
 
 { #category : #'registry access' }

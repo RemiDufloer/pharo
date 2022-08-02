@@ -183,12 +183,12 @@ ToolRegistry >> openTestRunner [
 
 { #category : #menu }
 ToolRegistry >> openTranscript [
-	^ self transcript open
+	^ self transcript openInWorld: world
 ]
 
 { #category : #menu }
 ToolRegistry >> openWorkspace [
-	^ self workspace open
+	^ self workspace openInWorld: world
 ]
 
 { #category : #registration }

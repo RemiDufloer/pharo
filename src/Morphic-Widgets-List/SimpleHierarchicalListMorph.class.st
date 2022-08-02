@@ -776,7 +776,7 @@ SimpleHierarchicalListMorph >> mouseUp: event [
 	((autoDeselect == true) and: [aMorph == selectedMorph]) 
 		ifTrue: [self setSelectedMorph: nil]
 		ifFalse: [self setSelectedMorph: aMorph].
-	Cursor normal show
+	Cursor normal showIn: self world
 ]
 
 { #category : #accessing }
