@@ -87,6 +87,12 @@ WorldState class >> sourcesWorldMenuOn: aBuilder [
 ]
 
 { #category : #'*Morphic-Base' }
+WorldState >> startMessageTally [
+
+	self class startMessageTally
+]
+
+{ #category : #'*Morphic-Base' }
 WorldState class >> startMessageTally [
 
 	(self confirm: 'MessageTally will start now,
@@ -96,13 +102,7 @@ to the top of the screen' translated)
 
 	TimeProfiler spyAllOn: [
 		MorphicRenderLoop new doOneCycleWhile: [ 
-			self currentWorld activeHand position y > 0 ] ]
-]
-
-{ #category : #'*Morphic-Base' }
-WorldState >> startMessageTally [
-
-	self class startMessageTally
+			self world activeHand position y > 0 ] ]
 ]
 
 { #category : #'*Morphic-Base' }
@@ -130,7 +130,7 @@ mouse pointer goes to the top of the screen')
 
 	TimeProfiler onBlock: [
 		MorphicRenderLoop new doOneCycleWhile: [ 
-			self currentWorld activeHand position y > 10 ] ]
+			self world activeHand position y > 10 ] ]
 ]
 
 { #category : #'*Morphic-Base' }
@@ -169,32 +169,34 @@ WorldState class >> systemOn: aBuilder [
 					(aBuilder item: #'Start drawing again')
 						help: 'Resume the drawing after a draw error of the world.';
 						order: 1;
-						action: [ self currentWorld resumeAfterDrawError ].
+						action: [ self world resumeAfterDrawError ].
 					(aBuilder item: #'Start stepping again')
 						help: 'Resume stepping of Morph after an error has occured.';
 						order: 2;
-						action: [ self currentWorld resumeAfterStepError ].
+						action: [ self world resumeAfterStepError ].
 					(aBuilder item: #'Restore display')
 						help: 'Restore Morphic display.';
 						order: 3;
-						action: [ self currentWorld restoreMorphicDisplay ].
+						action: [ self world restoreMorphicDisplay ].
 					aBuilder withSeparatorAfter ] ]
 ]
 
 { #category : #'*Morphic-Base' }
 WorldState class >> windowsOn: aBuilder [
 	<worldMenu>
+	| world |
+	world := aBuilder model world.
 	(aBuilder item: #Windows)
 		order: 90;
 		with: [ (aBuilder item: #'Collapse all windows')
-				action: [ self currentWorld collapseAll ];
+				action: [ world collapseAll ];
 				help: 'Reduce all open windows to collapsed forms that only show titles' translated.
 			(aBuilder item: #'Expand all windows')
 				iconName: #expandBoxIcon;
-				action: [ self currentWorld expandAll ];
+				action: [ world expandAll ];
 				help: 'Expand all collapsed windows back to their expanded forms' translated.
 			(aBuilder item: #'Fit all windows')
-				action: [ self currentWorld fitAllVisibleWindows ];
+				action: [ self world fitAllVisibleWindows ];
 				help: 'Fit all open windows as visible in World' translated.
 			(aBuilder item: #'Close all debuggers')
 				help: 'Close all opened debugger in the image.';
@@ -203,13 +205,13 @@ WorldState class >> windowsOn: aBuilder [
 				action: [ SystemWindow sendTopWindowToBack ];
 				help: 'Make the topmost window become the backmost one, and activate the window just beneath it.' translated.
 			(aBuilder item: #'Move windows onscreen')
-				action: [ self currentWorld bringWindowsFullOnscreen ];
+				action: [ world bringWindowsFullOnscreen ];
 				help: 'Make all windows fully visible on the screen' translated.
 			(aBuilder item: #'Delete unchanged windows')
-				action: [ self currentWorld closeUnchangedWindows ];
+				action: [ world closeUnchangedWindows ];
 				help: 'Deletes all windows that do not have unsaved text edits.' translated.
 			(aBuilder item: #'Delete all windows discarding edits')
-				action: [ self currentWorld closeAllWindowsDiscardingChanges ];
+				action: [ world closeAllWindowsDiscardingChanges ];
 				help: 'Deletes all windows even if they have unsaved text edits.' translated.
 			(aBuilder item: #'Toggle full screen mode')
 				action: [ Display toggleFullscreen ];

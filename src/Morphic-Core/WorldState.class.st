@@ -275,7 +275,7 @@ WorldState class >> screenShotCommandOn: aBuilder [
 	<worldMenu>
 	(aBuilder item: #Screenshot)
 		parent: #System;
-		target: self currentWorld;
+		target: aBuilder model world ;
 		order: 99;
 		selector: #makeAScreenshot;
 		label: 'Screenshot';
@@ -868,6 +868,12 @@ WorldState >> updateToNewResolution: originalEvent [
 WorldState >> viewBox [
 
 	^ self worldRenderer viewBox
+]
+
+{ #category : #accessing }
+WorldState >> world [
+
+	^ worldRenderer world
 ]
 
 { #category : #'worldmenu building' }

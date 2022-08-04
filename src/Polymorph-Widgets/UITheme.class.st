@@ -1111,7 +1111,7 @@ UITheme >> chooseIn: aThemedMorph title: title labels: labels values: values lin
 		labels: labels;
 		lines: (lines ifNil: [#()]);
 		model: values.
-	^ dialog openModal choice
+	^ (dialog openModalInWorld: aThemedMorph world) choice
 ]
 
 { #category : #services }

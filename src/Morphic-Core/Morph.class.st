@@ -2141,7 +2141,6 @@ Morph >> displayExtentChanged [
 
 { #category : #settings }
 Morph >> displayScaleFactor [
-
 	^ self currentWorld displayScaleFactor
 ]
 
@@ -6605,7 +6604,8 @@ Morph >> veryDeepInner: deepCopier [
 { #category : #'base - worlds' }
 Morph >> viewBox [
 
-	^ self world viewBox
+	 owner ifNil: [ ^nil ].
+	 ^ owner viewBox
 ]
 
 { #category : #drawing }

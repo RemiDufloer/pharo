@@ -1474,14 +1474,14 @@ SystemWindow >> offerWindowMenu [
 	aMenu := self buildWindowMenu.
 	model ifNotNil:
 		[model addModelItemsToWindowMenu: aMenu].
-	aMenu popUpEvent: self currentEvent in: self world
+	aMenu popUpEvent: self currentEvent in: self owner
 ]
 
 { #category : #'opening/closing' }
 SystemWindow >> openInWindow: aMorph [
 
 	| window |
-	window := aMorph openInWindowOnWorld: self world.
+	window := aMorph openInWindowOnWorld: self owner.
 	window model: self.
 	aMorph updateWindowTitle.
 	window minimumExtent: 650@500.0

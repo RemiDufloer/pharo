@@ -1,7 +1,7 @@
-Extension { #name : #DestkopMorph }
+Extension { #name : #DesktopMorph }
 
 { #category : #'*Morphic-Base' }
-DestkopMorph >> acceptDroppingMorph: dropped event: evt [
+DesktopMorph >> acceptDroppingMorph: dropped event: evt [
 
 	"The supplied morph, known to be acceptable to the receiver, is now to be assimilated; the precipitating event is supplied"
 
@@ -17,7 +17,7 @@ DestkopMorph >> acceptDroppingMorph: dropped event: evt [
 ]
 
 { #category : #'*Morphic-Base' }
-DestkopMorph >> dispatchKeystroke: anEvent [
+DesktopMorph >> dispatchKeystroke: anEvent [
 
 	"A keystroke was hit when no keyboard focus was set, so it is sent here to the world instead."
 
@@ -38,7 +38,7 @@ DestkopMorph >> dispatchKeystroke: anEvent [
 ]
 
 { #category : #'*Morphic-Base' }
-DestkopMorph >> install [
+DesktopMorph >> install [
 
 	"This method should not be used. This is for backward compatibility and will be replaced
 	with a newer solution"
@@ -63,7 +63,7 @@ DestkopMorph >> install [
 ]
 
 { #category : #'*Morphic-Base' }
-DestkopMorph >> mouseDown: evt [
+DesktopMorph >> mouseDown: evt [
 
 	super mouseDown: evt.
 	self currentWindow ifNotNil: [ :topWindow | 

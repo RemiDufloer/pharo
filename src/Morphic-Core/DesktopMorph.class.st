@@ -1,5 +1,5 @@
 Class {
-	#name : #DestkopMorph,
+	#name : #DesktopMorph,
 	#superclass : #PasteUpMorph,
 	#instVars : [
 		'tools'
@@ -10,38 +10,26 @@ Class {
 	#category : #'Morphic-Core-Worlds'
 }
 
-{ #category : #accessing }
-DestkopMorph class >> allowDropFiles [
-	"If this option is set to false, the world morph will no longer be able to receive droped files. This help to protect private code while deploying an application."
-	 
-	^ AllowDropFiles ifNil: [ AllowDropFiles := true ]
-]
-
-{ #category : #'startup - shutdown' }
-DestkopMorph class >> cleanUp [
-	self currentWorld cleanseOtherworldlySteppers
-]
-
 { #category : #setting }
-DestkopMorph class >> defaultWorldColor [
+DesktopMorph class >> defaultWorldColor [
 
 	^ Color r: 0.937 g: 0.937 b: 0.937
 ]
 
 { #category : #setting }
-DestkopMorph class >> displayScaleFactor [
+DesktopMorph class >> displayScaleFactor [
 
 	^ displayScaleFactor ifNil: [ displayScaleFactor := 1 ]
 ]
 
 { #category : #setting }
-DestkopMorph class >> displayScaleFactor: aNumber [
+DesktopMorph class >> displayScaleFactor: aNumber [
 
 	displayScaleFactor := aNumber
 ]
 
 { #category : #setting }
-DestkopMorph class >> displayScaleFactorSettingsOn: aBuilder [ 
+DesktopMorph class >> displayScaleFactorSettingsOn: aBuilder [ 
 	<systemsettings>
 	
 	(aBuilder range: #scaleFactor)
@@ -55,19 +43,19 @@ DestkopMorph class >> displayScaleFactorSettingsOn: aBuilder [
 ]
 
 { #category : #accessing }
-DestkopMorph class >> scaleFactor [
+DesktopMorph class >> scaleFactor [
 	
 	^ World scaleFactor
 ]
 
 { #category : #accessing }
-DestkopMorph class >> scaleFactor: aValue [
+DesktopMorph class >> scaleFactor: aValue [
 	
 	World scaleFactor: aValue
 ]
 
 { #category : #menus }
-DestkopMorph >> addStandardHaloMenuItemsTo: aMenu hand: aHandMorph [
+DesktopMorph >> addStandardHaloMenuItemsTo: aMenu hand: aHandMorph [
 
 	"Add standard halo items to the menu"
 
@@ -75,20 +63,20 @@ DestkopMorph >> addStandardHaloMenuItemsTo: aMenu hand: aHandMorph [
 ]
 
 { #category : #accessing }
-DestkopMorph >> announcer [
+DesktopMorph >> announcer [
 
 	WorldAnnouncer ifNil: [ WorldAnnouncer := Announcer new ].
 	^ WorldAnnouncer
 ]
 
 { #category : #cursor }
-DestkopMorph >> beCursorOwner [
+DesktopMorph >> beCursorOwner [
 
 	owner beCursorOwner
 ]
 
 { #category : #'meta-actions' }
-DestkopMorph >> buildMetaMenu: evt [
+DesktopMorph >> buildMetaMenu: evt [
 
 	| menu |
 	menu := UIManager default newMenuIn: self for: self.
@@ -97,7 +85,7 @@ DestkopMorph >> buildMetaMenu: evt [
 ]
 
 { #category : #'menu & halo' }
-DestkopMorph >> contentsMenu: aMenu [
+DesktopMorph >> contentsMenu: aMenu [
 
 	"Build the menu used from PopUpContentsMenu:"
 
@@ -136,44 +124,44 @@ DestkopMorph >> contentsMenu: aMenu [
 ]
 
 { #category : #'menu & halo' }
-DestkopMorph >> contentsMenuTitle [
+DesktopMorph >> contentsMenuTitle [
 
 	^ 'World contents' translated
 ]
 
 { #category : #'world menu' }
-DestkopMorph >> discoveredWorldMenu [
+DesktopMorph >> discoveredWorldMenu [
 
 	^ worldState discoveredWorldMenu
 ]
 
 { #category : #accessing }
-DestkopMorph >> displayArea [
+DesktopMorph >> displayArea [
 
 	^ owner worldState worldRenderer usableArea.
 ]
 
 { #category : #geometry }
-DestkopMorph >> extent: aPoint [
+DesktopMorph >> extent: aPoint [
 
 	super extent: aPoint.
 	owner worldState viewBox ifNotNil: [ owner worldState invalidate ]
 ]
 
 { #category : #'geometry - testing' }
-DestkopMorph >> fullContainsPoint: pt [
+DesktopMorph >> fullContainsPoint: pt [
 
 	^ bounds containsPoint: pt
 ]
 
 { #category : #'world state' }
-DestkopMorph >> haloMorphs [
+DesktopMorph >> haloMorphs [
 
 	^ owner hands collect: [ :h | h halo ] thenSelect: [ :halo | halo notNil ]
 ]
 
 { #category : #initialization }
-DestkopMorph >> initialize [
+DesktopMorph >> initialize [
 
 	| taskBarWindow |
 	super initialize.
@@ -188,18 +176,18 @@ DestkopMorph >> initialize [
 	MenubarMorph openInWorld: self.
 	taskBarWindow := TaskbarMorphForDesktop newWithDesktop: self.
 	self addMorphFront: taskBarWindow.
-	taskBarWindow intoWorld: self
+	taskBarWindow intoWorld: self.
 ]
 
 { #category : #initialization }
-DestkopMorph >> initializeTools [
+DesktopMorph >> initializeTools [
 
 	tools := PharoCommonTools new.
 	tools world: self.
 ]
 
 { #category : #'world menu' }
-DestkopMorph >> invokeWorldMenu: evt [
+DesktopMorph >> invokeWorldMenu: evt [
 	"Put up the world menu, triggered by the passed-in event."
 	| menu |
 	
@@ -214,54 +202,60 @@ DestkopMorph >> invokeWorldMenu: evt [
 ]
 
 { #category : #'meta-actions' }
-DestkopMorph >> isWorldMorph [
+DesktopMorph >> isWorldMorph [
 
 	^ true
 ]
 
 { #category : #accessing }
-DestkopMorph >> scaleFactor: newScaleFactor [
+DesktopMorph >> scaleFactor: newScaleFactor [
 
 	self setProperty: #scaleFactor toValue: newScaleFactor
 ]
 
 { #category : #initialization }
-DestkopMorph >> tools [
+DesktopMorph >> tools [
 
 	^ tools
 ]
 
 { #category : #'menu & halo' }
-DestkopMorph >> truncatedMenuLabelFor: aWindowLabel [
+DesktopMorph >> truncatedMenuLabelFor: aWindowLabel [
 
 	^ aWindowLabel truncateWithElipsisTo: 47
 ]
 
 { #category : #'halos and balloon help' }
-DestkopMorph >> wantsDirectionHandles [
+DesktopMorph >> wantsDirectionHandles [
 
 	^ false
 ]
 
 { #category : #'event handling' }
-DestkopMorph >> wantsDropFiles: anEvent [
+DesktopMorph >> wantsDropFiles: anEvent [
 	"We check if the WorldMorph is configured to be able to receive droped files. During the deployment of an application this option might be disabled."
 	
 	^ self class allowDropFiles
 ]
 
 { #category : #private }
-DestkopMorph >> wantsDroppedMorph: aMorph event: evt [
+DesktopMorph >> wantsDroppedMorph: aMorph event: evt [
 	^ true
 ]
 
 { #category : #'menu & halo' }
-DestkopMorph >> wantsWindowEvent: anEvent [
+DesktopMorph >> wantsWindowEvent: anEvent [
 	^ true
 ]
 
+{ #category : #accessing }
+DesktopMorph >> world [
+ 
+	^owner ifNil: [^ self]
+]
+
 { #category : #'world menu' }
-DestkopMorph >> worldMenu [
+DesktopMorph >> worldMenu [
 
 	| menu |
 	menu := PragmaMenuBuilder pragmaKeyword: #worldMenu model: self.

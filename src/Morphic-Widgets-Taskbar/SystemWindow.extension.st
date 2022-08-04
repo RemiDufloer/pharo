@@ -81,7 +81,7 @@ SystemWindow >> taskbarButtonEntered: aButton event: evt in: aMorph [
 			ifNotNil: [^self].
 		self setProperty: #taskbarThumbnail toValue: thumb.
 		thumb bottomLeft: ((aButton left min: aButton owner right - thumb width)@ (aButton owner top - 4)).
-		thumb openInWorld]
+		thumb openInWorld: self world]
 ]
 
 { #category : #'*Morphic-Widgets-Taskbar' }

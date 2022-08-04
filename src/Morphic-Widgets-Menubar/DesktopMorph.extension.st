@@ -1,7 +1,7 @@
-Extension { #name : #DestkopMorph }
+Extension { #name : #DesktopMorph }
 
 { #category : #'*Morphic-Widgets-Menubar' }
-DestkopMorph >> menubar [
+DesktopMorph >> menubar [
 
 	^ self submorphs detect: #isMenubar
 ]
