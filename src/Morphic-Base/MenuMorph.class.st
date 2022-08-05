@@ -1225,7 +1225,7 @@ MenuMorph >> popUpEvent: evt in: aWorld [
 	"Present this menu in response to the given event."
 
 	| aHand aPosition |
-	aHand := evt ifNotNil: [evt hand] ifNil: [ self activeHand ].
+	aHand := evt ifNotNil: [aWorld world activeHand .] ifNil: [ self activeHand ].
 	aPosition := aHand position truncated.
 	^ self popUpAt: aPosition forHand: aHand in: aWorld
 ]

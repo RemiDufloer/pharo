@@ -89,11 +89,11 @@ WorldState class >> sourcesWorldMenuOn: aBuilder [
 { #category : #'*Morphic-Base' }
 WorldState >> startMessageTally [
 
-	self class startMessageTally
+	self class startMessageTallyInWorld: self world
 ]
 
 { #category : #'*Morphic-Base' }
-WorldState class >> startMessageTally [
+WorldState class >> startMessageTallyInWorld: aWorld [
 
 	(self confirm: 'MessageTally will start now,
 and stop when the cursor goes
@@ -102,7 +102,7 @@ to the top of the screen' translated)
 
 	TimeProfiler spyAllOn: [
 		MorphicRenderLoop new doOneCycleWhile: [ 
-			self world activeHand position y > 0 ] ]
+			 aWorld  activeHand position y > 0 ] ]
 ]
 
 { #category : #'*Morphic-Base' }
@@ -121,7 +121,13 @@ WorldState >> startStepping: aMorph at: scheduledTime selector: aSelector argume
 ]
 
 { #category : #'*Morphic-Base' }
-WorldState class >> startThenBrowseMessageTally [
+WorldState >> startThenBrowseMessageTally [
+
+	self class startThenBrowseMessageTallyInWorld: self world
+]
+
+{ #category : #'*Morphic-Base' }
+WorldState class >> startThenBrowseMessageTallyInWorld: aWorld [
 	"Tally only the UI process"
 	
 	(self confirm: 'MessageTally the UI process until the
@@ -130,13 +136,7 @@ mouse pointer goes to the top of the screen')
 
 	TimeProfiler onBlock: [
 		MorphicRenderLoop new doOneCycleWhile: [ 
-			self world activeHand position y > 10 ] ]
-]
-
-{ #category : #'*Morphic-Base' }
-WorldState >> startThenBrowseMessageTally [
-
-	self class startThenBrowseMessageTally
+			aWorld  activeHand position y > 10 ] ]
 ]
 
 { #category : #'*Morphic-Base' }

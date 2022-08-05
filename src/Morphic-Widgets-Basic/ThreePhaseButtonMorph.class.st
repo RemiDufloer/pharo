@@ -113,7 +113,7 @@ ThreePhaseButtonMorph >> doButtonAction: evt [
 			arguments
 		].
 		target perform: actionSelector withArguments: moreArgs
-	]
+	]inWorld: self world
 ]
 
 { #category : #drawing }

@@ -23,21 +23,6 @@ Rectangle >> drawReverseFrame: rect [
 ]
 
 { #category : #'*Morphic-Base' }
-Rectangle class >> fromUser [
-	"Answer an instance of me that is determined by having the user 
-	designate the top left and bottom right corners. The gridding for user 
-	selection is 1@1."
-
-	^ self fromUser: 1 @ 1
-]
-
-{ #category : #'*Morphic-Base' }
-Rectangle class >> fromUser: gridPoint [ 
-
-	^ self fromUser: gridPoint inWorld: self currentWorld
-]
-
-{ #category : #'*Morphic-Base' }
 Rectangle class >> fromUser: gridPoint inWorld: aWorld [
 	"Answer a Rectangle that is determined by having the user 
 	designate the top left and bottom right corners. 

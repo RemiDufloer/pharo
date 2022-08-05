@@ -178,7 +178,7 @@ ToolRegistry >> openRecentChangesLog [
 
 { #category : #menu }
 ToolRegistry >> openTestRunner [
-	self using: #testRunner do: [:tool | tool open ]
+	TestRunner openInWorld: world
 ]
 
 { #category : #menu }

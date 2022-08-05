@@ -893,3 +893,9 @@ WorldState >> worldRenderer: anObject [
 	worldRenderer := anObject.
 	worldRenderer activate
 ]
+
+{ #category : #accessing }
+WorldState >> worldState [
+
+	^ self
+]

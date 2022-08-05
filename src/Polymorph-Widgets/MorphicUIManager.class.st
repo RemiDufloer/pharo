@@ -50,10 +50,10 @@ MorphicUIManager class >> uiProcess [
 { #category : #private }
 MorphicUIManager >> activate [
 
-	self currentWorld worldState worldRenderer: (AbstractWorldRenderer detectCorrectOneForWorld: self currentWorld).
-	self currentWorld currentCursor: self currentWorld currentCursor.
+	self world worldState worldRenderer: (AbstractWorldRenderer detectCorrectOneForWorld: self world).
+	self world currentCursor: self world currentCursor.
 		
-	self currentWorld ifNotNil: [:world | world restoreMorphicDisplay].
+	self world ifNotNil: [:world | world restoreMorphicDisplay].
 	WorldMorph extraWorldList do: [:each | each restoreMorphicDisplay].
 
 	activeTranscript 
@@ -348,7 +348,7 @@ MorphicUIManager >> deactivate [
 	self triggerEvent: #aboutToLeaveWorld.
 	WorldMorph extraWorldList do: [:world | world triggerEvent: #aboutToLeaveWorld ].	
 	
-	self currentWorld worldState worldRenderer: (NullWorldRenderer forWorld: self currentWorld).
+	self world worldState worldRenderer: (NullWorldRenderer forWorld: self world).
 ]
 
 { #category : #debug }
@@ -524,16 +524,16 @@ MorphicUIManager >> modalMorph [
 	[foundWorld or: [sender isNil]]
 		whileFalse: [receiver := sender receiver.
 			((sender selector = #invokeWorldMenu:)
-					or: [receiver == self currentWorld
+					or: [receiver == self world
 							and: [sender selector == #handleEvent:
 									or: [sender selector == #findWindow:]]])
 				ifTrue: [foundWorld := true]
 				ifFalse: [sender := sender sender]].
 	foundWorld
 		ifTrue: [^ receiver world
-				ifNil: [self currentWorld]].
+				ifNil: [self world]].
 	^ SystemWindow topWindow
-		ifNil: [self currentWorld]
+		ifNil: [self world]
 ]
 
 { #category : #'ui requests' }
@@ -597,7 +597,7 @@ MorphicUIManager >> onFontsChanged [
 	StringMorph allSubInstancesDo: [ :s | s layoutChanged ].
 	TextMorph allSubInstancesDo: [ :s | s layoutChanged ].
 	SystemWindow allInstancesDo: [ :w | [ w update: #relabel ] on: Error do: [ :ex | ] ].
-	self currentWorld ifNotNil: [ :w | w changed ].
+	self world ifNotNil: [ :w | w changed ].
 ]
 
 { #category : #events }
@@ -614,7 +614,7 @@ MorphicUIManager >> onPrimitiveError: aString [
 								ifFalse: [s cr; print: (context := context sender)]]].
 	Stdio stderr << message.
 	"init hands and redisplay" 
-	self currentWorld install
+	self world install
 ]
 
 { #category : #accessing }
@@ -713,14 +713,14 @@ MorphicUIManager >> requestPassword: aStringOrText [
 
 { #category : #'ui requests' }
 MorphicUIManager >> restoreDisplay [
-	self currentWorld fullRepaintNeeded
+	self world fullRepaintNeeded
 ]
 
 { #category : #'ui requests' }
 MorphicUIManager >> restoreDisplayAfter: aBlock [
 	aBlock value.
-	self currentWorld activeHand waitButton.
-	self currentWorld fullRepaintNeeded.
+	self world  activeHand waitButton.
+	self world fullRepaintNeeded.
 ]
 
 { #category : #'ui process' }

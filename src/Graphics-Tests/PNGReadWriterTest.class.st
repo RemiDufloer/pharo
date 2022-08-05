@@ -405,12 +405,6 @@ PNGReadWriterTest >> setUp [
 	fileName := nil.
 ]
 
-{ #category : #running }
-PNGReadWriterTest >> tearDown [
-	self currentWorld changed.
-	super tearDown
-]
-
 { #category : #'tests - bits' }
 PNGReadWriterTest >> test16Bit [
 	self encodeAndDecodeForm: (self drawStuffOn: (Form extent: 33@33 depth: 16))

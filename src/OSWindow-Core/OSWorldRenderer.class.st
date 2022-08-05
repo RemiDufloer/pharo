@@ -132,7 +132,7 @@ OSWorldRenderer >> doActivate [
 	world worldState doFullRepaint.
 	world displayWorld.
 	
-	OSWindowClipboard new beDefault.
+	OSWindowClipboard newByRenderer: self.
 ]
 
 { #category : #operations }
@@ -208,7 +208,7 @@ OSWorldRenderer >> initialize [
 
 	super initialize.
 	windowCloseAction := [ 
-	                     self currentWorld defer: [ 
+	                     self world defer: [ 
 		                     WorldState quitSession ] ]
 ]
 

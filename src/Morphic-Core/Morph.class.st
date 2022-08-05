@@ -5484,7 +5484,7 @@ Morph >> setToAdhereToEdge: anEdge [
 	self setProperty: #edgeToAdhereTo toValue: anEdge.
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #structure }
 Morph >> settingWorld [
 
 	| world |
@@ -6139,7 +6139,7 @@ Morph >> themeChanged [
 Morph >> tileBottom [
 
 	| max |
-	max := RealEstateAgent maximumUsableArea.
+	max := RealEstateAgent maximumUsableAreaInWorld: self world.
 	self bounds: (max leftCenter corner: max corner)
 ]
 
@@ -6147,7 +6147,7 @@ Morph >> tileBottom [
 Morph >> tileBottomLeft [
 
 	| max |
-	max := RealEstateAgent maximumUsableArea.
+	max := RealEstateAgent maximumUsableAreaInWorld: self world.
 	self bounds: (max leftCenter corner: max bottomCenter)
 ]
 
@@ -6155,7 +6155,7 @@ Morph >> tileBottomLeft [
 Morph >> tileBottomRight [
 
 	| max |
-	max := RealEstateAgent maximumUsableArea.
+	max := RealEstateAgent maximumUsableAreaInWorld: self world.
 	self bounds: (max center corner: max corner)
 ]
 
@@ -6163,7 +6163,7 @@ Morph >> tileBottomRight [
 Morph >> tileCenter [
 
 	| max initial |
-	max := RealEstateAgent maximumUsableArea.
+	max := RealEstateAgent maximumUsableAreaInWorld: self world.
 	initial := self initialExtent.
 	self bounds: ((max center - (initial/2)) extent: initial)
 ]
@@ -6172,7 +6172,7 @@ Morph >> tileCenter [
 Morph >> tileFull [
 
 	| max |
-	max := RealEstateAgent maximumUsableArea.
+	max := RealEstateAgent maximumUsableAreaInWorld: self world.
 	self bounds: max
 ]
 
@@ -6180,7 +6180,7 @@ Morph >> tileFull [
 Morph >> tileLeft [
 
 	| max |
-	max := RealEstateAgent maximumUsableArea.
+	max := RealEstateAgent maximumUsableAreaInWorld: self world.
 	self bounds: (max topLeft corner: max bottomCenter)
 ]
 
@@ -6188,7 +6188,7 @@ Morph >> tileLeft [
 Morph >> tileRight [
 
 	| max |
-	max := RealEstateAgent maximumUsableArea.
+	max := RealEstateAgent maximumUsableAreaInWorld: self world.
 	self bounds: (max topCenter corner: max corner)
 ]
 
@@ -6196,7 +6196,7 @@ Morph >> tileRight [
 Morph >> tileTop [
 
 	| max |
-	max := RealEstateAgent maximumUsableArea.
+	max := RealEstateAgent maximumUsableAreaInWorld: self world.
 	self bounds: (max topLeft corner: max rightCenter)
 ]
 
@@ -6204,7 +6204,7 @@ Morph >> tileTop [
 Morph >> tileTopLeft [
 
 	| max |
-	max := RealEstateAgent maximumUsableArea.
+	max := RealEstateAgent maximumUsableAreaInWorld: self world.
 	self bounds: (max topLeft corner: max center)
 ]
 
@@ -6212,7 +6212,7 @@ Morph >> tileTopLeft [
 Morph >> tileTopRight [
 
 	| max |
-	max := RealEstateAgent maximumUsableArea.
+	max := RealEstateAgent maximumUsableAreaInWorld: self world.
 	self bounds: (max topCenter corner: max rightCenter)
 ]
 

@@ -598,7 +598,7 @@ SystemWindow >> fastAnimateRectangles: rects [
 		merged := merged merge: r.
 		delay wait].
 	merged := merged expandBy: 1.
-	self currentWorld invalidRect: merged from: self
+	self world invalidRect: merged from: self
 ]
 
 { #category : #'*Polymorph-Widgets' }
