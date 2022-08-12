@@ -23,9 +23,8 @@ Class {
 { #category : #menu }
 Finder class >> finderMenuOn: aBuilder [ 
 	<worldMenu>
-
 	(aBuilder item: #Finder)
-		action: [self open];
+		action: [self openInWorld: aBuilder model world];
 		order: 2;
 		parent: #Searching;
 		help: 'Looking for something ?';
@@ -43,6 +42,12 @@ Finder class >> open [
 	<script>
 	
 	^ self new open
+]
+
+{ #category : #menu }
+Finder class >> openInWorld: aWorld [
+	
+	^ self new openInWorld: aWorld
 ]
 
 { #category : #'tools registry' }
@@ -362,6 +367,13 @@ Finder >> open [
 	<script: 'self new open'>
 	
 	^ (FinderUI on: self) open
+]
+
+{ #category : #display }
+Finder >> openInWorld: aWorld [
+	<script: 'self new open'>
+	
+	^ (FinderUI on: self) openInWorld: aWorld
 ]
 
 { #category : #accessing }

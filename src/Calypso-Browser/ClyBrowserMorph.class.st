@@ -522,12 +522,6 @@ ClyBrowserMorph >> openBy: aWindow [
 ]
 
 { #category : #'opening/closing' }
-ClyBrowserMorph >> openInWindow: aWindow [
-	
- 	self openInWindow: aWindow  inWorld: self currentWorld 
-]
-
-{ #category : #'opening/closing' }
 ClyBrowserMorph >> openInWindow: aWindow inWorld: aWorld [
 	| groupWindow myWindow |
 

@@ -30,7 +30,7 @@ RubTextFieldAreaTest >> simulatedKeyDownFromChar: aCharacter alt: useAlt ctrl: u
 		position: 0 @ 0
 		keyValue: code
 		charCode: code
-		hand: self currentWorld currentHand 
+		hand: self currentHand 
 		stamp: Time now.
 	event key: (KeyboardKey fromCharacter: aCharacter).
 	^ event
@@ -62,7 +62,7 @@ RubTextFieldAreaTest >> simulatedKeyStrokeFromChar: aCharacter alt: useAlt ctrl:
 		position: 0 @ 0
 		keyValue: code
 		charCode: code
-		hand: self currentWorld currentHand 
+		hand: self currentHand 
 		stamp: Time now.
 	^ event
 ]

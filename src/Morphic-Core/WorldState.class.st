@@ -884,7 +884,7 @@ WorldState >> worldMenu [
 { #category : #hands }
 WorldState >> worldRenderer [
 
-    ^ worldRenderer ifNil: [ worldRenderer := NullWorldRenderer forWorld: self currentWorld ]
+    ^ worldRenderer ifNil: [ worldRenderer := NullWorldRenderer forWorld: MiniWorld new ]
 ]
 
 { #category : #accessing }

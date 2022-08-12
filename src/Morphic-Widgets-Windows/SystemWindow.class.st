@@ -449,57 +449,6 @@ SystemWindow class >> wakeUpTopWindowUponStartup [
 				[TopWindow model modelWakeUpIn: TopWindow]]]
 ]
 
-{ #category : #'menu items' }
-SystemWindow class >> windowMenuOn: aBuilder [
-	"To inject your custom items in a specific place, note that each item increases in order by 1. For example, if you wanted your item to be the second item, you could give it an #order: 1.5"
-
-	<windowMenu>
-	| closableLabel draggableLabel maximizeLabel |
-	(aBuilder item: #Close)
-		order: 1.0;
-		action: [ aBuilder model closeBoxHit ];
-		iconName: #windowCloseForm;
-		enabledBlock: [ aBuilder model allowedToClose ];
-		withSeparatorAfter.
-	(aBuilder item: #About)
-		action: [ aBuilder model showAbout ];
-		iconName: #smallHelpIcon;
-		withSeparatorAfter.
-	(aBuilder item: #'Change title')
-		action: [ aBuilder model relabel ].
-	(aBuilder item: #'Copy title')
-		action: [ aBuilder model copyTitle ];
-		withSeparatorAfter.
-	(aBuilder item: #'Send to back')
-		action: [ aBuilder model sendToBack ].
-	(aBuilder item: #'Make next-to-topmost')
-		action: [ aBuilder model makeSecondTopmost ];
-		withSeparatorAfter.
-	(aBuilder item: #'Create window group')
-		action: [ aBuilder model createWindowGroup ];
-		withSeparatorAfter.
-	closableLabel := aBuilder model mustNotClose
-		ifFalse: [ #'Make unclosable' ]
-		ifTrue: [ #'Make closable' ].
-	(aBuilder item: closableLabel)
-		action: [ 
-			(closableLabel = #'Make unclosable')
-				ifTrue: [ aBuilder model makeUnclosable ] 
-				ifFalse:[ aBuilder model makeClosable] ].
-	draggableLabel := aBuilder model isSticky
-		ifTrue: [ #'Make draggable' ]
-		ifFalse: [ #'Make undraggable' ].
-	(aBuilder item: draggableLabel)
-		action: [ aBuilder model toggleStickiness ];
-		withSeparatorAfter.
-	maximizeLabel := aBuilder model isMaximized
-		ifTrue: [ #Restore ]
-		ifFalse: [ #Maximize ].
-	(aBuilder item: maximizeLabel)
-		action: [ aBuilder model expandBoxHit ];
-		iconName: #windowMaximizeForm
-]
-
 { #category : #'top window' }
 SystemWindow class >> windowsIn: aWorld satisfying: windowBlock [
 	| windows |
@@ -852,19 +801,6 @@ SystemWindow >> createBox [
 		 borderWidth: 0.
 
 	^ box
-]
-
-{ #category : #'menu actions' }
-SystemWindow >> createWindowGroup [
-	| group pos ext |
-	pos := self position.
-	ext := self extent.
-	group := GroupWindowMorph new.
-	group addWindow: self.
-	(group openInWindowLabeled: 'Group: ' translated , self label)
-		extent: ext;
-		position: pos;
-		model: group
 ]
 
 { #category : #initialization }

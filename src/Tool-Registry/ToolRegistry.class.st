@@ -177,6 +177,11 @@ ToolRegistry >> openRecentChangesLog [
 ]
 
 { #category : #menu }
+ToolRegistry >> openSpotter [
+	^ self spotter openInWorld: world
+]
+
+{ #category : #menu }
 ToolRegistry >> openTestRunner [
 	TestRunner openInWorld: world
 ]

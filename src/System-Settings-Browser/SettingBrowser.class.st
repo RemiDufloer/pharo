@@ -606,6 +606,14 @@ SettingBrowser >> newTreeHolder [
 ]
 
 { #category : #'user interface' }
+SettingBrowser >> open [ 
+
+	self openInWorld: self currentWorld
+	
+	
+]
+
+{ #category : #'user interface' }
 SettingBrowser >> openInWorld: aWorld [
 	
 	Cursor wait
