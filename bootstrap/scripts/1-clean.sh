@@ -7,6 +7,6 @@ set -e
 
 SCRIPTS="$(cd "$(dirname "${BASH_SOURCE[0]}")" ; pwd -P)"
 
-. ${SCRIPTS}/envvars.sh
+. "${SCRIPTS}/envvars.sh"
 
 rm -rf "${BOOTSTRAP_CACHE}"

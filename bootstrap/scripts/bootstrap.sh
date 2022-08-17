@@ -26,20 +26,20 @@ set -e
 
 SCRIPTS="$(cd "$(dirname "${BASH_SOURCE[0]}")" ; pwd -P)"
 
-. ${SCRIPTS}/envvars.sh
+. "${SCRIPTS}/envvars.sh"
 
 #
 # Remove any artifacts from previous runs
 #
-${SCRIPTS}/1-clean.sh
+"${SCRIPTS}/1-clean.sh"
 #
 # Fetch all prerequisites
 #
-${SCRIPTS}/2-download.sh
+"${SCRIPTS}/2-download.sh"
 #
 # Prepare the bootstrap environment
 #
-${SCRIPTS}/3-prepare.sh
+"${SCRIPTS}/3-prepare.sh"
 #
 # Build the new image
 #
