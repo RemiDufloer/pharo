@@ -149,20 +149,16 @@ WindowManagerTest >> testWindowShouldBeCreateAfterStartupWithGoodMorph [
 	manager openNewWindowWithRoot: Morph new.
 	manager openNewWindowWithRoot: Morph new.
 	manager openNewWindowWithRoot: Morph new.
-	
+
 	manager saveAllRoot.
-	manager saveAllAttributes .
+	manager saveAllAttributes.
 	manager deleteAll.
-	
+
 	manager startupRoot.
 
-	self assert: manager numberOfWindows  equals: 3.
-	
-	manager startupOpenWithAttributs.
-	
+	self assert: manager numberOfWindows equals: 3.
 
-	
-
+	manager startupOpenWithAttributes
 ]
 
 { #category : #tests }
@@ -187,21 +183,19 @@ WindowManagerTest >> testWindowShouldBeOpenAfterStartupWithGoodMorphWithGoodAttr
 	| newWindow |
 	newWindow := manager openNewWindowWithRoot: Morph new.
 
-	
+
 	manager saveAllRoot.
-	manager saveAllAttributes .
-	
+	manager saveAllAttributes.
+
 	manager deleteAll.
-	
+
 	manager startupRoot.
-	manager startupOpenWithAttributs.
-	
-	
-	self assert: manager allWindow first attributs  equals: newWindow attributs .
-	
+	manager startupOpenWithAttributes.
 
-	
 
+	self
+		assert: manager allWindow first attributs
+		equals: newWindow attributs
 ]
 
 { #category : #tests }

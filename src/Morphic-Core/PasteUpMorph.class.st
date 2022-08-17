@@ -216,20 +216,6 @@ PasteUpMorph >> checkSession [
 	"do nothing"
 ]
 
-{ #category : #stepping }
-PasteUpMorph >> cleanseOtherworldlySteppers [
-	"If the current project is a morphic one, then remove from its steplist
-	those morphs that are not really in the world"
-	"Utilities cleanseOtherworldlySteppers"
-	| old delta |
-	old := self world stepListSize.
-	self world steppingMorphsNotInWorld
-		do: [:m | m delete].
-	self world cleanseStepList.
-	(delta := old - self world stepListSize) > 0
-		ifTrue: [ self crTrace: delta asString , ' morphs removed from steplist' ]
-]
-
 { #category : #'Morphic-Base-Windows' }
 PasteUpMorph >> closeAllUnchangedWindows [
 	(self  windowsSatisfying: [:w | w model canDiscardEdits])

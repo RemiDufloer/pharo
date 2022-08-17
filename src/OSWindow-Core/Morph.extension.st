@@ -40,17 +40,14 @@ Morph >> openInExternalWindowModalCallback: aBlock [
 ]
 
 { #category : #'*OSWindow-Core' }
-Morph >> openInExternalWindowWithAttributs: aAttributs [
-	
+Morph >> openInExternalWindowWithAttributes: aAttributs [
+
 	| world |
-	world := self settingWorld .
-	
+	world := self buildWindowRootWorld.
+
 	self openInWorld: world.
-	self onAnnouncement: MorphDeleted do: [ :announce |
-		world ifNotNil: [
-			world delete
-		].
-		world := nil.
-	].
-	^ world openWithAttributs: aAttributs  .
+	self onAnnouncement: MorphDeleted do: [ :announce | 
+		world ifNotNil: [ world delete ].
+		world := nil ].
+	^ world openWithAttributes: aAttributs
 ]

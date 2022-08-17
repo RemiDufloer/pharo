@@ -42,18 +42,6 @@ DesktopMorph class >> displayScaleFactorSettingsOn: aBuilder [
 		range: (0.5 to: 5 by: 0.5)
 ]
 
-{ #category : #accessing }
-DesktopMorph class >> scaleFactor [
-	
-	^ World scaleFactor
-]
-
-{ #category : #accessing }
-DesktopMorph class >> scaleFactor: aValue [
-	
-	World scaleFactor: aValue
-]
-
 { #category : #menus }
 DesktopMorph >> addStandardHaloMenuItemsTo: aMenu hand: aHandMorph [
 

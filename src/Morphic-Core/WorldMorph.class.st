@@ -31,11 +31,6 @@ WorldMorph class >> allowDropFiles: anObject [
 	AllowDropFiles := anObject
 ]
 
-{ #category : #'startup - shutdown' }
-WorldMorph class >> cleanUp [
-	self currentWorld cleanseOtherworldlySteppers
-]
-
 { #category : #'extra worlds' }
 WorldMorph class >> cursorOwnerWorld [
 	^ CursorOwnerWorld ifNil: [ self currentWorld ]
@@ -118,18 +113,6 @@ WorldMorph class >> removeExtraWorld: aWorld [
 		ExtraWorldList size traceCr.
 	].
 	CursorOwnerWorld == aWorld ifTrue: [ CursorOwnerWorld := nil ].
-]
-
-{ #category : #setting }
-WorldMorph class >> scaleFactor [
-	
-	^ World scaleFactor
-]
-
-{ #category : #setting }
-WorldMorph class >> scaleFactor: aValue [
-	
-	World scaleFactor: aValue
 ]
 
 { #category : #operations }
@@ -520,9 +503,10 @@ WorldMorph >> stepListSize [
 
 { #category : #'project state' }
 WorldMorph >> steppingMorphsNotInWorld [
+
 	| all |
 	all := self allMorphs.
-	^ self listOfSteppingMorphs reject: [ :m | all includes: m ]	"self currentWorld steppingMorphsNotInWorld do: [:m | m delete]"
+	^ self listOfSteppingMorphs reject: [ :m | all includes: m ]
 ]
 
 { #category : #stepping }

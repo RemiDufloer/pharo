@@ -16,11 +16,11 @@ Class {
 	#name : #MiniWorld,
 	#superclass : #Morph,
 	#instVars : [
-		'worldRendered',
-		'state',
 		'root',
 		'backgroundMorph',
-		'manager'
+		'manager',
+		'worldState',
+		'worldRenderer'
 	],
 	#category : #'Morphic-Base'
 }
@@ -51,13 +51,13 @@ MiniWorld class >> new: aObject [
 { #category : #operations }
 MiniWorld >> activateCursor: aCursor withMask: maskForm [
 
-	state worldRenderer activateCursor: aCursor withMask: maskForm
+	worldState worldRenderer activateCursor: aCursor withMask: maskForm
 ]
 
 { #category : #structure }
 MiniWorld >> activeHand [
 
-	^ state activeHand
+	^ worldState activeHand
 ]
 
 { #category : #stepping }
@@ -65,7 +65,7 @@ MiniWorld >> addAlarm: aSelector withArguments: argArray for: aTarget at: schedu
 
 	"Add a new alarm with the given set of parameters"
 
-	state
+	worldState
 		addAlarm: aSelector
 		withArguments: argArray
 		for: aTarget
@@ -78,7 +78,7 @@ MiniWorld >> addHand: aHandMorph [
 	"Add the given hand to the list of hands for this world."
 
 	aHandMorph owner ifNotNil: [ aHandMorph owner removeHand: aHandMorph ].
-	state addHand: aHandMorph.
+	worldState addHand: aHandMorph.
 	aHandMorph privateOwner: self.
 	^ aHandMorph
 ]
@@ -162,13 +162,13 @@ MiniWorld >> becomeActiveDuring: aBlock [
 { #category : #'world state' }
 MiniWorld >> currentCursor [
 
-	^ state currentCursor
+	^ worldState currentCursor
 ]
 
 { #category : #accessing }
 MiniWorld >> currentCursor: aCursor [
 
-	^ state currentCursor: aCursor
+	^ worldState currentCursor: aCursor
 ]
 
 { #category : #state }
@@ -214,7 +214,7 @@ MiniWorld >> displayScaleFactor [
 { #category : #display }
 MiniWorld >> displayWorld [
 
-	state displayWorld: self .
+	worldState displayWorld: self .
 
 
 ]
@@ -222,7 +222,7 @@ MiniWorld >> displayWorld [
 { #category : #state }
 MiniWorld >> displayWorldSafely [
 
-	state displayWorldSafely: self
+	worldState displayWorldSafely: self
 ]
 
 { #category : #display }
@@ -236,13 +236,13 @@ MiniWorld >> doOneCycleNow [
 
 	"see the comment in doOneCycleNowFor:"
 
-	state doOneCycleFor: self
+	worldState doOneCycleFor: self
 ]
 
 { #category : #display }
 MiniWorld >> fullRepaintNeeded [
 
-	state doFullRepaint.
+	worldState doFullRepaint.
 	self windowsSatisfying: [ :w | 
 		w makeMeVisible.
 		false ]
@@ -251,7 +251,7 @@ MiniWorld >> fullRepaintNeeded [
 { #category : #'world state' }
 MiniWorld >> handsDo: aBlock [
 
-	^ state handsDo: aBlock
+	^ worldState handsDo: aBlock
 ]
 
 { #category : #accessing }
@@ -259,8 +259,8 @@ MiniWorld >> initialize [
 
 	super initialize.
 	submorphs := OrderedCollection new.
-	worldRendered := MorphicRootRenderer new: self.
-	state := WorldState new.
+	worldRenderer := MorphicRootRenderer new: self.
+	worldState := WorldState new.
 	self color: Color veryLightGray.
 	
 ]
@@ -268,7 +268,7 @@ MiniWorld >> initialize [
 { #category : #'change reporting' }
 MiniWorld >> invalidRect: damageRect from: aMorph [
 	"Clip damage reports to my bounds, since drawing is clipped to my bounds."
-	state recordDamagedRect: (damageRect intersect: self bounds ifNone: [ ^ self ])
+	worldState recordDamagedRect: (damageRect intersect: self bounds ifNone: [ ^ self ])
 ]
 
 { #category : #testing }
@@ -305,11 +305,11 @@ MiniWorld >> modalUnlockFrom: aSystemWindow [
 { #category : #'API - opening' }
 MiniWorld >> open [
 
-	worldRendered := OSWorldRenderer forWorld: self.
-	worldRendered windowCloseAction: [ self worldRenderer deactivate ].
-	state activeHand: (self addHand: HandMorph new).
+	worldRenderer := OSWorldRenderer forWorld: self.
+	worldRenderer windowCloseAction: [ self worldRenderer deactivate ].
+	worldState activeHand: (self addHand: HandMorph new).
 	WorldMorph addExtraWorld: self.
-	worldRendered osWindow announcer weak
+	worldRenderer osWindow announcer weak
 		when: AnnouncementMiniWorld
 		send: #deleteByCross
 		to: self.
@@ -341,18 +341,18 @@ MiniWorld >> openModal: aSystemWindow [
 { #category : #opening }
 MiniWorld >> openWithAttributs: aAttributes [
 
-	worldRendered := (OSWorldRenderer forWorld: self withAttributs: aAttributes  ).
+	worldRenderer := (OSWorldRenderer forWorld: self withAttributs: aAttributes  ).
 	self worldState worldRenderer:
-		(worldRendered windowCloseAction: [ self worldRenderer deactivate ]).
-	state activeHand: (self addHand: HandMorph new).
+		(worldRenderer windowCloseAction: [ self worldRenderer deactivate ]).
+	worldState activeHand: (self addHand: HandMorph new).
 	WorldMorph addExtraWorld: self.
-	worldRendered osWindow  announcer weak when: AnnouncementMiniWorld send: #deleteByCross to: self
+	worldRenderer osWindow  announcer weak when: AnnouncementMiniWorld send: #deleteByCross to: self
 ]
 
 { #category : #'world simulation' }
 MiniWorld >> removeAlarm: aSelector for: aTarget [
 
-	^ state removeAlarm: aSelector for: aTarget
+	^ worldState removeAlarm: aSelector for: aTarget
 ]
 
 { #category : #display }
@@ -367,7 +367,7 @@ MiniWorld >> resizeBackgroundMorph [
 { #category : #display }
 MiniWorld >> restoreMorphicDisplay [
 
-	state worldRenderer restoreMorphicDisplay
+	worldState worldRenderer restoreMorphicDisplay
 ]
 
 { #category : #accessing }
@@ -384,13 +384,13 @@ MiniWorld >> root: aObject [
 
 { #category : #stepping }
 MiniWorld >> runLocalStepMethods [
-	state runLocalStepMethodsIn: self
+	worldState runLocalStepMethodsIn: self
 ]
 
 { #category : #'submorphs - add/remove' }
 MiniWorld >> runStepMethods [
 
-	state runStepMethodsIn: self
+	worldState runStepMethodsIn: self
 ]
 
 { #category : #setter }
@@ -412,7 +412,7 @@ MiniWorld >> startStepping: aMorph [
 { #category : #stepping }
 MiniWorld >> startStepping: aMorph at: scheduledTime selector: aSelector arguments: args stepTime: stepTime [
 
-	state
+	worldState
 		startStepping: aMorph
 		at: scheduledTime
 		selector: aSelector
@@ -429,13 +429,13 @@ MiniWorld >> step [
 { #category : #stepping }
 MiniWorld >> stopStepping: aMorph [
 
-	state stopStepping: aMorph
+	worldState stopStepping: aMorph
 ]
 
 { #category : #stepping }
 MiniWorld >> stopStepping: aMorph selector: aSelector [
 
-	state stopStepping: aMorph selector: aSelector
+	worldState stopStepping: aMorph selector: aSelector
 ]
 
 { #category : #'world simulation' }
@@ -448,12 +448,12 @@ MiniWorld >> viewBox [
 MiniWorld >> viewBox: newViewBox [
 	"I am now displayed within newViewBox; react."
 	(self viewBox isNil or: [ self viewBox extent ~= newViewBox extent ])
-		ifTrue: [ state invalidate ].
+		ifTrue: [ worldState invalidate ].
 
 	self position: newViewBox topLeft.
 	fullBounds := bounds := newViewBox.
 	
-	state handsDo: [ :hand | hand releaseKeyboardFocus ].
+	worldState handsDo: [ :hand | hand releaseKeyboardFocus ].
 	self fullRepaintNeeded
 ]
 
@@ -484,11 +484,11 @@ MiniWorld >> world [
 { #category : #accessing }
 MiniWorld >> worldRenderer [ 
 
-	^ worldRendered 
+	^ worldRenderer 
 ]
 
 { #category : #accessing }
 MiniWorld >> worldState [
 
-	^ state
+	^ worldState
 ]

@@ -26,8 +26,8 @@ Class {
 		'window',
 		'backend',
 		'manager',
-		'attributs',
-		'osWindow'
+		'osWindow',
+		'attributes'
 	],
 	#category : #'Morphic-Base'
 }
@@ -53,7 +53,7 @@ Window >> allowedToClose [
 { #category : #'submorphs - add/remove' }
 Window >> attributs [
 
-	^ attributs
+	^ attributes
 ]
 
 { #category : #'submorphs - add/remove' }
@@ -63,7 +63,7 @@ Window >> attributsSave [
 	osWindow title.
 	osWindow bounds.
 	
-	^ attributs 
+	^ attributes 
 ]
 
 { #category : #accessing }
@@ -76,7 +76,7 @@ Window >> backend [
 Window >> canBeMaximized [
 	"Answer whether we are not we can be maximised."
 
-	^ attributs  resizable  and: [ attributs maximized not ]
+	^ attributes  resizable  and: [ attributes maximized not ]
 ]
 
 { #category : #'submorphs - add/remove' }
@@ -149,26 +149,26 @@ Window >> isClosed [
 { #category : #testing }
 Window >> isMaximized [ 
 
-	^ attributs maximized 
+	^ attributes maximized 
 ]
 
 { #category : #testing }
 Window >> isMinimized [
 
-	^ attributs minimized
+	^ attributes minimized
 ]
 
 { #category : #testing }
 Window >> isNotMinimized [
 
-	^ attributs minimized not
+	^ attributes minimized not
 ]
 
 { #category : #testing }
 Window >> isNotRestored [
 	"Answer whether we are maximised or minimised."
 
-	^attributs  minimized or: [attributs maximized]
+	^attributes  minimized or: [attributes maximized]
 ]
 
 { #category : #testing }
@@ -204,7 +204,7 @@ Window >> minimize [
 Window >> open [
 	backend := window openInExternalWindow.
 	backend manager: manager .
-	attributs := self backend worldState worldRenderer osWindow initialAttributes.
+	attributes := self backend worldState worldRenderer osWindow initialAttributes.
 	osWindow := self backend worldState worldRenderer osWindow.
 	osWindow  announcer weak when: AnnouncementMiniWorld send: #deleteByCross to: self.
 	window announcer  weak when: AnnouncementWindow  send: #windowTitleChanged: to:  self
@@ -212,12 +212,12 @@ Window >> open [
 ]
 
 { #category : #open }
-Window >> openWithAttributs: aAttributs [ 
-	
+Window >> openWithAttributes: attributes [
 
-	backend := window openInExternalWindowWithAttributs: aAttributs .
-	attributs := self backend worldState worldRenderer osWindow initialAttributes.
-	osWindow := self backend worldState worldRenderer osWindow.
+	backend := window openInExternalWindowWithAttributes: attributes.
+	attributes := self backend worldState worldRenderer osWindow
+		             initialAttributes.
+	osWindow := self backend worldState worldRenderer osWindow
 ]
 
 { #category : #'submorphs - add/remove' }

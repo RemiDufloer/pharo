@@ -176,9 +176,9 @@ WindowManager >> saveAllRoot [
 ]
 
 { #category : #startup }
-WindowManager >> startupOpenWithAttributs [
+WindowManager >> startupOpenWithAttributes [
 	
-	1 to: allAttributes  size do: [ :a | (allWindow  at: a) openWithAttributs: (allAttributes at: a)  ]
+	1 to: allAttributes  size do: [ :a | (allWindow  at: a) openWithAttributes: (allAttributes at: a)  ]
 ]
 
 { #category : #'startup - shutdown' }

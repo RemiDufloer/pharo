@@ -1494,6 +1494,25 @@ Morph >> buildMetaMenu: evt [
 	^ menu
 ]
 
+{ #category : #structure }
+Morph >> buildWindowRootWorld [
+
+	"Build a new world morph that will be the root of a window.
+	Prepare it to have a single child that will take all of its space."
+	
+	| world |
+	world := MiniWorld new.
+
+	world
+		layoutPolicy: StackLayout new;
+		clipSubmorphs: true.
+
+	self
+		hResizing: #spaceFill;
+		vResizing: #spaceFill.
+	^ world
+]
+
 { #category : #menu }
 Morph >> buildYellowButtonMenu: aHand [ 
 	"build the morph menu for the yellow button"
@@ -5482,22 +5501,6 @@ Morph >> setToAdhereToEdge: anEdge [
 	anEdge ifNil: [^ self].
 	anEdge == #none ifTrue: [^ self removeProperty: #edgeToAdhereTo].
 	self setProperty: #edgeToAdhereTo toValue: anEdge.
-]
-
-{ #category : #structure }
-Morph >> settingWorld [
-
-	| world |
-	world := MiniWorld new.
-
-	world
-		layoutPolicy: StackLayout new;
-		clipSubmorphs: true.
-
-	self
-		hResizing: #spaceFill;
-		vResizing: #spaceFill.
-	^ world
 ]
 
 { #category : #'drop shadows' }

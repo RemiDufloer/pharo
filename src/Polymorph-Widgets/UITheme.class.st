@@ -103,7 +103,7 @@ UITheme class >> current: aUITheme [
 		balloonMorph setBalloonColorTo: aUITheme balloonBackgroundColor ].
 
 	aUITheme updateWorldDockingBars.
-	self currentWorld themeChanged.
+	self currentWorld  themeChanged.
 	(SystemWindow allSubInstances select:[:e | e owner isNil]) do: [ :each | each themeChanged ].
 
 	SystemAnnouncer uniqueInstance announce: UIThemeChanged
@@ -1893,7 +1893,7 @@ UITheme >> disabledTextColor [
 { #category : #accessing }
 UITheme >> displayScaleFactor [
 	
-	^ self currentWorld displayScaleFactor
+	^ self world displayScaleFactor
 ]
 
 { #category : #accessing }
@@ -5916,7 +5916,7 @@ UITheme >> updateScrollBarButtonsAspect: aCollection color: aColor [
 UITheme >> updateWorldDockingBars [
 	"Update the world docking bar gradients."
 	
-	self currentWorld mainDockingBars do: [:d |
+	self world mainDockingBars do: [:d |
 		d
 			color: (self worldMainDockingBarColorFor: d);
 			gradientRamp: (self class current
@@ -6383,6 +6383,12 @@ UITheme >> windowShadowColor [
 UITheme >> windowTopOffset [
 
 	^ 0
+]
+
+{ #category : #accessing }
+UITheme >> world [ 
+
+	^ self currentWorld 
 ]
 
 { #category : #'border-styles' }
