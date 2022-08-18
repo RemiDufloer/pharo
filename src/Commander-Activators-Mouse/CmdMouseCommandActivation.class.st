@@ -135,6 +135,17 @@ CmdMouseCommandActivation >> initialize [
 ]
 
 { #category : #testing }
+CmdMouseCommandActivation >> isActiveInContext: aToolContext [
+
+	[ 
+	| mouseEvent |
+	mouseEvent := aToolContext currentWorld activeHand lastEvent.
+
+	^ (self matchesEvent: mouseEvent) and: [ 
+		  super isActiveInContext: aToolContext ] ]
+]
+
+{ #category : #testing }
 CmdMouseCommandActivation >> isBlueButton [
 
 	^whichButton anyMask: MouseEvent blueButton
