@@ -701,7 +701,7 @@ ClyBrowserMorph >> updateWindowTitle [
 			group window ifNotNil: [ :mainWindow | 
 				self setWindowTitle: w labelString in: mainWindow ] ].
 		self announcer announce:
-			(AnnouncementWindow title: self newWindowTitle) ]
+			(WindowTitleAnnouncement title: self newWindowTitle) ]
 ]
 
 { #category : #navigation }

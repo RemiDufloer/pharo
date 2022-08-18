@@ -196,7 +196,6 @@ AbstractTool >> renameClass: aClass [
 	| oldName newName obs |
 
 	aClass ifNil: [ ^ self ].
-	
 	oldName := aClass name.
 	newName := UIManager default  request: 'Please type new class name' initialAnswer: oldName.
 	newName isEmptyOrNil ifTrue: [ ^ self ].	"Cancel returns"

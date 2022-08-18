@@ -476,7 +476,7 @@ RubTextEditor >> clipboardText [
 { #category : #'menu messages' }
 RubTextEditor >> clipboardTextPut: text [
 
-	^ Clipboard clipboardText: text
+	^ self morph world clipboardText: text
 ]
 
 { #category : #'typing support' }

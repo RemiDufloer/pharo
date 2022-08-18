@@ -5808,7 +5808,7 @@ UITheme >> textEntryIn: aThemedMorph text: aStringOrText title: aString entryTex
 		   textFont: self textFont;
 		   title: aString;
 		   text: aStringOrText;
-		   entryText: defaultEntryText) openInWorld: aWorld) entryText
+		   entryText: defaultEntryText) openModalInWorld: aWorld) entryText
 ]
 
 { #category : #'border-styles' }

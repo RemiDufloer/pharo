@@ -152,7 +152,7 @@ SycMethodNameEditorPresenter class >> openOn: aMethod withInvalidArgs: aSet canR
 	temp canRemoveArgs: aBoolean2.
 	temp canAddArgs: aBoolean3.
 	temp canEditName: aBoolean4.
-	^ temp openBlockedDialogInWorld: aWorld 
+	^ temp asBlockedDialogWindow open
 ]
 
 { #category : #action }

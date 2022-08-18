@@ -138,7 +138,7 @@ MorphicUIManager >> chooseFrom: labelList values: valueList lines: linesArray ti
 
 	"Choose an item from the given list. Answer the selected item."
 
-	self
+	^ self
 		chooseFrom: labelList
 		values: valueList
 		lines: linesArray

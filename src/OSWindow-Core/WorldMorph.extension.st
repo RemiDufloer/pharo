@@ -7,5 +7,5 @@ WorldMorph >> clipboardText [
 
 { #category : #'*OSWindow-Core' }
 WorldMorph >> clipboardText: aString [
-	^ self osWindow clipboardText: aString
+	^ self worldState worldRenderer clipboardText: aString
 ]

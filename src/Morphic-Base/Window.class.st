@@ -206,8 +206,8 @@ Window >> open [
 	backend manager: manager .
 	attributes := self backend worldState worldRenderer osWindow initialAttributes.
 	osWindow := self backend worldState worldRenderer osWindow.
-	osWindow  announcer weak when: AnnouncementMiniWorld send: #deleteByCross to: self.
-	window announcer  weak when: AnnouncementWindow  send: #windowTitleChanged: to:  self
+	osWindow  announcer weak when: DeleteWindowByCrossAnnouncement send: #deleteByCross to: self.
+	window announcer  weak when: WindowTitleAnnouncement  send: #windowTitleChanged: to:  self
 	 
 ]
 

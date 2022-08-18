@@ -310,7 +310,7 @@ MiniWorld >> open [
 	worldState activeHand: (self addHand: HandMorph new).
 	WorldMorph addExtraWorld: self.
 	worldRenderer osWindow announcer weak
-		when: AnnouncementMiniWorld
+		when: DeleteWindowByCrossAnnouncement
 		send: #deleteByCross
 		to: self.
 ]
@@ -346,7 +346,7 @@ MiniWorld >> openWithAttributs: aAttributes [
 		(worldRenderer windowCloseAction: [ self worldRenderer deactivate ]).
 	worldState activeHand: (self addHand: HandMorph new).
 	WorldMorph addExtraWorld: self.
-	worldRenderer osWindow  announcer weak when: AnnouncementMiniWorld send: #deleteByCross to: self
+	worldRenderer osWindow  announcer weak when: DeleteWindowByCrossAnnouncement send: #deleteByCross to: self
 ]
 
 { #category : #'world simulation' }

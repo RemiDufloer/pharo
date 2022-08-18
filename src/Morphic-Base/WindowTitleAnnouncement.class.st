@@ -1,0 +1,29 @@
+"
+This class is an announcement, is for change the title automatically of the window
+"
+Class {
+	#name : #WindowTitleAnnouncement,
+	#superclass : #Announcement,
+	#instVars : [
+		'title'
+	],
+	#category : #'Morphic-Base'
+}
+
+{ #category : #accessing }
+WindowTitleAnnouncement class >> title: aString [
+
+	^ self new title: aString.
+]
+
+{ #category : #accessing }
+WindowTitleAnnouncement >> title [
+
+	^ title
+]
+
+{ #category : #accessing }
+WindowTitleAnnouncement >> title: aString [
+
+	title := aString .
+]

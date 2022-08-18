@@ -184,7 +184,7 @@ OSWindow >> deliverGlobalEvent: aGlobalEvent [
 
 { #category : #private }
 OSWindow >> destroy [
-	announcer  announce: AnnouncementMiniWorld .
+	announcer  announce: DeleteWindowByCrossAnnouncement .
 	self validHandle destroy.
 	backendWindow := nil.
 	eventHandler := nil.
