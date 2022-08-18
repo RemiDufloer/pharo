@@ -38,25 +38,26 @@ AthensCairoCanvas class >> primCreate: cairoSurface [
 
 { #category : #clipping }
 AthensCairoCanvas >> clipBy: aRectangle during: aBlock [
-	| oldClip transformedClipRectangle newClip |
 
-	oldClip := 	currentClipRect.
-	transformedClipRectangle := pathTransform transformRectangle: aRectangle.
-	newClip := oldClip
-		ifNil: [ transformedClipRectangle ]
-		ifNotNil: [ (pathTransform transformRectangle: oldClip) intersect: transformedClipRectangle ifNone:[^ self] ]. 
-	
+	| oldClip transformedClipRectangle newClip |
+	oldClip := currentClipRect.
+	transformedClipRectangle := pathTransform transformRectangle:
+		                            aRectangle.
+	newClip := oldClip ifNil: [ transformedClipRectangle ] ifNotNil: [ 
+		           (pathTransform transformRectangle: oldClip)
+			           intersect: transformedClipRectangle
+			           ifNone: [ ^ self ] ].
+
 	self
 		setPathMatrix;
 		primSaveState;
 		pushClipRect: aRectangle.
-	
+
 	currentClipRect := newClip.
 
-	[aBlock value] ensure: [
+	[ aBlock value ] ensure: [ 
 		self primRestoreState.
-		currentClipRect := oldClip
-	].
+		currentClipRect := oldClip ]
 ]
 
 { #category : #accessing }
