@@ -135,20 +135,15 @@ MorphicUIManager >> chooseFrom: labelList values: valueList lines: linesArray me
 
 { #category : #'ui requests' }
 MorphicUIManager >> chooseFrom: labelList values: valueList lines: linesArray title: aString [
+
 	"Choose an item from the given list. Answer the selected item."
-	
-	|modalMorph|
-	
-	(ProvideAnswerNotification signal: aString) ifNotNil: [:answer |
-		^answer].
-	
-	modalMorph := self modalMorph.
-	^modalMorph theme  
-		chooseIn: modalMorph
-		title: aString
-		labels: labelList
+
+	self
+		chooseFrom: labelList
 		values: valueList
 		lines: linesArray
+		title: aString
+		world: self currentWorld
 ]
 
 { #category : #'ui request' }
@@ -168,6 +163,25 @@ MorphicUIManager >> chooseFrom: labelList values: valueList lines: linesArray ti
 		values: valueList
 		lines: linesArray
 		on: aWorld
+]
+
+{ #category : #'ui request' }
+MorphicUIManager >> chooseFrom: labelList values: valueList lines: linesArray title: aString world: world [
+	"Choose an item from the given list. Answer the selected item."
+	
+	|modalMorph|
+	
+	(ProvideAnswerNotification signal: aString) ifNotNil: [:answer |
+		^answer].
+	
+	modalMorph := self modalMorph.
+	^modalMorph theme  
+		chooseIn: modalMorph
+		title: aString
+		labels: labelList
+		values: valueList
+		lines: linesArray
+		world: world
 ]
 
 { #category : #'ui requests' }
