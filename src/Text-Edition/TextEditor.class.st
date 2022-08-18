@@ -1005,7 +1005,7 @@ TextEditor >> clearUndoManager: aKeyboardEvent [
 { #category : #'menu messages' }
 TextEditor >> clipboardText [
 
-	^ Clipboard clipboardText
+	^ self morph world clipboardText
 ]
 
 { #category : #'menu messages' }

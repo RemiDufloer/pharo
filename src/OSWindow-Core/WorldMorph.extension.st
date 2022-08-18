@@ -2,7 +2,7 @@ Extension { #name : #WorldMorph }
 
 { #category : #'*OSWindow-Core' }
 WorldMorph >> clipboardText [
-	^ self osWindow clipboardText
+	^ self worldState worldRenderer  osWindow clipboardText
 ]
 
 { #category : #'*OSWindow-Core' }
