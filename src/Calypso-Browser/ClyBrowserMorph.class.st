@@ -506,7 +506,7 @@ ClyBrowserMorph >> okToChange [
 { #category : #'opening/closing' }
 ClyBrowserMorph >> open [
 
-	self openInWindowOnWorld:  self currentWorld .
+	self openInWindowOnWorld: self currentWorld
 ]
 
 { #category : #'opening/closing' }
@@ -525,10 +525,10 @@ ClyBrowserMorph >> openBy: aWindow [
 
 { #category : #'opening/closing' }
 ClyBrowserMorph >> openInWindow: aWindow inWorld: aWorld [
-	| groupWindow myWindow |
 
+	| groupWindow myWindow |
 	groupWindow := self createWindowGroupFrom: aWindow inWorld: aWorld.
-	
+
 	myWindow := self buildWindow.
 	groupWindow addWindow: myWindow.
 	myWindow activate.
