@@ -552,8 +552,8 @@ AthensCairoSurface >> getFreetypeFontRendererFor: aFreetypeFont [
 
 { #category : #accessing }
 AthensCairoSurface >> getHandle [
-	
-	^ handle 
+
+	^ handle
 ]
 
 { #category : #'text support' }
