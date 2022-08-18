@@ -82,8 +82,8 @@ ClyFullBrowserMorph class >> openOn: aNavigationEnvironment inWorld: aWorld [
 
 	| browser |
 	browser := self on: aNavigationEnvironment.
-	browser openInWindowOnWorld:   aWorld.	
-	^browser
+	browser openInWindowOnWorld: aWorld.
+	^ browser
 ]
 
 { #category : #opening }
