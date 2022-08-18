@@ -349,12 +349,6 @@ GrowlMorph >> nextColorStep: aColor [
 ]
 
 { #category : #opening }
-GrowlMorph >> position: position [
-
-	super position: position
-]
-
-{ #category : #opening }
 GrowlMorph >> preOpenInWorld: aWorld [
 
 	self position: (self unoccupiedPositionBottomLeft: aWorld)
