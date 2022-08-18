@@ -106,16 +106,7 @@ GrowlMorph class >> openWithLabel: aString contents: contentString [
 { #category : #'instance creation' }
 GrowlMorph class >> openWithLabel: aString contents: contentString backgroundColor: aColor labelColor: aLabelColor [
 	
-	^ self type = #window 
-		ifTrue: [ MessageDialogWindow new message: contentString ]
-		ifFalse: [ 
-			| anInstance |
-			anInstance := self label: aString contents: contentString.
-			aColor ifNotNil: [ anInstance backgroundColor: aColor ].
-			aLabelColor ifNotNil: [ 
-				anInstance labelColor: aLabelColor.
-				anInstance contentsColor: aLabelColor ].
-			anInstance openInWorld ]
+	^ self openWithLabel: aString contents: contentString backgroundColor: aColor labelColor: aLabelColor inWorld: self currentWorld
 ]
 
 { #category : #'instance creation' }
