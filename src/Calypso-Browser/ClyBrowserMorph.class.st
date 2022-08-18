@@ -506,7 +506,7 @@ ClyBrowserMorph >> okToChange [
 { #category : #'opening/closing' }
 ClyBrowserMorph >> open [
 
-	self openInWindowOnWorld:  ActiveWorld
+	self openInWindowOnWorld:  self currentWorld .
 ]
 
 { #category : #'opening/closing' }
