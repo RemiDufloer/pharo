@@ -124,10 +124,13 @@ CmdCommandActivator >> context: anObject [
 
 { #category : #execution }
 CmdCommandActivator >> executeCommand [
-	[self prepareCommandForExecution.
+
+	[ 
+	self prepareCommandForExecution.
 	context executeCommand: command by: self.
-	self applyCommandResult] 
-		on: Exception do: [ :exc | self processCommandFailure: exc ]
+	self applyCommandResult ]
+		on: Exception
+		do: [ :exc | self processCommandFailure: exc ]
 ]
 
 { #category : #testing }
