@@ -10,7 +10,7 @@ Class {
 { #category : #running }
 AbstractWindowManagerTest >> setUp [
 	super setUp.
-	manager := WindowManager new.
+	manager := MorphicWindowManager new.
 	
 ]
 

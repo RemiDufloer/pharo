@@ -1,5 +1,5 @@
 Class {
-	#name : #WindowTest,
+	#name : #MorphicNativeWindowTest,
 	#superclass : #AbstractWindowManagerTest,
 	#instVars : [
 		'window'
@@ -8,7 +8,7 @@ Class {
 }
 
 { #category : #running }
-WindowTest >> setUp [
+MorphicNativeWindowTest >> setUp [
 
 	super setUp.
 
@@ -16,7 +16,7 @@ WindowTest >> setUp [
 ]
 
 { #category : #tests }
-WindowTest >> testMaximizeWindow [
+MorphicNativeWindowTest >> testMaximizeWindow [
 
 	window open.
 	window maximize.
@@ -25,7 +25,7 @@ WindowTest >> testMaximizeWindow [
 ]
 
 { #category : #tests }
-WindowTest >> testMinimizeWindow [
+MorphicNativeWindowTest >> testMinimizeWindow [
 
 	window open.
 
@@ -35,7 +35,7 @@ WindowTest >> testMinimizeWindow [
 ]
 
 { #category : #tests }
-WindowTest >> testNewWindowDefaultsIsNotMaximize [
+MorphicNativeWindowTest >> testNewWindowDefaultsIsNotMaximize [
 
 	window open .
 	
@@ -43,7 +43,7 @@ WindowTest >> testNewWindowDefaultsIsNotMaximize [
 ]
 
 { #category : #tests }
-WindowTest >> testNewWindowDefaultsIsNotMinimized [
+MorphicNativeWindowTest >> testNewWindowDefaultsIsNotMinimized [
 
 	window open.
 
@@ -51,7 +51,7 @@ WindowTest >> testNewWindowDefaultsIsNotMinimized [
 ]
 
 { #category : #tests }
-WindowTest >> testRestoreWindow [
+MorphicNativeWindowTest >> testRestoreWindow [
 
 	window open .
 	window restore .

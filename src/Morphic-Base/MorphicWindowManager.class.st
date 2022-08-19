@@ -13,7 +13,7 @@ I manage the native window, when i was create i open a window with a taskbar, if
     Implementation Points
 "
 Class {
-	#name : #WindowManager,
+	#name : #MorphicWindowManager,
 	#superclass : #Morph,
 	#instVars : [
 		'taskBar',
@@ -26,24 +26,24 @@ Class {
 }
 
 { #category : #accessing }
-WindowManager >> allAttributes [
+MorphicWindowManager >> allAttributes [
 	^ allAttributes
 ]
 
 { #category : #accessing }
-WindowManager >> allSaveRoot [
+MorphicWindowManager >> allSaveRoot [
 	
 	^ rootSave 
 ]
 
 { #category : #accessing }
-WindowManager >> allWindow [ 
+MorphicWindowManager >> allWindow [ 
 
 	^ allWindow 
 ]
 
 { #category : #accessing }
-WindowManager >> closeAllWindow [
+MorphicWindowManager >> closeAllWindow [
 
 	
 	(allWindow size) to: (1) by: (-1) do: [ :m | (allWindow at: m) delete  ].
@@ -51,7 +51,7 @@ WindowManager >> closeAllWindow [
 ]
 
 { #category : #accessing }
-WindowManager >> closeAllWindowToLeft: aWindow [
+MorphicWindowManager >> closeAllWindowToLeft: aWindow [
 
 	| index |
 	index := allWindow indexOf: aWindow.
@@ -60,7 +60,7 @@ WindowManager >> closeAllWindowToLeft: aWindow [
 ]
 
 { #category : #accessing }
-WindowManager >> closeAllWindowToRight: aWindow [
+MorphicWindowManager >> closeAllWindowToRight: aWindow [
 
 	| index |
 	index := allWindow indexOf: aWindow.
@@ -70,14 +70,14 @@ WindowManager >> closeAllWindowToRight: aWindow [
 ]
 
 { #category : #accessing }
-WindowManager >> closeWindow: aWindow [
+MorphicWindowManager >> closeWindow: aWindow [
 
 	( allWindow  includes: aWindow )ifTrue:[allWindow remove: aWindow ].
 	taskBar ifNotNil:  [taskBar  updateTasks] .
 ]
 
 { #category : #closing }
-WindowManager >> deleteAll [
+MorphicWindowManager >> deleteAll [
 
 	self closeAllWindow.
 
@@ -87,7 +87,7 @@ WindowManager >> deleteAll [
 ]
 
 { #category : #accessing }
-WindowManager >> ensureCloseAllWindow [
+MorphicWindowManager >> ensureCloseAllWindow [
 
 	allWindow size to: 1 by: -1 do: [ :m | 
 		(allWindow at: m) ensureDelete ].
@@ -95,7 +95,7 @@ WindowManager >> ensureCloseAllWindow [
 ]
 
 { #category : #closing }
-WindowManager >> ensureDeleteAll [
+MorphicWindowManager >> ensureDeleteAll [
 
 	self ensureCloseAllWindow.
 
@@ -104,20 +104,20 @@ WindowManager >> ensureDeleteAll [
 ]
 
 { #category : #accessing }
-WindowManager >> initialize [
+MorphicWindowManager >> initialize [
 
 	allWindow := OrderedCollection new.
 	self startupTaskbar .
 ]
 
 { #category : #testing }
-WindowManager >> isTaskBarOpen [
+MorphicWindowManager >> isTaskBarOpen [
 	
 	^ taskBarWindow isOpen
 ]
 
 { #category : #accessing }
-WindowManager >> newWindowWithRoot: aMorph [
+MorphicWindowManager >> newWindowWithRoot: aMorph [
 
 	| newWindow |
 	newWindow := MorphicNativeWindow newWindow: aMorph manageBy: self.
@@ -126,36 +126,36 @@ WindowManager >> newWindowWithRoot: aMorph [
 ]
 
 { #category : #size }
-WindowManager >> numberOfAttributesSave [
+MorphicWindowManager >> numberOfAttributesSave [
 	
 	^ allAttributes size
 ]
 
 { #category : #accessing }
-WindowManager >> numberOfOpenWindows [
+MorphicWindowManager >> numberOfOpenWindows [
 
 	^ allWindow size
 ]
 
 { #category : #accessing }
-WindowManager >> numberOfRootSave [
+MorphicWindowManager >> numberOfRootSave [
 	
 	^ rootSave size 
 ]
 
 { #category : #accessing }
-WindowManager >> numberOfWindows [
+MorphicWindowManager >> numberOfWindows [
 	^ allWindow size
 ]
 
 { #category : #accessing }
-WindowManager >> openNewWindowBackendGtkWithRoot: aMorph [ 
+MorphicWindowManager >> openNewWindowBackendGtkWithRoot: aMorph [ 
 	
 	^ (self newWindowWithRoot: aMorph ) openWithGtk .
 ]
 
 { #category : #accessing }
-WindowManager >> openNewWindowWithRoot: aMorph [ 
+MorphicWindowManager >> openNewWindowWithRoot: aMorph [ 
 
 	| newWindow |
 	newWindow := ( self newWindowWithRoot: aMorph ) open.
@@ -164,31 +164,31 @@ WindowManager >> openNewWindowWithRoot: aMorph [
 ]
 
 { #category : #saving }
-WindowManager >> saveAllAttributes [
+MorphicWindowManager >> saveAllAttributes [
 	
 	allAttributes := allWindow collect: [  :w | w attributsSave ].
 ]
 
 { #category : #saving }
-WindowManager >> saveAllRoot [
+MorphicWindowManager >> saveAllRoot [
 	
 	rootSave := allWindow collect: [ :m | m window ]
 ]
 
 { #category : #startup }
-WindowManager >> startupOpenWithAttributes [
+MorphicWindowManager >> startupOpenWithAttributes [
 	
 	1 to: allAttributes  size do: [ :a | (allWindow  at: a) openWithAttributes: (allAttributes at: a)  ]
 ]
 
 { #category : #'startup - shutdown' }
-WindowManager >> startupRoot [
+MorphicWindowManager >> startupRoot [
 	
 	1 to: rootSave size do: [ :r | self newWindowWithRoot:  (rootSave at: r) ]
 ]
 
 { #category : #startup }
-WindowManager >> startupTaskbar [
+MorphicWindowManager >> startupTaskbar [
 	
 	taskBarWindow := MorphicNativeWindow newWindow: (TaskbarMorphForManager newByManager: self) manageBy: self.
 	taskBarWindow open.
@@ -196,7 +196,7 @@ WindowManager >> startupTaskbar [
 ]
 
 { #category : #accessing }
-WindowManager >> taskBar [
+MorphicWindowManager >> taskBar [
 
 	^ taskBar 
 ]

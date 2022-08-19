@@ -1,11 +1,11 @@
 Class {
-	#name : #WindowManagerTest,
+	#name : #MorphicWindowManagerTest,
 	#superclass : #AbstractWindowManagerTest,
 	#category : #'Morphic-Tests'
 }
 
 { #category : #tests }
-WindowManagerTest >> testDeleteANonOpenWindowFails [
+MorphicWindowManagerTest >> testDeleteANonOpenWindowFails [
 
 	| newWindow |
 	newWindow := manager newWindowWithRoot: Morph new.
@@ -21,7 +21,7 @@ WindowManagerTest >> testDeleteANonOpenWindowFails [
 ]
 
 { #category : #tests }
-WindowManagerTest >> testDeleteAWindow [
+MorphicWindowManagerTest >> testDeleteAWindow [
 
 	| newWindow |
 	newWindow := manager openNewWindowWithRoot: Morph new.
@@ -32,7 +32,7 @@ WindowManagerTest >> testDeleteAWindow [
 ]
 
 { #category : #tests }
-WindowManagerTest >> testDeleteAWindowAndTaskBarActualized [
+MorphicWindowManagerTest >> testDeleteAWindowAndTaskBarActualized [
 
 	| newWindow |
 	newWindow := manager openNewWindowWithRoot: Morph new.
@@ -43,7 +43,7 @@ WindowManagerTest >> testDeleteAWindowAndTaskBarActualized [
 ]
 
 { #category : #tests }
-WindowManagerTest >> testDeleteAll [
+MorphicWindowManagerTest >> testDeleteAll [
 
 	| newWindow |
 	newWindow := manager openNewWindowWithRoot: Morph new.
@@ -56,7 +56,7 @@ WindowManagerTest >> testDeleteAll [
 ]
 
 { #category : #tests }
-WindowManagerTest >> testDeleteAllWindow [
+MorphicWindowManagerTest >> testDeleteAllWindow [
 
 	| newWindow |
 	newWindow := manager openNewWindowWithRoot: Morph new.
@@ -73,7 +73,7 @@ WindowManagerTest >> testDeleteAllWindow [
 ]
 
 { #category : #tests }
-WindowManagerTest >> testDeleteAllWindowToLeftOfAWindow [
+MorphicWindowManagerTest >> testDeleteAllWindowToLeftOfAWindow [
 
 	| newWindow |
 	manager openNewWindowWithRoot: Morph new.
@@ -88,7 +88,7 @@ WindowManagerTest >> testDeleteAllWindowToLeftOfAWindow [
 ]
 
 { #category : #tests }
-WindowManagerTest >> testDeleteAllWindowToLeftOfAWindowWhenDontHaveWindowOnLeft [
+MorphicWindowManagerTest >> testDeleteAllWindowToLeftOfAWindowWhenDontHaveWindowOnLeft [
 
 	| newWindow |
 	newWindow := manager openNewWindowWithRoot: Morph new.
@@ -99,7 +99,7 @@ WindowManagerTest >> testDeleteAllWindowToLeftOfAWindowWhenDontHaveWindowOnLeft 
 ]
 
 { #category : #tests }
-WindowManagerTest >> testDeleteAllWindowToRightOfAWindow [
+MorphicWindowManagerTest >> testDeleteAllWindowToRightOfAWindow [
 
 	| newWindow |
 	newWindow := manager openNewWindowWithRoot: Morph new.
@@ -114,7 +114,7 @@ WindowManagerTest >> testDeleteAllWindowToRightOfAWindow [
 ]
 
 { #category : #tests }
-WindowManagerTest >> testDeleteAllWindowToRightOfAWindowWhenDontHaveWindowOnRight [
+MorphicWindowManagerTest >> testDeleteAllWindowToRightOfAWindowWhenDontHaveWindowOnRight [
 
 	| newWindow |
 	newWindow := manager openNewWindowWithRoot: Morph new.
@@ -125,17 +125,17 @@ WindowManagerTest >> testDeleteAllWindowToRightOfAWindowWhenDontHaveWindowOnRigh
 ]
 
 { #category : #tests }
-WindowManagerTest >> testNewWindowShouldBeSave [
+MorphicWindowManagerTest >> testNewWindowShouldBeSave [
 
 	| newWindow |
-	manager := WindowManager new.
+	manager := MorphicWindowManager new.
 	newWindow := manager newWindowWithRoot: Morph new.
 
 	self assert: manager numberOfWindows equals: 1
 ]
 
 { #category : #tests }
-WindowManagerTest >> testOpenNewWindowShouldBeSave [
+MorphicWindowManagerTest >> testOpenNewWindowShouldBeSave [
 
 	| newWindow |
 	newWindow := manager openNewWindowWithRoot:
@@ -144,7 +144,7 @@ WindowManagerTest >> testOpenNewWindowShouldBeSave [
 ]
 
 { #category : #tests }
-WindowManagerTest >> testWindowShouldBeCreateAfterStartupWithGoodMorph [
+MorphicWindowManagerTest >> testWindowShouldBeCreateAfterStartupWithGoodMorph [
 
 	manager openNewWindowWithRoot: Morph new.
 	manager openNewWindowWithRoot: Morph new.
@@ -162,7 +162,7 @@ WindowManagerTest >> testWindowShouldBeCreateAfterStartupWithGoodMorph [
 ]
 
 { #category : #tests }
-WindowManagerTest >> testWindowShouldBeOpenAfterStartupWithGoodMorphWhenNoMorphIsSave [
+MorphicWindowManagerTest >> testWindowShouldBeOpenAfterStartupWithGoodMorphWhenNoMorphIsSave [
 
 	manager saveAllRoot.
 	
@@ -178,7 +178,7 @@ WindowManagerTest >> testWindowShouldBeOpenAfterStartupWithGoodMorphWhenNoMorphI
 ]
 
 { #category : #tests }
-WindowManagerTest >> testWindowShouldBeOpenAfterStartupWithGoodMorphWithGoodAttribus [
+MorphicWindowManagerTest >> testWindowShouldBeOpenAfterStartupWithGoodMorphWithGoodAttribus [
 
 	| newWindow |
 	newWindow := manager openNewWindowWithRoot: Morph new.
@@ -199,7 +199,7 @@ WindowManagerTest >> testWindowShouldBeOpenAfterStartupWithGoodMorphWithGoodAttr
 ]
 
 { #category : #tests }
-WindowManagerTest >> testWindowShouldBeOpenAfterStartupWithtaskBar [
+MorphicWindowManagerTest >> testWindowShouldBeOpenAfterStartupWithtaskBar [
 
 	
 	manager deleteAll.
@@ -214,7 +214,7 @@ WindowManagerTest >> testWindowShouldBeOpenAfterStartupWithtaskBar [
 ]
 
 { #category : #tests }
-WindowManagerTest >> testWindowShouldBeSaveBeforeShutDownSaveAttributes [
+MorphicWindowManagerTest >> testWindowShouldBeSaveBeforeShutDownSaveAttributes [
 
 	manager openNewWindowWithRoot: Morph new.
 	manager saveAllAttributes.
@@ -227,7 +227,7 @@ WindowManagerTest >> testWindowShouldBeSaveBeforeShutDownSaveAttributes [
 ]
 
 { #category : #tests }
-WindowManagerTest >> testWindowShouldBeSaveBeforeShutDownSaveAttributesButNoRoot [
+MorphicWindowManagerTest >> testWindowShouldBeSaveBeforeShutDownSaveAttributesButNoRoot [
 
 	manager saveAllAttributes.
 	
@@ -239,7 +239,7 @@ WindowManagerTest >> testWindowShouldBeSaveBeforeShutDownSaveAttributesButNoRoot
 ]
 
 { #category : #tests }
-WindowManagerTest >> testWindowShouldBeSaveBeforeShutDownSaveRoot [
+MorphicWindowManagerTest >> testWindowShouldBeSaveBeforeShutDownSaveRoot [
 
 
    manager openNewWindowWithRoot:  Morph new.
@@ -255,7 +255,7 @@ WindowManagerTest >> testWindowShouldBeSaveBeforeShutDownSaveRoot [
 ]
 
 { #category : #tests }
-WindowManagerTest >> testWindowShouldBeSaveBeforeShutDownSaveRootButHaveNotRoot [
+MorphicWindowManagerTest >> testWindowShouldBeSaveBeforeShutDownSaveRootButHaveNotRoot [
 
 	manager saveAllRoot.
 	
