@@ -51,7 +51,7 @@ BaselineOfMorphicCore >> baseline: spec [
 { #category : #actions }
 BaselineOfMorphicCore >> postload: loader package: packageSpec [
 
-	| world hand |
+	| world hand desktop |
 
 	"Ignore pre and post loads if already executed"
 	Initialized = true ifTrue: [ ^ self ].
@@ -70,7 +70,7 @@ BaselineOfMorphicCore >> postload: loader package: packageSpec [
 
 	world := MiniWorld new.
 	world instVarNamed: #worldState put: WorldState new.
-	world addMorph: DesktopMorph new.
+	world addMorph: (desktop := DesktopMorph new).
 	
 	hand := HandMorph new.
 	world addHand: hand.
@@ -82,7 +82,7 @@ BaselineOfMorphicCore >> postload: loader package: packageSpec [
 	world viewBox: Display boundingBox.
 	
 	world handsDo: [:h | h initForEvents].
-	"world borderWidth: 0."
+	desktop borderWidth: 0.
 	
 	Display newDepth: 32.
 	world displayWorldSafely.
