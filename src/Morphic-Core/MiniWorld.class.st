@@ -22,7 +22,7 @@ Class {
 		'worldState',
 		'worldRenderer'
 	],
-	#category : #'Morphic-Base'
+	#category : #'Morphic-Core-Worlds'
 }
 
 { #category : #'initialize-release' }
