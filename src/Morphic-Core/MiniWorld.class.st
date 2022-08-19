@@ -288,6 +288,12 @@ MiniWorld >> manager: aWindowManager [
 	manager := aWindowManager
 ]
 
+{ #category : #'world simulation' }
+MiniWorld >> menubar [
+
+	^ self submorphs detect: #isMenubar
+]
+
 { #category : #modal }
 MiniWorld >> modalLockTo: aSystemWindow [
 	"Lock the receiver as a modal owner of the given window."
