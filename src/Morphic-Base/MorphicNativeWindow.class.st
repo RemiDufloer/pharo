@@ -227,22 +227,6 @@ MorphicNativeWindow >> openWithAttributes: attributes [
 	osWindow := self backend worldState worldRenderer osWindow
 ]
 
-{ #category : #'submorphs - add/remove' }
-MorphicNativeWindow >> openWithGtk [
-
-	| presenter morph |
-	presenter := SpPresenter new.
-	presenter application: (SpApplication new useBackend: #Gtk).
-	presenter layout: (SpPanedLayout newHorizontal
-			 add: (morph := presenter newMorph);
-			 yourself).
-	morph morph: window.
-
-	presenter open.
-
-	backend := presenter
-]
-
 { #category : #accessing }
 MorphicNativeWindow >> osWindow [
 
