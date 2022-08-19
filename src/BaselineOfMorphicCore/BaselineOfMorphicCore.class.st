@@ -82,7 +82,7 @@ BaselineOfMorphicCore >> postload: loader package: packageSpec [
 	world viewBox: Display boundingBox.
 	
 	world handsDo: [:h | h initForEvents].
-	world borderWidth: 0.
+	"world borderWidth: 0."
 	
 	Display newDepth: 32.
 	world displayWorldSafely.
@@ -96,12 +96,12 @@ BaselineOfMorphicCore >> postload: loader package: packageSpec [
 
 	hand instVarNamed: #targetOffset put: 0@0.
 
-	WorldMorph initialize.
+	MiniWorld  initialize.
 	ExternalDropHandler initialize.
 	PasteUpMorph initialize.
 	DefaultExternalDropHandler initialize.
 	
-	WorldMorph recompile.
+	MiniWorld  recompile.
 
 	Initialized := true.
 ]
