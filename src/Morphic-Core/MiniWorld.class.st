@@ -60,6 +60,12 @@ MiniWorld >> activeHand [
 	^ worldState activeHand
 ]
 
+{ #category : #structure }
+MiniWorld >> activeHand: aHandMorph [
+	"Temporarily retained for old main event loops"
+	worldState activeHand: aHandMorph
+]
+
 { #category : #stepping }
 MiniWorld >> addAlarm: aSelector withArguments: argArray for: aTarget at: scheduledTime [
 
