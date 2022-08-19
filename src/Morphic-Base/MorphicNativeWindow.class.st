@@ -202,13 +202,20 @@ MorphicNativeWindow >> minimize [
 
 { #category : #'submorphs - add/remove' }
 MorphicNativeWindow >> open [
+
 	backend := window openInExternalWindow.
-	backend manager: manager .
-	attributes := self backend worldState worldRenderer osWindow initialAttributes.
+	backend manager: manager.
+	attributes := self backend worldState worldRenderer osWindow
+		              initialAttributes.
 	osWindow := self backend worldState worldRenderer osWindow.
-	osWindow  announcer weak when: DeleteWindowByCrossAnnouncement send: #deleteByCross to: self.
-	window announcer  weak when: WindowTitleAnnouncement  send: #windowTitleChanged: to:  self
-	 
+	osWindow announcer weak
+		when: DeleteWindowByCrossAnnouncement
+		send: #deleteByCross
+		to: self.
+	window announcer weak
+		when: WindowTitleAnnouncement
+		send: #windowTitleChanged:
+		to: self
 ]
 
 { #category : #open }
