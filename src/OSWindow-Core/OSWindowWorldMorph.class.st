@@ -75,7 +75,7 @@ OSWindowWorldMorph >> openInWorld [
 ]
 
 { #category : #'instance creation' }
-OSWindowWorldMorph >> openWithAttributs: aAttributes [
+OSWindowWorldMorph >> openWithAttributes: aAttributes [
 
 	self worldState worldRenderer: ((OSWorldRenderer forWorld: self withAttributs: aAttributes  )
 		windowCloseAction: [self osWindowCloseButtonPressed]).

@@ -339,7 +339,7 @@ MiniWorld >> openModal: aSystemWindow [
 ]
 
 { #category : #opening }
-MiniWorld >> openWithAttributs: aAttributes [
+MiniWorld >> openWithAttributes: aAttributes [
 
 	worldRenderer := (OSWorldRenderer forWorld: self withAttributs: aAttributes  ).
 	self worldState worldRenderer:
