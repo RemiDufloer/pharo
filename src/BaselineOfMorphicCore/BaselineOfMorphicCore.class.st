@@ -98,6 +98,7 @@ BaselineOfMorphicCore >> postload: loader package: packageSpec [
 
 	MiniWorld  initialize.
 	ExternalDropHandler initialize.
+	WorldMorph initialize .
 	PasteUpMorph initialize.
 	DefaultExternalDropHandler initialize.
 	
