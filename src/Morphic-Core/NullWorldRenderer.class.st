@@ -46,7 +46,7 @@ NullWorldRenderer >> doActivate [
 
 { #category : #operations }
 NullWorldRenderer >> drawDuring: aBlock [
-
+	
 	| canvas |
 	canvas := (Form extent: self actualScreenSize depth: 32) getCanvas.
 	aBlock value: canvas

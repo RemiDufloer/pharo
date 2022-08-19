@@ -259,6 +259,13 @@ UIManager >> chooseFrom: labelList values: valueList title: aString [
 	^self chooseFrom: labelList values: valueList lines: #() title: aString
 ]
 
+{ #category : #'ui request' }
+UIManager >> chooseFrom: labelList values: valueList title: aString on: aWorld [ 
+	"Choose an item from the given list. Answer the selected item."
+	
+	^self chooseFrom: labelList values: valueList lines: #() title: aString on: aWorld 
+]
+
 { #category : #'ui requests' }
 UIManager >> chooseFullFileNameMatching: patterns [
 	"Let the user choose a file matching the given patterns"

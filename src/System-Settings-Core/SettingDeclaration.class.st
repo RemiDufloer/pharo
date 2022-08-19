@@ -296,12 +296,6 @@ SettingDeclaration >> inputWidgetForColor [
 ]
 
 { #category : #'user interface' }
-SettingDeclaration >> inputWidgetForDirectory [
-
-	^ self inputWidgetForFileOrDirectoryWithAction: #chooseFileDirectory.
-]
-
-{ #category : #'user interface' }
 SettingDeclaration >> inputWidgetForFileOrDirectoryWithAction: aSymbol [
 	| list button |
 	list := EditableDropListMorph

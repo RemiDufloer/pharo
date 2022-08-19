@@ -101,7 +101,8 @@ PharoCommonTools class >> worldMenuOn: aBuilder [
 	<worldMenu>
 	(aBuilder item: #'System Browser')
 		parent: #Browsing;
-		action: [ Smalltalk tools openClassBrowser ];
+		action: [ 
+			 aBuilder model tools openClassBrowser. ];
 		order: 0;
 		keyText: 'o, b';
 		help: 'System browser to browse and edit code.';

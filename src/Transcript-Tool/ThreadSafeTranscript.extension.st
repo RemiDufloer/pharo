@@ -10,7 +10,7 @@ ThreadSafeTranscript >> interactionModel [
 ThreadSafeTranscript class >> menuCommandOn: aBuilder [
 	<worldMenu>
 	(aBuilder item: #'Transcript')
-		action: [ Smalltalk tools transcript open ];
+		action: [ aBuilder model tools openTranscript ];
 		order: 2;
 		parent: #InputOutput;
 		help: 'Transcript';
@@ -38,6 +38,14 @@ ThreadSafeTranscript class >> open [
 ]
 
 { #category : #'*Transcript-Tool' }
+ThreadSafeTranscript >> openInWorld: aWorld [
+	<script: 'self new open'>
+	
+	^ self openLabel: self title inWorld: aWorld 
+
+]
+
+{ #category : #'*Transcript-Tool' }
 ThreadSafeTranscript >> openLabel: aString [
 	| window m |
 	window := (SystemWindow labelled: aString) model: self.
@@ -49,5 +57,20 @@ ThreadSafeTranscript >> openLabel: aString [
 	m onAnnouncement: MorphDeleted do: [ self announcer unsubscribe: m  ].
 	window addMorph: m frame: (0 @ 0 corner: 1 @ 1).
 	^ window openInWorld
+
+]
+
+{ #category : #'*Transcript-Tool' }
+ThreadSafeTranscript >> openLabel: aString inWorld: aWorld [
+	| window m |
+	window := (SystemWindow labelled: aString) model: self.
+	m := RubPluggableTextMorph new
+		getTextSelector: #contents;
+		setTextSelector: #clear;
+		on: self;
+		beForSmalltalkScripting.
+	m onAnnouncement: MorphDeleted do: [ self announcer unsubscribe: m  ].
+	window addMorph: m frame: (0 @ 0 corner: 1 @ 1).
+	^ window openInWorld: aWorld
 
 ]

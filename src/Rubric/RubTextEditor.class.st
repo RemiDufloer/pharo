@@ -470,13 +470,13 @@ RubTextEditor >> click: event [
 { #category : #'menu messages' }
 RubTextEditor >> clipboardText [
 
-	^ Clipboard clipboardText
+	^ self morph world clipboardText
 ]
 
 { #category : #'menu messages' }
 RubTextEditor >> clipboardTextPut: text [
 
-	^ Clipboard clipboardText: text
+	^ self morph world clipboardText: text
 ]
 
 { #category : #'typing support' }

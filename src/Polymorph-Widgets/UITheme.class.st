@@ -103,7 +103,7 @@ UITheme class >> current: aUITheme [
 		balloonMorph setBalloonColorTo: aUITheme balloonBackgroundColor ].
 
 	aUITheme updateWorldDockingBars.
-	self currentWorld themeChanged.
+	self currentWorld  themeChanged.
 	(SystemWindow allSubInstances select:[:e | e owner isNil]) do: [ :each | each themeChanged ].
 
 	SystemAnnouncer uniqueInstance announce: UIThemeChanged
@@ -842,23 +842,6 @@ UITheme >> caretColor [
 	^ Color blue
 ]
 
-{ #category : #services }
-UITheme >> centeredAlertIn: aThemedMorph text: aStringOrText title: aString configure: aBlock [
-	"Answer the result of an alert dialog (true) with the given label and title."
-
-	| dialog |
-	SoundTheme useThemeSounds ifTrue: [ self alertSound play ].
-	dialog := (AlertDialogWindow newWithTheme: aThemedMorph theme)
-		textFont: self textFont;
-		title: aString;
-		text: aStringOrText.
-	aBlock value: dialog.
-	dialog left: ((self currentWorld width / 2) - (dialog width /2)).
-	dialog top: ((self currentWorld height / 2) - (dialog height /2)).
-	dialog openModal.
-	^ dialog cancelled not
-]
-
 { #category : #'border-styles - buttons' }
 UITheme >> checkboxButtonDisabledBorderStyleFor: aCheckboxButton [
 	"Return the disabled checkbox button borderStyle for the given button."
@@ -1128,7 +1111,34 @@ UITheme >> chooseIn: aThemedMorph title: title labels: labels values: values lin
 		labels: labels;
 		lines: (lines ifNil: [#()]);
 		model: values.
-	^ dialog openModal choice
+	^ (dialog openModalInWorld: aThemedMorph world) choice
+]
+
+{ #category : #services }
+UITheme >> chooseIn: aThemedMorph title: title labels: labels values: values lines: lines on: aWorld [ 
+	"Answer the result of a popup choice with the given title, labels, values and lines."
+
+	| dialog |
+	dialog := (PopupChoiceDialogWindow newWithTheme: aThemedMorph theme)
+		title: (title isEmpty ifTrue: ['Choose' translated] ifFalse: [title asString]);
+		labels: labels;
+		lines: (lines ifNil: [#()]);
+		model: values.
+	(dialog openInWorld: aWorld) .
+	^ dialog  choice.
+]
+
+{ #category : #services }
+UITheme >> chooseIn: aThemedMorph title: title labels: labels values: values lines: lines world: aMiniWorld [ 
+	"Answer the result of a popup choice with the given title, labels, values and lines."
+
+	| dialog |
+	dialog := (PopupChoiceDialogWindow newWithTheme: aThemedMorph theme)
+		title: (title isEmpty ifTrue: ['Choose' translated] ifFalse: [title asString]);
+		labels: labels;
+		lines: (lines ifNil: [#()]);
+		model: values.
+	^ (dialog openModalInWorld: aMiniWorld ) choice
 ]
 
 { #category : #services }
@@ -1883,7 +1893,7 @@ UITheme >> disabledTextColor [
 { #category : #accessing }
 UITheme >> displayScaleFactor [
 	
-	^ self currentWorld displayScaleFactor
+	^ self world displayScaleFactor
 ]
 
 { #category : #accessing }
@@ -4783,6 +4793,17 @@ UITheme >> questionWithoutCancelIn: aThemedMorph text: aStringOrText title: aStr
 			text: aStringOrText) openModal answer
 ]
 
+{ #category : #services }
+UITheme >> questionWithoutCancelIn: aThemedMorph text: aStringOrText title: aString inWorld: aWorld [
+	"Answer the result of a question dialog with the given label and title."
+
+	self questionSound play.
+	^(((QuestionWithoutCancelDialogWindow newWithTheme: aThemedMorph theme)
+			textFont: self textFont;
+			title: aString;
+			text: aStringOrText) openInWorld: aWorld ) answer
+]
+
 { #category : #'border-styles - buttons' }
 UITheme >> radioButtonCornerStyleFor: aRadioButton [
 	"Answer the corner style for radio buttons.
@@ -5779,6 +5800,17 @@ UITheme >> textEntryIn: aThemedMorph text: aStringOrText title: aString entryTex
 			entryCompletion: anEntryCompletion) openModal entryText
 ]
 
+{ #category : #services }
+UITheme >> textEntryIn: aThemedMorph text: aStringOrText title: aString entryText: defaultEntryText inWorld: aWorld [
+
+	self questionSound play.
+	^ ((TextEntryDialogWindow new
+		   textFont: self textFont;
+		   title: aString;
+		   text: aStringOrText;
+		   entryText: defaultEntryText) openModalInWorld: aWorld) entryText
+]
+
 { #category : #'border-styles' }
 UITheme >> textFieldDisabledBorderStyleFor: aTextField [
 	"Return the disabled text field borderStyle for the given text field."
@@ -5884,7 +5916,7 @@ UITheme >> updateScrollBarButtonsAspect: aCollection color: aColor [
 UITheme >> updateWorldDockingBars [
 	"Update the world docking bar gradients."
 	
-	self currentWorld mainDockingBars do: [:d |
+	self world mainDockingBars do: [:d |
 		d
 			color: (self worldMainDockingBarColorFor: d);
 			gradientRamp: (self class current
@@ -6351,6 +6383,12 @@ UITheme >> windowShadowColor [
 UITheme >> windowTopOffset [
 
 	^ 0
+]
+
+{ #category : #accessing }
+UITheme >> world [ 
+
+	^ self currentWorld 
 ]
 
 { #category : #'border-styles' }

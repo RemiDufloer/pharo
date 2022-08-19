@@ -27,20 +27,8 @@ WorldMorph class >> addExtraWorld: aWorld [
 ]
 
 { #category : #accessing }
-WorldMorph class >> allowDropFiles [
-	"If this option is set to false, the world morph will no longer be able to receive droped files. This help to protect private code while deploying an application."
-	
-	^ AllowDropFiles ifNil: [ AllowDropFiles := true ]
-]
-
-{ #category : #accessing }
 WorldMorph class >> allowDropFiles: anObject [
 	AllowDropFiles := anObject
-]
-
-{ #category : #'startup - shutdown' }
-WorldMorph class >> cleanUp [
-	self currentWorld cleanseOtherworldlySteppers
 ]
 
 { #category : #'extra worlds' }
@@ -106,6 +94,12 @@ WorldMorph class >> extraWorldList [
 	^ ExtraWorldList
 ]
 
+{ #category : #accessing }
+WorldMorph class >> extraWorldListMutex [
+
+	^ ExtraWorldListMutex
+]
+
 { #category : #'class initialization' }
 WorldMorph class >> initialize [
 	ExtraWorldListMutex := Semaphore forMutualExclusion.
@@ -114,21 +108,11 @@ WorldMorph class >> initialize [
 { #category : #'extra worlds' }
 WorldMorph class >> removeExtraWorld: aWorld [
 	ExtraWorldListMutex critical: [
+		ExtraWorldList size traceCr.
 		ExtraWorldList := self extraWorldList copyWithout: aWorld.
+		ExtraWorldList size traceCr.
 	].
 	CursorOwnerWorld == aWorld ifTrue: [ CursorOwnerWorld := nil ].
-]
-
-{ #category : #setting }
-WorldMorph class >> scaleFactor [
-	
-	^ World scaleFactor
-]
-
-{ #category : #setting }
-WorldMorph class >> scaleFactor: aValue [
-	
-	World scaleFactor: aValue
 ]
 
 { #category : #operations }
@@ -165,7 +149,7 @@ WorldMorph >> addAlarm: aSelector withArguments: argArray for: aTarget at: sched
 WorldMorph >> addAllMorphs: array [
 
 	super addAllMorphs: array.
-	array do: [:m | self startSteppingSubmorphsOf: m]
+	array do: [ :m | m startSteppingSubmorphs ]
 ]
 
 { #category : #'world state' }
@@ -519,9 +503,10 @@ WorldMorph >> stepListSize [
 
 { #category : #'project state' }
 WorldMorph >> steppingMorphsNotInWorld [
+
 	| all |
 	all := self allMorphs.
-	^ self listOfSteppingMorphs reject: [ :m | all includes: m ]	"self currentWorld steppingMorphsNotInWorld do: [:m | m delete]"
+	^ self listOfSteppingMorphs reject: [ :m | all includes: m ]
 ]
 
 { #category : #stepping }
@@ -583,7 +568,6 @@ WorldMorph >> wantsDropFiles: anEvent [
 
 { #category : #private }
 WorldMorph >> wantsDroppedMorph: aMorph event: evt [
-	
 	^ true
 ]
 

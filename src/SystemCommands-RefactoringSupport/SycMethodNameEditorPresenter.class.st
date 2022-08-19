@@ -140,6 +140,21 @@ SycMethodNameEditorPresenter class >> openOn: aMethod withInvalidArgs: aSet canR
 	^ temp openBlockedDialog
 ]
 
+{ #category : #specs }
+SycMethodNameEditorPresenter class >> openOn: aMethod withInvalidArgs: aSet canRenameArgs: aBoolean1 canRemoveArgs: aBoolean2 canAddArgs: aBoolean3 canEditName: aBoolean4 inWorld: aWorld [
+
+	"I take a RBMethodName as parameter and open the refactoring UI in a modal to rename it."
+
+	| temp |
+	temp := self on: aMethod.
+	temp invalidArgNames: aSet.
+	temp canRenameArgs: aBoolean1.
+	temp canRemoveArgs: aBoolean2.
+	temp canAddArgs: aBoolean3.
+	temp canEditName: aBoolean4.
+	^ temp asBlockedDialogWindow open
+]
+
 { #category : #action }
 SycMethodNameEditorPresenter >> addArgument [
 

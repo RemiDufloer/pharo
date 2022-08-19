@@ -85,7 +85,6 @@ RubParagraph >> click: anEvent for: model controller: editor [
 	"Give sensitive text a chance to fire.  Display flash: (100@100 extent: 100@100)."
 	
 	| action clickPoint |
-	
 	clickPoint := anEvent cursorPoint.
 	action := false.
 	self actionAttributesUnder: clickPoint event: anEvent do: [ :attribute| |target|
@@ -94,7 +93,7 @@ RubParagraph >> click: anEvent for: model controller: editor [
 		(attribute rubActOnClick: anEvent for: target in: self editor: editor) == true 	
 			ifTrue: [ ^ true ]].
 	
-	(action and: [ self currentWorld currentCursor == Cursor webLink]) 
+	(action and: [ textArea world currentCursor == Cursor webLink]) 
 		ifTrue:[ Cursor normal show ].
 	
 	^ action
@@ -437,7 +436,7 @@ RubParagraph >> move: anEvent for: model controller: editor [
 		(attribute actOnMove: anEvent for: target in: self editor: editor) == true 	
 			ifTrue: [ ^ true ]].
 	
-	(action and: [ self currentWorld currentCursor == Cursor webLink]) 
+	(action and: [ textArea world currentCursor currentCursor == Cursor webLink]) 
 		ifTrue:[ Cursor normal show ].
 	
 	^ action

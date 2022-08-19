@@ -19,7 +19,7 @@ MenubarItemMorph >> drawIconOn: aCanvas [
 	x := (self menuStringBounds left - iconForm width - 5 ).
 	y := (self top + ((self height - iconForm height) // 2)).
 	
-	aCanvas translucentImage: iconForm at: x @ y
+	aCanvas translucentImage: iconForm at: x @ y.
 ]
 
 { #category : #drawing }

@@ -72,7 +72,6 @@ TextEditorDialogWindow >> icon [
 { #category : #initialization }
 TextEditorDialogWindow >> initialize [
 	"Initialize the receiver."
-
 	super initialize.
 	self beResizeable.
 	entryText := ''.

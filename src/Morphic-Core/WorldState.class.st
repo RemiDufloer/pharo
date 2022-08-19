@@ -275,7 +275,7 @@ WorldState class >> screenShotCommandOn: aBuilder [
 	<worldMenu>
 	(aBuilder item: #Screenshot)
 		parent: #System;
-		target: self currentWorld;
+		target: aBuilder model world ;
 		order: 99;
 		selector: #makeAScreenshot;
 		label: 'Screenshot';
@@ -751,6 +751,7 @@ WorldState >> runLocalStepMethodsIn: aWorld [
 	now := Time millisecondClockValue.
 	priorWorld := ActiveWorld.
 	ActiveWorld := aWorld.
+
 	self triggerAlarmsBefore: now.
 	stepList isEmpty 
 		ifTrue: 
@@ -830,6 +831,13 @@ WorldState >> stopStepping: aMorph selector: aSelector [
 	stepList removeAll: (stepList select:[:stepMsg| stepMsg receiver == aMorph and:[stepMsg selector == aSelector]]).
 ]
 
+{ #category : #accessing }
+WorldState >> tools [
+
+	Smalltalk tools world: self worldRenderer world .
+	^ Smalltalk tools
+]
+
 { #category : #alarms }
 WorldState >> triggerAlarmsBefore: nowTime [
 	"Trigger all pending alarms that are to be executed before nowTime."
@@ -862,6 +870,12 @@ WorldState >> viewBox [
 	^ self worldRenderer viewBox
 ]
 
+{ #category : #accessing }
+WorldState >> world [
+
+	^ worldRenderer world
+]
+
 { #category : #'worldmenu building' }
 WorldState >> worldMenu [
 	^self menuBuilder menuEntitled: self discoveredMenuTitle
@@ -870,7 +884,7 @@ WorldState >> worldMenu [
 { #category : #hands }
 WorldState >> worldRenderer [
 
-    ^ worldRenderer ifNil: [ worldRenderer := NullWorldRenderer forWorld: self currentWorld ]
+    ^ worldRenderer ifNil: [ worldRenderer := NullWorldRenderer forWorld: MiniWorld new ]
 ]
 
 { #category : #accessing }
@@ -878,4 +892,10 @@ WorldState >> worldRenderer: anObject [
 
 	worldRenderer := anObject.
 	worldRenderer activate
+]
+
+{ #category : #accessing }
+WorldState >> worldState [
+
+	^ self
 ]

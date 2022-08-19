@@ -319,7 +319,6 @@ SystemWindow >> allowedToClose [
 { #category : #'*Polymorph-Widgets' }
 SystemWindow >> animateClose [
 	"Animate closing."
-	
 	| smallRect restoredRect rects steps|
 	self isMinimized ifTrue: [^self].
 	restoredRect := self bounds.
@@ -328,7 +327,7 @@ SystemWindow >> animateClose [
 	steps := self theme numberOfStepsForAnimations.
 	rects := ((steps - 1)/steps to: 0 by: -1/steps) collect: [:x |
 		smallRect interpolateTo: restoredRect at: (20 raisedTo: x) - 1 / 19].
-	self currentWorld displayWorldSafely.
+	self world displayWorldSafely.
 	self fastAnimateRectangles: rects
 ]
 
@@ -599,7 +598,7 @@ SystemWindow >> fastAnimateRectangles: rects [
 		merged := merged merge: r.
 		delay wait].
 	merged := merged expandBy: 1.
-	self currentWorld invalidRect: merged from: self
+	self world invalidRect: merged from: self
 ]
 
 { #category : #'*Polymorph-Widgets' }
@@ -740,10 +739,14 @@ SystemWindow >> isActive [
 
 { #category : #'*Polymorph-Widgets' }
 SystemWindow >> isEmbedded [
+
 	"Answer whether the receiver is embedded, i.e.
 	has an owner that is not the world or the hand."
 
-	^self owner isNotNil and: [self owner ~= self world and: [self owner ~= self activeHand]]
+	^ self owner isNotNil and: [ 
+		  self owner ~= self world and: [ 
+			  self owner ~= self activeHand and: [ 
+				  self owner owner ~= self world ] ] ]
 ]
 
 { #category : #'*Polymorph-Widgets' }

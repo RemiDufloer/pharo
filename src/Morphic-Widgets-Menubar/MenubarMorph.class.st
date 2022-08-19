@@ -28,7 +28,7 @@ Class {
 }
 
 { #category : #'instance creation' }
-MenubarMorph class >> closeAll [
+MenubarMorph class >> closeAllWindow [
 
 	self currentWorld submorphs
 		select: [ :e | e isKindOf: MenubarMorph ]
@@ -80,11 +80,21 @@ MenubarMorph class >> open [
 		open.
 ]
 
+{ #category : #'instance creation' }
+MenubarMorph class >> openInWorld: aWorld [
+	
+	self showMenubar ifFalse: [ ^ self ].
+
+	self new
+		menuBarItems:  aWorld worldMenu menuSpec items;
+		openInWorld: aWorld.
+]
+
 { #category : #'class initialization' }
 MenubarMorph class >> reset [
 
 	<script>
-	self closeAll.
+	self closeAllWindow.
 	self open.
 ]
 
@@ -149,6 +159,11 @@ MenubarMorph >> newMenuItem [
 
 { #category : #accessing }
 MenubarMorph >> open [
+	self openInWorld: self currentWorld .
+]
+
+{ #category : #accessing }
+MenubarMorph >> openInWorld: aWorld [
 	self menuBarItems
 		do: [ :each | 
 			self
@@ -160,9 +175,8 @@ MenubarMorph >> open [
 				keyText: each keyText.
 			each separator
 				ifTrue: [ self addSeparator ] ].
-	self
-		adhereToTop;
-		openInWorld
+	self adhereToTop.
+	aWorld addMorphFront: self.
 ]
 
 { #category : #recategorized }

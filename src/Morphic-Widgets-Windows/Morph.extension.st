@@ -104,8 +104,7 @@ Morph >> openInWindow [
 
 { #category : #'*Morphic-Widgets-Windows' }
 Morph >> openInWindowLabeled: aString [
-
-	^self openInWindowLabeled: aString inWorld: self currentWorld
+	^self openInWindowLabeled: aString inWorld: self currentWorld  
 ]
 
 { #category : #'*Morphic-Widgets-Windows' }
@@ -115,6 +114,12 @@ Morph >> openInWindowLabeled: aString inWorld: aWorld [
 	^ self wrappedInWindow
 		setLabel: aString;
 		openInWorld: aWorld
+]
+
+{ #category : #'*Morphic-Widgets-Windows' }
+Morph >> openInWindowOnWorld: aWorld [
+	self ensureInitialState.
+	^self openInWindowLabeled: self defaultLabel inWorld: aWorld
 ]
 
 { #category : #'*Morphic-Widgets-Windows' }
@@ -153,8 +158,8 @@ Morph >> shadowMargins [
 { #category : #'*Morphic-Widgets-Windows' }
 Morph >> window [
 	"Answer the receiver's window."
-
-	^self ownerThatIsA: SystemWindow
+	
+	^ self owner ifNotNil: [ self owner window ]
 ]
 
 { #category : #'*Morphic-Widgets-Windows' }

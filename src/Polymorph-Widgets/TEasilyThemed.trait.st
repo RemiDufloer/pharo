@@ -54,19 +54,6 @@ TEasilyThemed >> alert: aStringOrText title: aString configure: aBlock [
 ]
 
 { #category : #services }
-TEasilyThemed >> centeredAlert: aStringOrText title: aString configure: aBlock [
-	"Open an alert dialog.
-	Configure the dialog with the 1 argument block
-	before opening modally."
-
-	^self theme
-		centeredAlertIn: self
-		text: aStringOrText
-		title: aString
-		configure: aBlock
-]
-
-{ #category : #services }
 TEasilyThemed >> chooseColor [
 	"Answer the result of a color selector dialog ."
 

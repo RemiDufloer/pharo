@@ -169,8 +169,7 @@ AbstractWorldRenderer class >> stopProfilingRenderingTime [
 { #category : #activation }
 AbstractWorldRenderer >> activate [
 
-	alreadyActivated ifTrue: [ 
-		"Maybe I need to change the title of the window after saving the image"
+	alreadyActivated ifTrue: [ "Maybe I need to change the title of the window after saving the image" 
 		^ self updateWindowTitle ].
 
 	self doActivate.
@@ -258,7 +257,7 @@ AbstractWorldRenderer >> doActivate [
 
 { #category : #rendering }
 AbstractWorldRenderer >> drawDuring: aBlock [
-
+	
 	self subclassResponsibility
 ]
 
@@ -310,7 +309,7 @@ AbstractWorldRenderer >> restoreMorphicDisplay [
 		submorphsDo: [ :each | each displayExtentChanged ];
 		fullRepaintNeeded.
 		
-	world defer: [Cursor normal show].
+	world defer: [Cursor normal showIn: world].
 		
 	world layoutChanged.
 ]

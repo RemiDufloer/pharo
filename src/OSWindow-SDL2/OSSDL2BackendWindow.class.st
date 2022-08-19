@@ -367,13 +367,13 @@ OSSDL2BackendWindow >> mapSpecialCharacter: symbol [
 { #category : #'window management' }
 OSSDL2BackendWindow >> maximize [
 
-	sdl2Window maximize
+	^ sdl2Window maximize
 ]
 
 { #category : #'window management' }
 OSSDL2BackendWindow >> minimize [
 
-	sdl2Window minimize
+	^ sdl2Window minimize
 ]
 
 { #category : #'event handling' }

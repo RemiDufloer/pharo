@@ -42,7 +42,8 @@ Class {
 	#superclass : #Object,
 	#instVars : [
 		'tools',
-		'announcer'
+		'announcer',
+		'world'
 	],
 	#category : #'Tool-Registry'
 }
@@ -148,7 +149,7 @@ ToolRegistry >> menuItems [
 
 { #category : #menu }
 ToolRegistry >> openClassBrowser [
-	^ self browser open
+	 ^ self browser openInWorld: world
 ]
 
 { #category : #menu }
@@ -176,18 +177,23 @@ ToolRegistry >> openRecentChangesLog [
 ]
 
 { #category : #menu }
+ToolRegistry >> openSpotter [
+	^ self spotter openInWorld: world
+]
+
+{ #category : #menu }
 ToolRegistry >> openTestRunner [
-	self using: #testRunner do: [:tool | tool open ]
+	TestRunner openInWorld: world
 ]
 
 { #category : #menu }
 ToolRegistry >> openTranscript [
-	^ self transcript open
+	^ self transcript openInWorld: world
 ]
 
 { #category : #menu }
 ToolRegistry >> openWorkspace [
-	^ self workspace open
+	^ self workspace openInWorld: world
 ]
 
 { #category : #registration }
@@ -247,4 +253,10 @@ ToolRegistry >> whenToolRegistered: aBlock [
 ToolRegistry >> whenToolUnregistered: aBlock [
 
 	self announcer weak when: ToolRegistryToolUnregistered do: aBlock 
+]
+
+{ #category : #world }
+ToolRegistry >> world: aWorld [ 
+	
+	world := aWorld .
 ]

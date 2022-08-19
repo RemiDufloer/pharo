@@ -552,7 +552,7 @@ AthensCairoSurface >> getFreetypeFontRendererFor: aFreetypeFont [
 
 { #category : #accessing }
 AthensCairoSurface >> getHandle [
-	
+
 	^ handle
 ]
 

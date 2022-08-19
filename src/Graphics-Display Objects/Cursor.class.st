@@ -1030,18 +1030,24 @@ Cursor >> scaledToSize: newExtent [
 ]
 
 { #category : #displaying }
-Cursor >> show [
+Cursor >> showIn: aWorld [
 	"Make the hardware's mouse cursor look like the receiver"
-	self currentWorld activeHand ifNotNil: [:aHand | aHand currentCursor: self ]
+	aWorld activeHand ifNotNil: [:aHand | aHand currentCursor: self ]
 ]
 
 { #category : #displaying }
-Cursor >> showWhile: aBlock [ 
-	"While evaluating the argument, aBlock, make the receiver be the cursor shape."
+Cursor >> showWhile: aBlock [
+
+	^ self showWhile: aBlock  inWorld: self currentWorld .
+]
+
+{ #category : #displaying }
+Cursor >> showWhile: aBlock inWorld: aWorld [
+
 	| oldcursor |
-	oldcursor := self currentWorld currentCursor.
-	self show.
-	^aBlock ensure: [oldcursor show]
+	oldcursor := aWorld currentCursor.
+	self showIn: aWorld .
+	^ aBlock ensure: [ oldcursor showIn: aWorld ]
 ]
 
 { #category : #converting }

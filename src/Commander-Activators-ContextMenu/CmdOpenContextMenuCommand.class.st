@@ -59,7 +59,7 @@ CmdOpenContextMenuCommand >> execute [
 	menu hasItems ifFalse: [^self].
 	
 	menu setInvokingView: context tool.
-	menu invokeModal
+	menu invokeModalInWorld: context tool world
 ]
 
 { #category : #'context menu' }

@@ -246,7 +246,7 @@ SettingBrowser class >> menuCommandOn: aBuilder [
 		parent: #Pharo;
 		order: 1;
 		iconName: #smallConfigurationIcon;
-		action: [ SettingBrowser open ];
+		action: [ SettingBrowser openInWorld: aBuilder model world];
 		keyText: 'o, s';
 		help: 'Opens a SystemSettingBrowser which allows you to alter many system settings.';
 		withSeparatorAfter
@@ -256,6 +256,11 @@ SettingBrowser class >> menuCommandOn: aBuilder [
 SettingBrowser class >> open [
 	"Open a SettingBrowser view"
 	^ self new open
+]
+
+{ #category : #showing }
+SettingBrowser class >> openInWorld: aWorldMorph [ 
+	self new openInWorld: aWorldMorph 
 ]
 
 { #category : #updating }
@@ -601,14 +606,22 @@ SettingBrowser >> newTreeHolder [
 ]
 
 { #category : #'user interface' }
-SettingBrowser >> open [
+SettingBrowser >> open [ 
+
+	self openInWorld: self currentWorld
+	
+	
+]
+
+{ #category : #'user interface' }
+SettingBrowser >> openInWorld: aWorld [
 	
 	Cursor wait
 		showWhile: [ | window |window := StandardWindow new model: self.
 			window title: self windowTitle.
 			self buildWindowIn: window.
 			window themeChanged.
-			window openInWorld.
+			window openInWorld: aWorld.
 			(window findDeeplyA: self treeMorphClass)  takeKeyboardFocus. 
 			^ window]
 ]

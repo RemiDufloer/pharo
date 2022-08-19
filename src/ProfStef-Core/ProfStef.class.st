@@ -251,7 +251,6 @@ ProfStef >> goOn: aTutorialClass [
 { #category : #'private - accessing' }
 ProfStef >> helpBrowserWindow [
 	"Yes this is a hack"
-	
 	^ self currentWorld systemWindows 
 		detect: [ :each | each model class = HelpBrowser ] 
 		ifNone: [ nil ]

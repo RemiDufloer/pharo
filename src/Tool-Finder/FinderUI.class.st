@@ -769,13 +769,13 @@ FinderUI >> menu: menu shifted: b [
 ]
 
 { #category : #display }
-FinderUI >> open [
+FinderUI >> openInWorld: aWorld [
 	 
 	| window |
 	window := StandardWindow new model: self.
 	self addAllItems: window.
 	window setLabel: self defaultWindowLabel.
-	window openInWorld.
+	window openInWorld: aWorld .
 	self searchingTextArea contentMorph takeKeyboardFocus
 ]
 

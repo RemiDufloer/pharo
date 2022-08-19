@@ -328,7 +328,7 @@ TabBarMorph >> ownerChanged [
 { #category : #menu }
 TabBarMorph >> popUpMenu [
 	| menu |
-	
+	1haltOnce.
 	menu := self selectedTab menu.
 	menu popUpAt: menuButton bottomRight forHand: self activeHand in: self currentWorld
 ]

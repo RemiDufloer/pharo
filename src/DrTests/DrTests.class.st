@@ -59,7 +59,7 @@ DrTests class >> menuCommandOn: aBuilder [
 	
 	(aBuilder item: #'Dr Test (Preview)')
 		parent: #Testing;
-		action: [ self open ];
+		action: [ self openInWorld: aBuilder model world ];
 		order: 2;
 		"keyText: 'o, u';" "Note: Removed the shortcut to not clash with SUnitRunner keybinding."
 		help: '(Preview) Let you run and debug SUnit tests.';
@@ -73,6 +73,15 @@ DrTests class >> open [
 	<script>
 	^ self new
 		  open;
+		  yourself
+]
+
+{ #category : #api }
+DrTests class >> openInWorld: aWorld [
+
+	<script>
+	^ self new
+		  openInWorld: aWorld;
 		  yourself
 ]
 

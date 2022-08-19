@@ -81,7 +81,7 @@ SystemWindow >> taskbarButtonEntered: aButton event: evt in: aMorph [
 			ifNotNil: [^self].
 		self setProperty: #taskbarThumbnail toValue: thumb.
 		thumb bottomLeft: ((aButton left min: aButton owner right - thumb width)@ (aButton owner top - 4)).
-		thumb openInWorld]
+		thumb openInWorld: self world]
 ]
 
 { #category : #'*Morphic-Widgets-Taskbar' }
@@ -109,8 +109,9 @@ SystemWindow >> taskbarButtonLeft: aButton event: evt in: aMorph [
 { #category : #'*Morphic-Widgets-Taskbar' }
 SystemWindow >> taskbarButtonMenu: aMenu [
 	"Answer the menu for the task bar button."
-
+	
 	| menu theme submenu  |
+
 	theme :=  self theme.	
 	menu := theme newMenuIn: self for: self.
 	
@@ -171,7 +172,7 @@ SystemWindow >> taskbarButtonMenu: aMenu [
 		enablementSelector: true.
 	submenu
 		addToggle: 'unchanged windows' translated
-		target: self currentWorld
+		target: self world
 		selector: #closeAllUnchangedWindows
 		getStateSelector: nil
 		enablementSelector: true.

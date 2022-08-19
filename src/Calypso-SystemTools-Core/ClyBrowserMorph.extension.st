@@ -104,16 +104,17 @@ ClyBrowserMorph >> requestRemoveClassStrategyFor: classes [
 		              classes: classes.
 
 	strategies size = 1 ifTrue: [ ^ strategies first ].
-	
+
 	title := classes size = 1
-		ifTrue: [ 'Class has references, subclasses, or users' ]
-		ifFalse: [ 'Classes have references, subclasses, or users' ].
+		         ifTrue: [ 'Class has references, subclasses, or users' ]
+		         ifFalse: [ 'Classes have references, subclasses, or users' ].
 
 	result := UIManager default
 		          chooseFrom:
 		          (strategies collect: [ :each | each userRequestString ])
 		          values: strategies
-		          title: title.
+		          title: title
+		          on: self world.
 
 	^ result ifNil: [ SycNotRemoveClassStrategy new ]
 ]

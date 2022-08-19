@@ -216,20 +216,6 @@ PasteUpMorph >> checkSession [
 	"do nothing"
 ]
 
-{ #category : #stepping }
-PasteUpMorph >> cleanseOtherworldlySteppers [
-	"If the current project is a morphic one, then remove from its steplist
-	those morphs that are not really in the world"
-	"Utilities cleanseOtherworldlySteppers"
-	| old delta |
-	old := self world stepListSize.
-	self world steppingMorphsNotInWorld
-		do: [:m | m delete].
-	self world cleanseStepList.
-	(delta := old - self world stepListSize) > 0
-		ifTrue: [ self crTrace: delta asString , ' morphs removed from steplist' ]
-]
-
 { #category : #'Morphic-Base-Windows' }
 PasteUpMorph >> closeAllUnchangedWindows [
 	(self  windowsSatisfying: [:w | w model canDiscardEdits])
@@ -914,15 +900,6 @@ PasteUpMorph >> shouldGetStepsFrom: aWorld [
 	(self isWorldMorph and: [owner notNil]) 
 		ifTrue: [ ^self outermostWorldMorph == aWorld ].
 	^super shouldGetStepsFrom: aWorld
-]
-
-{ #category : #'world state' }
-PasteUpMorph >> startSteppingSubmorphsOf: aMorph [
-	"Ensure that all submorphs of the given morph that want to be stepped are added to the step list.   Typically used after adding a morph to the world."
-
-	aMorph allMorphsDo: [:m |
-		m wantsSteps ifTrue: [m arrangeToStartSteppingIn: m world].
-	]
 ]
 
 { #category : #options }

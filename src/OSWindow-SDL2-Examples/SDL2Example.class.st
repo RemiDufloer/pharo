@@ -21,7 +21,7 @@ SDL2Example >> osWindow [
 	attrs preferableDriver: OSSDL2Driver new;
 		extent: Display extent.
 	window := OSWindow createWithAttributes: attrs.
-	window eventHandler: (OSWindowMorphicEventHandler for: self currentWorld).
+	window eventHandler: (OSWindowMorphicEventHandler for:  MiniWorld new ).
 	window newFormRenderer: Display.
 	^window
 ]

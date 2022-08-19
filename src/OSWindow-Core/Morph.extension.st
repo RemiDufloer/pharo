@@ -3,11 +3,10 @@ Extension { #name : #Morph }
 { #category : #'*OSWindow-Core' }
 Morph >> openInExternalWindow [
 	| world |
-	world := OSWindowWorldMorph new extent: self fullBounds extent.
+	world := MiniWorld new.
 	world
-		layoutPolicy: ProportionalLayout new;
+		layoutPolicy: StackLayout  new;
 		clipSubmorphs: true.
-
 	self hResizing: #spaceFill; vResizing: #spaceFill.
 	self openInWorld: world.
 	self onAnnouncement: MorphDeleted do: [ :announce |
@@ -38,4 +37,17 @@ Morph >> openInExternalWindowModalCallback: aBlock [
 		world := nil.
 	].
 	^ world open
+]
+
+{ #category : #'*OSWindow-Core' }
+Morph >> openInExternalWindowWithAttributes: aAttributs [
+
+	| world |
+	world := self buildWindowRootWorld.
+
+	self openInWorld: world.
+	self onAnnouncement: MorphDeleted do: [ :announce | 
+		world ifNotNil: [ world delete ].
+		world := nil ].
+	^ world openWithAttributes: aAttributs
 ]

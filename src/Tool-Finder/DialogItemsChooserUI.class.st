@@ -311,7 +311,7 @@ DialogItemsChooserUI >> newContentMorph [
 
 { #category : #opening }
 DialogItemsChooserUI >> preOpenInWorld: aWorld [
-
+	
 	self width: 500.
 	self height: 400.
 	self centering

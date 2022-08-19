@@ -68,8 +68,10 @@ BaselineOfMorphicCore >> postload: loader package: packageSpec [
 	Cursor initTarget.
 	EventManager initialize.
 
-	world := WorldMorph new.
+	world := MiniWorld new.
 	world instVarNamed: #worldState put: WorldState new.
+	world addMorph: DesktopMorph new.
+	
 	hand := HandMorph new.
 	world addHand: hand.
 	world activeHand: hand.
@@ -85,8 +87,7 @@ BaselineOfMorphicCore >> postload: loader package: packageSpec [
 	Display newDepth: 32.
 	world displayWorldSafely.
 	MorphicCoreUIManager new spawnNewProcess.
-	
-	world cleanseOtherworldlySteppers.
+
 	ExternalDropHandler resetRegisteredHandlers.
 
 	Display newDepth: 32.

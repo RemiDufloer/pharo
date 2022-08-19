@@ -401,7 +401,7 @@ TaskbarMorph >> updateTasks [
 	task will be considered dead along with a new replacement."
 
 	| wm deadTasks newTasks taskbarTasksFromWorldMorph |
-	wm := self worldMorphs asOrderedCollection.
+	wm := self windows.
 	taskbarTasksFromWorldMorph := (wm collect: [ :m | m taskbarTask ])
 		reject: [ :m | m isNil ].
 	self tasks: taskbarTasksFromWorldMorph.
@@ -431,6 +431,12 @@ TaskbarMorph >> wantsToBeTopmost [
 	objects in its owner."
 	
 	^ true
+]
+
+{ #category : #taskbar }
+TaskbarMorph >> windows [
+
+	^ self worldMorphs asOrderedCollection
 ]
 
 { #category : #taskbar }

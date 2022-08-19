@@ -95,7 +95,7 @@ ThreePhaseButtonMorph >> doButtonAction [
 	(target notNil and: [actionSelector notNil]) 
 		ifTrue: 
 			[Cursor normal 
-				showWhile: [target perform: actionSelector withArguments: arguments].
+				showWhile: [target perform: actionSelector withArguments: arguments]inWorld: self world.
 			target isMorph ifTrue: [target changed]]
 ]
 
@@ -113,7 +113,7 @@ ThreePhaseButtonMorph >> doButtonAction: evt [
 			arguments
 		].
 		target perform: actionSelector withArguments: moreArgs
-	]
+	]inWorld: self world
 ]
 
 { #category : #drawing }

@@ -141,7 +141,7 @@ SimpleButtonMorph >> doButtonAction [
 	(target notNil and: [actionSelector notNil]) 
 		ifTrue: 
 			[Cursor normal 
-				showWhile: [target perform: actionSelector withArguments: arguments]].
+				showWhile: [target perform: actionSelector withArguments: arguments]inWorld: self world].
 	actWhen == #startDrag ifTrue: [oldColor ifNotNil: [self color: oldColor]]
 ]
 

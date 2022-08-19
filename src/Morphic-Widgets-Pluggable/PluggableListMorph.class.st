@@ -1061,7 +1061,7 @@ PluggableListMorph >> mouseUpOnSingle: event [
 				ifTrue: [ row = 0 ifFalse: [ self changeModelSelection: 0 ] ]
 				ifFalse: [ self changeModelSelection: row ] ]
 		ifFalse: [ self changeModelSelection: row ].
-	Cursor normal show
+	Cursor normal showIn: self world
 ]
 
 { #category : #'multi-selection' }

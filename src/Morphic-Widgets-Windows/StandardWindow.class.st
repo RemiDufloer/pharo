@@ -168,15 +168,6 @@ StandardWindow >> open [
 	self openInWorld
 ]
 
-{ #category : #'open/close' }
-StandardWindow >> openFullscreen [
-	"Open the receiver in a FullscreenMorph."
-
-	^FullscreenMorph new
-		setContentMorph: self;
-		openInWorld
-]
-
 { #category : #testing }
 StandardWindow >> openedFullscreen [
 	"Should activate and update the layout."

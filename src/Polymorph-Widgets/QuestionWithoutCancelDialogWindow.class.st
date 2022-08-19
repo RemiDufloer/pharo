@@ -20,6 +20,12 @@ QuestionWithoutCancelDialogWindow >> escapePressed [
 	self no
 ]
 
+{ #category : #initialization }
+QuestionWithoutCancelDialogWindow >> initialize [ 
+	super initialize 
+	
+]
+
 { #category : #accessing }
 QuestionWithoutCancelDialogWindow >> newButtons [
 	"Answer new buttons as appropriate."

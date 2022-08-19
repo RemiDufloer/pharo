@@ -58,13 +58,3 @@ SimulateMouseTest >> timeoutAfter: aDuration ifNot: aBlock [
 	timer := Stopwatch new activate.
 	[ timer duration < aDuration and: [ aBlock value not ] ] whileTrue.
 ]
-
-{ #category : #helpers }
-SimulateMouseTest >> waitForMorphThat: aBlock [
-
-	self timeoutAfter: 2 seconds ifNot: [
-		morph := self currentWorld submorphThat: aBlock ifNone: [ nil ].
-		(Delay forMilliseconds: 100) wait.
-		morph isNil].
-	^ morph.
-]

@@ -43,11 +43,3 @@ HelpBrowserTest >> testLazyDefaultHelpBrowser [
 	
 	self assert: self defaultTestClass defaultHelpBrowser notNil
 ]
-
-{ #category : #testing }
-HelpBrowserTest >> testOpen [
-	|browser|
-	browser := self defaultTestClass open.
-	self currentWorld doOneCycleNow. 
-	browser close
-]

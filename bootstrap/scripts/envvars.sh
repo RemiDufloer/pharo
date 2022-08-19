@@ -30,11 +30,10 @@ fi
 
 if [ -z ${BOOTSTRAP_REPOSITORY+x} ]
 then
-  ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." ; pwd -P)"
-  export BOOTSTRAP_REPOSITORY="${ROOT_DIR}"
-else
-  ROOT_DIR="$(pwd -P)"
+  export BOOTSTRAP_REPOSITORY="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." ; pwd -P)"
 fi
+# Always use the current working diretory as root directory
+ROOT_DIR="$(pwd -P)"
 
 if [ -z ${BOOTSTRAP_CACHE+x} ]
 then
@@ -61,5 +60,5 @@ fi
 IMAGE_FLAGS="--no-default-preferences"
 
 # Include pharo version 
-. $(cd "$(dirname "${BASH_SOURCE[0]}")" ; pwd -P)/envversion.sh
+. "$(cd "$(dirname "${BASH_SOURCE[0]}")" ; pwd -P)/envversion.sh"
 

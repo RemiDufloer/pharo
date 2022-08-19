@@ -133,7 +133,6 @@ WelcomeHelp class >> open [
 WelcomeHelp class >> openForRelease [
 	<script>
 	| browser window findBlock |
-	
 	findBlock := [ :each | (each isKindOf: SystemWindow) and: [ each label = self bookName ] ]. 
 	self currentWorld submorphs 
 		detect: findBlock 

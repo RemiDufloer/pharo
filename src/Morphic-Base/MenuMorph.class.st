@@ -208,6 +208,7 @@ MenuMorph >> activeSubmenu: aSubmenu [
 	activeSubMenu
 		ifNotNil: [activeSubMenu delete].
 	activeSubMenu := aSubmenu.
+	self world ifNotNil: [ self world fullRepaintNeeded ] .
 ]
 
 { #category : #construction }
@@ -686,15 +687,6 @@ MenuMorph >> detachSubMenu: evt [
 	].
 ]
 
-{ #category : #control }
-MenuMorph >> displayAt: aPoint during: aBlock [
-	"Add this menu to the Morphic world during the execution of the given block."
-	self currentWorld addMorph: self centeredNear: aPoint.
-	self world displayWorld.  "show myself"
-	aBlock value.
-	self delete
-]
-
 { #category : #'keyboard control' }
 MenuMorph >> displayFiltered: evt [
 	| matchStr matches feedbackMorph |
@@ -826,7 +818,6 @@ MenuMorph >> hasSubMenu: aMenuMorph [
 { #category : #initialization }
 MenuMorph >> initialize [
 	super initialize.
-
 	self setDefaultParameters.
 	self listDirection: #topToBottom.
 	self hResizing: #shrinkWrap.
@@ -888,8 +879,30 @@ MenuMorph >> invokeModal [
 	menu invokeModal."
 	
   ^ self
-		invokeAt: self currentWorld activeHand position
-		in: self currentWorld
+		invokeAt: (self owner world) activeHand position
+		in: (self owner world)
+]
+
+{ #category : #invoking }
+MenuMorph >> invokeModalInWorld: aWorld [
+
+	"Invoke this menu and don't return until the user has chosen a value.
+	See example below on how to use modal menu morphs.
+	Example:
+	| menu sub entry |
+	menu := MenuMorph new.
+	1 to: 3 do: [:i |
+		entry := 'Line', i printString.
+		sub := MenuMorph new.
+		menu add: entry subMenu: sub.
+		#('Item A' 'Item B' 'Item C')  do:[:subEntry|
+			sub add: subEntry target: menu 
+				selector: #modalSelection: argument: {entry. subEntry}]].
+	menu invokeModal."
+
+	^ self
+		  invokeAt: aWorld activeHand position
+		  in: aWorld
 ]
 
 { #category : #testing }
@@ -967,18 +980,17 @@ MenuMorph >> keyDown: evt [
 
 { #category : #events }
 MenuMorph >> keyStroke: evt [
+
 	"Handle keboard item matching."
 
-	| matchString char asc help |
-	help := self theme builder newBalloonHelp: 'Enter text to\narrow selection down\to matching items ' withCRs for: self corner: #topLeft.
-	help popUpForHand: self activeHand.
+	| matchString char asc |
+	(self rootMenu hasProperty: #hasUsedKeyboard) ifFalse: [ 
+		self rootMenu setProperty: #hasUsedKeyboard toValue: true.
+		self changed ].
 
-	(self rootMenu hasProperty: #hasUsedKeyboard)
-		ifFalse: [ self rootMenu setProperty: #hasUsedKeyboard toValue: true.
-			self changed ].
-
-	(evt commandKeyPressed and: [ self commandKeyHandler notNil ])
-		ifTrue: [ self commandKeyHandler commandKeyTypedIntoMenu: evt.
+	(evt commandKeyPressed and: [ self commandKeyHandler notNil ]) 
+		ifTrue: [ 
+			self commandKeyHandler commandKeyTypedIntoMenu: evt.
 			^ self deleteIfPopUp: evt ].
 
 	char := evt keyCharacter.
@@ -986,7 +998,9 @@ MenuMorph >> keyStroke: evt [
 
 	"If we reach this point, it means that we are editing the filter associated to each menu. "
 	"In case ther eis no filter associated to the menu, we simply create one"
-	matchString := self valueOfProperty: #matchString ifAbsentPut: [ String new ].
+	matchString := self
+		               valueOfProperty: #matchString
+		               ifAbsentPut: [ String new ].
 
 	"No need to go further if the character is not alphanumeric, i.e., not useful for filtering"
 	char isAlphaNumeric ifFalse: [ ^ self ].
@@ -1070,7 +1084,8 @@ MenuMorph >> mouseDown: evt [
 	"Handle a mouse down event."
 	"Overridden to not grab on mouse down"
 	(stayUp or:[self fullContainsPoint: evt position]) 
-		ifFalse:[^self deleteIfPopUp: evt]. "click outside"
+		ifFalse:[
+			^self deleteIfPopUp: evt]. "click outside"
 	self comeToFront
 ]
 
@@ -1128,33 +1143,40 @@ MenuMorph >> pinboxClicked [
 ]
 
 { #category : #events }
-MenuMorph >> popUpAdjacentTo: rightOrLeftPoint forHand: hand from: sourceItem [ 
+MenuMorph >> popUpAdjacentTo: rightOrLeftPoint forHand: hand from: sourceItem [
+
 	"Present this menu at the given point under control of the given  
 	hand."
+
 	| tryToPlace selectedOffset |
-	hand world startSteppingSubmorphsOf: self.
+	self startSteppingSubmorphs.
 	popUpOwner := sourceItem.
 	self fullBounds.
-self updateColor.
+	self updateColor.
 	"ensure layout is current"
-	selectedOffset := selectedItem ifNil: [
-		self items 
-			ifEmpty: [ 0@0 ]
-			ifNotEmpty: [ :col | col first position - self position. ]
-	] ifNotNil: [ selectedItem position - self position ].
-					
-	tryToPlace := [:where :mustFit | | delta | 
-			self position: where - selectedOffset.
-			delta := self fullBoundsInWorld amountToTranslateWithin: sourceItem worldBounds.
-			(delta x = 0
-					or: [mustFit])
-				ifTrue: [delta = (0 @ 0)
-						ifFalse: [self position: self position + delta].
-					sourceItem world addMorphFront: self.
-					^ self]].
-	tryToPlace value: rightOrLeftPoint first value: false;
-		 value: rightOrLeftPoint last - (self width @ 0) value: false;
-		 value: rightOrLeftPoint first value: true
+	selectedOffset := selectedItem
+		                  ifNil: [ 
+			                  self items
+				                  ifEmpty: [ 0 @ 0 ]
+				                  ifNotEmpty: [ :col | 
+				                  col first position - self position ] ]
+		                  ifNotNil: [ selectedItem position - self position ].
+
+	tryToPlace := [ :where :mustFit | 
+	              | delta |
+	              self position: where - selectedOffset.
+	              delta := self fullBoundsInWorld 
+		                       amountToTranslateWithin:
+		                       sourceItem worldBounds.
+	              (delta x = 0 or: [ mustFit ]) ifTrue: [ 
+		              delta = (0 @ 0) ifFalse: [ 
+			              self position: self position + delta ].
+		              sourceItem world addMorphFront: self.
+		              ^ self ] ].
+	tryToPlace
+		value: rightOrLeftPoint first value: false;
+		value: rightOrLeftPoint last - (self width @ 0) value: false;
+		value: rightOrLeftPoint first value: true
 ]
 
 { #category : #control }
@@ -1201,10 +1223,13 @@ MenuMorph >> popUpAt: aPoint forHand: hand in: aWorld allowKeyboard: aBoolean [
 
 { #category : #control }
 MenuMorph >> popUpEvent: evt in: aWorld [
+
 	"Present this menu in response to the given event."
 
 	| aHand aPosition |
-	aHand := evt ifNotNil: [evt hand] ifNil: [ self activeHand ].
+	aHand := evt
+		         ifNotNil: [ aWorld world activeHand ]
+		         ifNil: [ self activeHand ].
 	aPosition := aHand position truncated.
 	^ self popUpAt: aPosition forHand: aHand in: aWorld
 ]
@@ -1229,13 +1254,6 @@ MenuMorph >> popUpInWorld [
 MenuMorph >> popUpInWorld: aWorld [
 	"Present this menu under control of the given hand."
 	^self popUpAt: aWorld primaryHand position forHand: aWorld primaryHand in: aWorld
-]
-
-{ #category : #control }
-MenuMorph >> popUpNoKeyboard [
-	"Present this menu in the current World, *not* allowing keyboard input into the menu"
-
-	^ self popUpAt: self activeHand position forHand: self activeHand in: self currentWorld allowKeyboard: false
 ]
 
 { #category : #accessing }

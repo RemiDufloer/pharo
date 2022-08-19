@@ -437,18 +437,19 @@ Morph >> addFillStyleMenuItems: aMenu hand: aHand [
 
 { #category : #'rotate scale and flex' }
 Morph >> addFlexShell [
+
 	"Wrap a rotating and scaling shell around this morph."
 
 	| oldHalo flexMorph myWorld anIndex |
-
 	myWorld := self world.
 	oldHalo := self halo.
 	anIndex := self owner submorphIndexOf: self.
-	self owner addMorph: (flexMorph := self newTransformationMorph asFlexOf: self)
+	self owner
+		addMorph: (flexMorph := self newTransformationMorph asFlexOf: self)
 		asElementNumber: anIndex.
 	self transferStateToRenderer: flexMorph.
-	oldHalo ifNotNil: [oldHalo setTarget: flexMorph].
-	myWorld ifNotNil: [myWorld startSteppingSubmorphsOf: flexMorph].
+	oldHalo ifNotNil: [ oldHalo setTarget: flexMorph ].
+	myWorld ifNotNil: [ flexMorph startSteppingSubmorphs ].
 
 	^ flexMorph
 ]
@@ -1493,6 +1494,25 @@ Morph >> buildMetaMenu: evt [
 	^ menu
 ]
 
+{ #category : #structure }
+Morph >> buildWindowRootWorld [
+
+	"Build a new world morph that will be the root of a window.
+	Prepare it to have a single child that will take all of its space."
+	
+	| world |
+	world := MiniWorld new.
+
+	world
+		layoutPolicy: StackLayout new;
+		clipSubmorphs: true.
+
+	self
+		hResizing: #spaceFill;
+		vResizing: #spaceFill.
+	^ world
+]
+
 { #category : #menu }
 Morph >> buildYellowButtonMenu: aHand [ 
 	"build the morph menu for the yellow button"
@@ -2140,7 +2160,6 @@ Morph >> displayExtentChanged [
 
 { #category : #settings }
 Morph >> displayScaleFactor [
-
 	^ self currentWorld displayScaleFactor
 ]
 
@@ -2200,7 +2219,7 @@ Morph >> doLayoutIn: layoutBounds [
 { #category : #opening }
 Morph >> doOpenInWorld: aWorld [
 
-	aWorld addMorph: self
+	aWorld addMorphInFrontOfLayer: self
 ]
 
 { #category : #'submorphs - accessing' }
@@ -2773,6 +2792,7 @@ Morph >> handleDropFiles: anEvent [
 Morph >> handleDropMorph: anEvent [
 	"Handle a dropping morph."
 	| aMorph localPt |
+	
 	aMorph := anEvent contents.
 	"Do a symmetric check if both morphs like each other"
 	((self wantsDroppedMorph: aMorph event: anEvent)	"I want her"
@@ -3107,6 +3127,7 @@ Morph >> handlesKeyStroke: evt [
 
 { #category : #'event handling' }
 Morph >> handlesKeyUp: evt [
+			
 	^self handlesKeyboard: evt
 ]
 
@@ -4432,15 +4453,6 @@ Morph >> onAnnouncement: anAnnouncement send: aMessageSelector to: anObject [
 ]
 
 { #category : #showing }
-Morph >> openCenteredInWorld [
-	"Open me in the center of current world"
-	self 
-		fullBounds;
-		openInWorld;
-		center: self world clearArea center
-]
-
-{ #category : #showing }
 Morph >> openInHand [
 	"Attach the receiver to the current hand in the current morphic world"
 
@@ -4655,7 +4667,7 @@ Morph >> positionSubmorphs [
 { #category : #opening }
 Morph >> postOpenInWorld: aWorld [
 
-	aWorld startSteppingSubmorphsOf: self
+	self startSteppingSubmorphs
 ]
 
 { #category : #'meta-actions' }
@@ -5199,6 +5211,7 @@ Morph >> repelsMorph: aMorph event: ev [
 
 { #category : #'submorphs - add/remove' }
 Morph >> replaceSubmorph: oldMorph by: newMorph [
+
 	| index itsPosition w |
 	oldMorph stopStepping.
 	itsPosition := oldMorph referencePositionInWorld.
@@ -5206,8 +5219,7 @@ Morph >> replaceSubmorph: oldMorph by: newMorph [
 	oldMorph privateDelete.
 	self privateAddMorph: newMorph atIndex: index.
 	newMorph referencePositionInWorld: itsPosition.
-	(w := newMorph world) ifNotNil:
-		[w startSteppingSubmorphsOf: newMorph]
+	(w := newMorph world) ifNotNil: [ newMorph startSteppingSubmorphs ]
 ]
 
 { #category : #'accessing - extension' }
@@ -5880,6 +5892,15 @@ Morph >> startSteppingSelector: aSelector [
 ]
 
 { #category : #'stepping and presenter' }
+Morph >> startSteppingSubmorphs [
+	"Ensure that all submorphs of the given morph that want to be stepped are added to the step list.   Typically used after adding a morph to the world."
+
+	self allMorphsDo: [:submorph |
+		submorph wantsSteps ifTrue: [submorph arrangeToStartSteppingIn: submorph world].
+	]
+]
+
+{ #category : #'stepping and presenter' }
 Morph >> step [
 	"Do some periodic activity. Use startStepping/stopStepping to start and stop getting sent this message. The time between steps is specified by this morph's answer to the stepTime message.  The generic version dispatches control to the player, if any.  The nasty circumlocation about owner's transformation is necessitated by the flexing problem that the player remains in the properties dictionary both of the flex and the real morph.  In the current architecture, only the top renderer's pointer to the player should actually be honored for the purpose of firing."
 ]
@@ -6121,7 +6142,7 @@ Morph >> themeChanged [
 Morph >> tileBottom [
 
 	| max |
-	max := RealEstateAgent maximumUsableArea.
+	max := RealEstateAgent maximumUsableAreaInWorld: self world.
 	self bounds: (max leftCenter corner: max corner)
 ]
 
@@ -6129,7 +6150,7 @@ Morph >> tileBottom [
 Morph >> tileBottomLeft [
 
 	| max |
-	max := RealEstateAgent maximumUsableArea.
+	max := RealEstateAgent maximumUsableAreaInWorld: self world.
 	self bounds: (max leftCenter corner: max bottomCenter)
 ]
 
@@ -6137,7 +6158,7 @@ Morph >> tileBottomLeft [
 Morph >> tileBottomRight [
 
 	| max |
-	max := RealEstateAgent maximumUsableArea.
+	max := RealEstateAgent maximumUsableAreaInWorld: self world.
 	self bounds: (max center corner: max corner)
 ]
 
@@ -6145,7 +6166,7 @@ Morph >> tileBottomRight [
 Morph >> tileCenter [
 
 	| max initial |
-	max := RealEstateAgent maximumUsableArea.
+	max := RealEstateAgent maximumUsableAreaInWorld: self world.
 	initial := self initialExtent.
 	self bounds: ((max center - (initial/2)) extent: initial)
 ]
@@ -6154,7 +6175,7 @@ Morph >> tileCenter [
 Morph >> tileFull [
 
 	| max |
-	max := RealEstateAgent maximumUsableArea.
+	max := RealEstateAgent maximumUsableAreaInWorld: self world.
 	self bounds: max
 ]
 
@@ -6162,7 +6183,7 @@ Morph >> tileFull [
 Morph >> tileLeft [
 
 	| max |
-	max := RealEstateAgent maximumUsableArea.
+	max := RealEstateAgent maximumUsableAreaInWorld: self world.
 	self bounds: (max topLeft corner: max bottomCenter)
 ]
 
@@ -6170,7 +6191,7 @@ Morph >> tileLeft [
 Morph >> tileRight [
 
 	| max |
-	max := RealEstateAgent maximumUsableArea.
+	max := RealEstateAgent maximumUsableAreaInWorld: self world.
 	self bounds: (max topCenter corner: max corner)
 ]
 
@@ -6178,7 +6199,7 @@ Morph >> tileRight [
 Morph >> tileTop [
 
 	| max |
-	max := RealEstateAgent maximumUsableArea.
+	max := RealEstateAgent maximumUsableAreaInWorld: self world.
 	self bounds: (max topLeft corner: max rightCenter)
 ]
 
@@ -6186,7 +6207,7 @@ Morph >> tileTop [
 Morph >> tileTopLeft [
 
 	| max |
-	max := RealEstateAgent maximumUsableArea.
+	max := RealEstateAgent maximumUsableAreaInWorld: self world.
 	self bounds: (max topLeft corner: max center)
 ]
 
@@ -6194,7 +6215,7 @@ Morph >> tileTopLeft [
 Morph >> tileTopRight [
 
 	| max |
-	max := RealEstateAgent maximumUsableArea.
+	max := RealEstateAgent maximumUsableAreaInWorld: self world.
 	self bounds: (max topCenter corner: max rightCenter)
 ]
 
@@ -6585,7 +6606,9 @@ Morph >> veryDeepInner: deepCopier [
 
 { #category : #'base - worlds' }
 Morph >> viewBox [
-	^ self pasteUpMorph viewBox
+
+	 owner ifNil: [ ^nil ].
+	 ^ owner viewBox
 ]
 
 { #category : #drawing }
@@ -6877,6 +6900,6 @@ Morph >> yellowButtonActivity: shiftState [
 	menu
 		addTitle: self externalName
 		icon: (self iconOrThumbnailOfSize: 28).
-	menu popUpInWorld: self currentWorld.
+	menu popUpInWorld: self world.
 	^ true
 ]

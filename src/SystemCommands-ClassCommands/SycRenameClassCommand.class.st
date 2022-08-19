@@ -50,7 +50,7 @@ SycRenameClassCommand >> prepareFullExecutionInContext: aToolContext [
 	super prepareFullExecutionInContext: aToolContext.
 	
 	newName := UIManager default 
-		request: 'New name of the class' initialAnswer: targetClass name title: 'Rename a class'.
+		request: 'New name of the class' initialAnswer: targetClass name title: 'Rename a class' inWorld:( aToolContext tool world).
 		
 	newName isEmptyOrNil | (newName = targetClass name) ifTrue: [ CmdCommandAborted signal]
 ]

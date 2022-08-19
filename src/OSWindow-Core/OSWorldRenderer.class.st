@@ -9,10 +9,30 @@ Class {
 		'osWindow',
 		'display',
 		'windowCloseAction',
-		'previousFrameRenderingTime'
+		'previousFrameRenderingTime',
+		'attributs',
+		'attributes'
 	],
 	#category : #'OSWindow-Core-Morphic'
 }
+
+{ #category : #'instance creation' }
+OSWorldRenderer class >> forWorld: aWorld [
+
+	^ self new
+		  world: aWorld;
+		  setAttributesDefault;
+		  yourself
+]
+
+{ #category : #'instance creation' }
+OSWorldRenderer class >> forWorld: aWorld withAttributs: aAttributes [
+
+	^ self new
+		  world: aWorld;
+		  attributes: aAttributes
+		  yourself
+]
 
 { #category : #accessing }
 OSWorldRenderer class >> isApplicableFor: aWorld [
@@ -39,6 +59,14 @@ OSWorldRenderer >> activateCursor: aCursor withMask: maskForm [
 { #category : #accessing }
 OSWorldRenderer >> actualScreenSize [
 	^ (self windowExtent / self screenScaleFactor) ceiling max: 1@1
+]
+
+{ #category : #accessing }
+OSWorldRenderer >> attributes: aAttributes [
+
+	attributes := aAttributes .
+	driver := aAttributes preferableDriver.
+	display := Form extent: aAttributes extent depth: 32.
 ]
 
 { #category : #events }
@@ -94,22 +122,6 @@ OSWorldRenderer >> deferUpdatesDuring: aBlock [
 { #category : #private }
 OSWorldRenderer >> doActivate [
 
-	| attributes initialExtent |
-	
-	initialExtent := world worldState realWindowExtent ifNil: [976@665].
-
-	attributes := OSWindowAttributes new.
-	attributes
-		extent: initialExtent;
-		title: Smalltalk image imageFile fullName;
-		windowCentered:true;
-		icon: (self iconNamed: #pharoBig).
-
-	display := Form extent: initialExtent depth: 32.
-	world extent: initialExtent.
-
-	driver := self pickMostSuitableWindowDriver.
-	attributes preferableDriver: driver.
 	osWindow := OSWindow createWithAttributes: attributes eventHandler: (OSWindowMorphicEventHandler for: world).
 	
 	driver afterMainPharoWindowCreated: osWindow.
@@ -120,7 +132,7 @@ OSWorldRenderer >> doActivate [
 	world worldState doFullRepaint.
 	world displayWorld.
 	
-	OSWindowClipboard new beDefault.
+	OSWindowClipboard newByRenderer: self.
 ]
 
 { #category : #operations }
@@ -195,7 +207,15 @@ OSWorldRenderer >> icon: aForm [
 OSWorldRenderer >> initialize [
 
 	super initialize.
-	windowCloseAction := [ self currentWorld defer: [ WorldState quitSession ] ]
+	windowCloseAction := [ 
+	                     self world defer: [ 
+		                     WorldState quitSession ] ]
+]
+
+{ #category : #accessing }
+OSWorldRenderer >> osWindow [
+
+	^ osWindow 
 ]
 
 { #category : #accessing }
@@ -218,6 +238,30 @@ OSWorldRenderer >> pickMostSuitableWindowDriver [
 OSWorldRenderer >> screenScaleFactor [
 
 	^ world scaleFactor * self windowScaleFactor
+]
+
+{ #category : #initialization }
+OSWorldRenderer >> setAttributesDefault [
+
+	| initialExtent |
+	initialExtent := world worldState realWindowExtent ifNil: [ 
+		                 976 @ 665 ].
+
+
+	attributes := OSWindowAttributes new.
+	attributes
+		extent: initialExtent;
+		title: Smalltalk image imageFile fullName;
+		windowCentered: true;
+		icon: (self iconNamed: #pharoBig).
+
+	display := Form extent: initialExtent depth: 32.
+
+	driver := self pickMostSuitableWindowDriver.
+	attributes preferableDriver: driver.
+
+	world worldState worldRenderer: self.
+	world extent: initialExtent
 ]
 
 { #category : #operations }

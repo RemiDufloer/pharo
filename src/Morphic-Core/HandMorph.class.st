@@ -116,14 +116,6 @@ HandMorph class >> settingsOn: aBuilder [
 "HandMorph eventStats inspect"'
 ]
 
-{ #category : #utilities }
-HandMorph class >> showEvents: aBool [
-	"HandMorph showEvents: true"
-	"HandMorph showEvents: false"
-	ShowEvents := aBool.
-	aBool ifFalse: [ self currentWorld invalidRect: (0@0 extent: 500@120) ].
-]
-
 { #category : #accessing }
 HandMorph class >> upperHandLimit [
 
@@ -286,10 +278,6 @@ HandMorph >> deleteBalloonTarget: aMorph [
 	"Delete any existing balloon help.  This is now done unconditionally, whether or not the morph supplied is the same as the current balloon target"
 	
 	self balloonHelp: nil
-
-"	| h |
-	h := self balloonHelp ifNil: [^ self].
-	h balloonOwner == aMorph ifTrue: [self balloonHelp: nil]"
 ]
 
 { #category : #drawing }
@@ -510,7 +498,6 @@ HandMorph >> handleEvent: anEvent [
 	| evt  |
 	owner ifNil:[^self].
 	evt := anEvent.
-	
 	"nil test here is for efficiency in the normal case"
 	EventStats ifNotNil: [ self class logEventStats: evt ]. 
 	
@@ -720,7 +707,7 @@ HandMorph >> needsToBeDrawn [
 		ifTrue: [ ^ true ].
 	"Switch from one hardware cursor to another, if needed."
 	cursor := hardwareCursor ifNil: [Cursor normal].
-	self currentCursor == cursor ifFalse: [cursor show].
+	self currentCursor == cursor ifFalse: [cursor showIn: self world].
 	^ false
 ]
 

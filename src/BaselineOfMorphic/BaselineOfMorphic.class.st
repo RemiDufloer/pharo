@@ -139,7 +139,7 @@ BaselineOfMorphic >> cleanUpAfterMorphicInitialization [
 	FreeTypeCache clearCurrent.
 	ImageMorph classPool at: #DefaultForm put: (Form extent: 1 @ 1 depth: 1).
 	Behavior flushObsoleteSubclasses.
-	World cleanseOtherworldlySteppers.
+	
 	Smalltalk organization removeEmptyCategories.
 	MCFileBasedRepository flushAllCaches.
 	MCMethodDefinition shutDown.

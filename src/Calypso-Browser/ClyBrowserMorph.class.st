@@ -123,7 +123,8 @@ Class {
 		'navigationStarted',
 		'plugins',
 		'navigationEnvironment',
-		'systemScope'
+		'systemScope',
+		'announcer'
 	],
 	#category : #'Calypso-Browser-UI'
 }
@@ -196,6 +197,12 @@ ClyBrowserMorph >> allNavigationScopes [
 	^self systemScope = defaultScope 
 		ifTrue: [ {self systemScope} ]
 		ifFalse: [ { self systemScope. defaultScope } ]
+]
+
+{ #category : #accessing }
+ClyBrowserMorph >> announcer [ 
+
+	^ announcer ifNil:  [ announcer := Announcer new. ]
 ]
 
 { #category : #'opening/closing' }
@@ -274,7 +281,7 @@ ClyBrowserMorph >> createCommandContext [
 ]
 
 { #category : #'opening/closing' }
-ClyBrowserMorph >> createWindowGroupFrom: currentWindow [
+ClyBrowserMorph >> createWindowGroupFrom: currentWindow inWorld: aWorld [
   | group pos ext |
 	(currentWindow ownerThatIsA: GroupWindowMorph) ifNotNil: [:existing | ^existing].
 	
@@ -282,10 +289,12 @@ ClyBrowserMorph >> createWindowGroupFrom: currentWindow [
 	ext := currentWindow extent.
 	group := ClyGroupWindowMorph new.
 	group addWindow: currentWindow.
-	(group openInWindowLabeled: currentWindow label) 
+	(group openInWindowLabeled: currentWindow label inWorld: aWorld) 
  		extent: ext;
 		position: pos.
 	^group
+	
+
 ]
 
 { #category : #'tools support' }
@@ -352,10 +361,12 @@ ClyBrowserMorph >> initialExtent [
 
 { #category : #initialization }
 ClyBrowserMorph >> initialize [
+
 	super initialize.
 	navigationStarted := false.
 	navigationHistory := ClyNavigationHistory new.
-	plugins := SortedCollection sortBlock: [ :a :b | a priority <= b priority ].
+	plugins := SortedCollection sortBlock: [ :a :b | 
+		           a priority <= b priority ].
 	self extent: self initialExtent.
 	self changeProportionalLayout.
 	self initializeToolsPanel.
@@ -494,25 +505,30 @@ ClyBrowserMorph >> okToChange [
 
 { #category : #'opening/closing' }
 ClyBrowserMorph >> open [
-	| window |
-	
-	self ensureInitialState.
-	window := self openInWindow.
-	window model: self.
-	self updateWindowTitle.
-	window minimumExtent: 650@500.0
+
+	self openInWindowOnWorld: self currentWorld
 ]
 
 { #category : #'opening/closing' }
 ClyBrowserMorph >> openAnotherBrowser: aBrowser [
-	aBrowser open
+	aBrowser openBy: self owner
+]
+
+{ #category : #'API - opening' }
+ClyBrowserMorph >> openBy: aWindow [ 
+	
+	| window |
+	self ensureInitialState.
+	aWindow openInWindow: self.
+	
 ]
 
 { #category : #'opening/closing' }
-ClyBrowserMorph >> openInWindow: aWindow [
+ClyBrowserMorph >> openInWindow: aWindow inWorld: aWorld [
+
 	| groupWindow myWindow |
-	groupWindow := self createWindowGroupFrom: aWindow.
-	
+	groupWindow := self createWindowGroupFrom: aWindow inWorld: aWorld.
+
 	myWindow := self buildWindow.
 	groupWindow addWindow: myWindow.
 	myWindow activate.
@@ -681,10 +697,11 @@ ClyBrowserMorph >> updateWindowTitle [
 		self setWindowTitle: self newWindowTitle in: w.
 		"in the case when window is managed as tab by window group
 		we should set up top group window label too"
-		(self ownerThatIsA: GroupWindowMorph) ifNotNil: [:group | 
-			group window ifNotNil: [:mainWindow |
-				self setWindowTitle: w labelString in: mainWindow]]
-	]
+		(self ownerThatIsA: GroupWindowMorph) ifNotNil: [ :group | 
+			group window ifNotNil: [ :mainWindow | 
+				self setWindowTitle: w labelString in: mainWindow ] ].
+		self announcer announce:
+			(WindowTitleAnnouncement title: self newWindowTitle) ]
 ]
 
 { #category : #navigation }

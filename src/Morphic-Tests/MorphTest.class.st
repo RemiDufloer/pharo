@@ -61,7 +61,7 @@ MorphTest >> testExtent [
 MorphTest >> testForTiltedStickyness [
 
 	| m |
-	m := Morph new openCenteredInWorld.
+	m := Morph new openInWorld.
 	self assert: m topRendererOrSelf isSticky not.
 	m beSticky.
 	self assert: m topRendererOrSelf isSticky.

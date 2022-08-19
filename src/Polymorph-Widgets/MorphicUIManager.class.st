@@ -50,10 +50,10 @@ MorphicUIManager class >> uiProcess [
 { #category : #private }
 MorphicUIManager >> activate [
 
-	self currentWorld worldState worldRenderer: (AbstractWorldRenderer detectCorrectOneForWorld: self currentWorld).
-	self currentWorld currentCursor: self currentWorld currentCursor.
+	self world worldState worldRenderer: (AbstractWorldRenderer detectCorrectOneForWorld: self world).
+	self world currentCursor: self world currentCursor.
 		
-	self currentWorld ifNotNil: [:world | world restoreMorphicDisplay].
+	self world ifNotNil: [:world | world restoreMorphicDisplay].
 	WorldMorph extraWorldList do: [:each | each restoreMorphicDisplay].
 
 	activeTranscript 
@@ -105,6 +105,21 @@ MorphicUIManager >> chooseFrom: aList lines: linesArray title: aString [
 		title: aString) ifNil: [0]
 ]
 
+{ #category : #default }
+MorphicUIManager >> chooseFrom: aList lines: linesArray title: aString world: aWorld [ 
+"Choose an item from the given list. Answer the index of the selected item."
+	
+	^(self
+		chooseFrom: aList
+		values: nil
+		lines: linesArray
+		title: aString
+		world:  aWorld) ifNil: [0]
+
+
+
+]
+
 { #category : #services }
 MorphicUIManager >> chooseFrom: labelList values: valueList lines: linesArray message: messageString title: aString [
 	"Choose an item from the given list. Answer the selected item."
@@ -120,6 +135,19 @@ MorphicUIManager >> chooseFrom: labelList values: valueList lines: linesArray me
 
 { #category : #'ui requests' }
 MorphicUIManager >> chooseFrom: labelList values: valueList lines: linesArray title: aString [
+
+	"Choose an item from the given list. Answer the selected item."
+
+	^ self
+		chooseFrom: labelList
+		values: valueList
+		lines: linesArray
+		title: aString
+		world: self currentWorld
+]
+
+{ #category : #'ui request' }
+MorphicUIManager >> chooseFrom: labelList values: valueList lines: linesArray title: aString on: aWorld [
 	"Choose an item from the given list. Answer the selected item."
 	
 	|modalMorph|
@@ -134,6 +162,26 @@ MorphicUIManager >> chooseFrom: labelList values: valueList lines: linesArray ti
 		labels: labelList
 		values: valueList
 		lines: linesArray
+		on: aWorld
+]
+
+{ #category : #'ui request' }
+MorphicUIManager >> chooseFrom: labelList values: valueList lines: linesArray title: aString world: world [
+	"Choose an item from the given list. Answer the selected item."
+	
+	|modalMorph|
+	
+	(ProvideAnswerNotification signal: aString) ifNotNil: [:answer |
+		^answer].
+	
+	modalMorph := self modalMorph.
+	^modalMorph theme  
+		chooseIn: modalMorph
+		title: aString
+		labels: labelList
+		values: valueList
+		lines: linesArray
+		world: world
 ]
 
 { #category : #'ui requests' }
@@ -190,6 +238,17 @@ MorphicUIManager >> confirm: aStringOrText [
 	^ self confirm: aStringOrText label: 'Question' translated.
 ]
 
+{ #category : #'ui request' }
+MorphicUIManager >> confirm: aStringOrText inWorld: aWorld [ 
+	"Put up a question dialog (without cancel).
+	Answer true if the response is yes, false if no.
+	This is a modal question--the user must respond yes or no."
+	
+	^ self confirm: aStringOrText label: ('Question' translated) inWorld: aWorld .
+
+
+]
+
 { #category : #'ui requests' }
 MorphicUIManager >> confirm: questionStringOrText label: labelStringOrText [
 	"Put up a question dialog (without cancel).
@@ -204,6 +263,23 @@ MorphicUIManager >> confirm: questionStringOrText label: labelStringOrText [
 		questionWithoutCancelIn: modalMorph
 		text: questionStringOrText
 		title: labelStringOrText.
+]
+
+{ #category : #'ui request' }
+MorphicUIManager >> confirm: questionStringOrText label: labelStringOrText inWorld: aWorld [
+	"Put up a question dialog (without cancel).
+	Answer true if the response is yes, false if no.
+	This is a modal question--the user must respond yes or no."
+	
+	|modalMorph|
+	(ProvideAnswerNotification signal: questionStringOrText) ifNotNil: [:answer |
+		^answer].
+	modalMorph := self modalMorph.
+	^modalMorph theme 
+		questionWithoutCancelIn: modalMorph
+		text: questionStringOrText
+		title: labelStringOrText
+		inWorld: aWorld.
 ]
 
 { #category : #services }
@@ -286,7 +362,7 @@ MorphicUIManager >> deactivate [
 	self triggerEvent: #aboutToLeaveWorld.
 	WorldMorph extraWorldList do: [:world | world triggerEvent: #aboutToLeaveWorld ].	
 	
-	self currentWorld worldState worldRenderer: (NullWorldRenderer forWorld: self currentWorld).
+	self world worldState worldRenderer: (NullWorldRenderer forWorld: self world).
 ]
 
 { #category : #debug }
@@ -387,6 +463,20 @@ MorphicUIManager >> inform: aStringOrText [
 ]
 
 { #category : #'ui requests' }
+MorphicUIManager >> inform: aStringOrText inWindow: aWorld [
+	"Display a message for the user to read and then dismiss."
+	
+	(ProvideAnswerNotification signal: aStringOrText) ifNotNil: [:answer |
+		^true].
+	GrowlMorph 
+		openWithLabel: 'Information' translated 
+		contents: aStringOrText
+		backgroundColor: nil
+		labelColor: nil 
+		inWorld: aWorld.
+]
+
+{ #category : #'ui requests' }
 MorphicUIManager >> informUserDuring: aBlock [
 	"Display a message as progress	during execution of the given block."
 	"UIManager default informUserDuring: [:bar|
@@ -448,16 +538,16 @@ MorphicUIManager >> modalMorph [
 	[foundWorld or: [sender isNil]]
 		whileFalse: [receiver := sender receiver.
 			((sender selector = #invokeWorldMenu:)
-					or: [receiver == self currentWorld
+					or: [receiver == self world
 							and: [sender selector == #handleEvent:
 									or: [sender selector == #findWindow:]]])
 				ifTrue: [foundWorld := true]
 				ifFalse: [sender := sender sender]].
 	foundWorld
 		ifTrue: [^ receiver world
-				ifNil: [self currentWorld]].
+				ifNil: [self world]].
 	^ SystemWindow topWindow
-		ifNil: [self currentWorld]
+		ifNil: [self world]
 ]
 
 { #category : #'ui requests' }
@@ -521,7 +611,7 @@ MorphicUIManager >> onFontsChanged [
 	StringMorph allSubInstancesDo: [ :s | s layoutChanged ].
 	TextMorph allSubInstancesDo: [ :s | s layoutChanged ].
 	SystemWindow allInstancesDo: [ :w | [ w update: #relabel ] on: Error do: [ :ex | ] ].
-	self currentWorld ifNotNil: [ :w | w changed ].
+	self world ifNotNil: [ :w | w changed ].
 ]
 
 { #category : #events }
@@ -538,7 +628,7 @@ MorphicUIManager >> onPrimitiveError: aString [
 								ifFalse: [s cr; print: (context := context sender)]]].
 	Stdio stderr << message.
 	"init hands and redisplay" 
-	self currentWorld install
+	self world install
 ]
 
 { #category : #accessing }
@@ -601,6 +691,23 @@ MorphicUIManager >> request: aStringOrText initialAnswer: defaultAnswer title: a
 		entryCompletion: anEntryCompletion)
 ]
 
+{ #category : #'ui request' }
+MorphicUIManager >> request: aStringOrText initialAnswer: defaultAnswer title: aTitle inWorld: aWorld [
+
+	| modalMorph |
+	(ProvideAnswerNotification signal: aStringOrText) ifNotNil: [ :answer | 
+		^ answer == #default
+			  ifTrue: [ defaultAnswer ]
+			  ifFalse: [ answer ] ].
+	modalMorph := self modalMorph.
+	^ modalMorph theme
+		  textEntryIn: modalMorph
+		  text: aStringOrText
+		  title: aTitle
+		  entryText: defaultAnswer
+		  inWorld: aWorld
+]
+
 { #category : #'ui requests' }
 MorphicUIManager >> requestPassword: aStringOrText [ 
 	"Request for a password.
@@ -620,16 +727,14 @@ MorphicUIManager >> requestPassword: aStringOrText [
 
 { #category : #'ui requests' }
 MorphicUIManager >> restoreDisplay [
-
-	self currentWorld fullRepaintNeeded
+	self world fullRepaintNeeded
 ]
 
 { #category : #'ui requests' }
 MorphicUIManager >> restoreDisplayAfter: aBlock [
-
 	aBlock value.
-	self currentWorld activeHand waitButton.
-	self currentWorld fullRepaintNeeded.
+	self world  activeHand waitButton.
+	self world fullRepaintNeeded.
 ]
 
 { #category : #'ui process' }

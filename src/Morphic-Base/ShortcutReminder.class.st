@@ -54,11 +54,11 @@ ShortcutReminder class >> settingsOn: aBuilder [
 ]
 
 { #category : #display }
-ShortcutReminder class >> showShortcut: aShortcut [
+ShortcutReminder class >> showShortcut: aShortcut inWorld: aWorld [
 	
 	(aShortcut keyText isNil or: [ self enabled not ]) ifTrue: [ ^self ].
 	
-	self defaultReminder remind: aShortcut.
+	self defaultReminder remind: aShortcut inWorld: aWorld.
 ]
 
 { #category : #accessing }
@@ -267,11 +267,10 @@ ShortcutReminder >> position: aSymbol [
 ]
 
 { #category : #'shortcut creation' }
-ShortcutReminder >> positionShortcut: aMorph [
-	
+ShortcutReminder >> positionShortcut: aMorph inWorld: aWorld [
 	| area |
 	
-	area := self currentWorld clearArea insetBy: 3. 
+	area := aWorld clearArea insetBy: 3. 
 	
 	aMorph 
 	cellPositioning: position;
@@ -288,7 +287,7 @@ ShortcutReminder >> positions [
 ]
 
 { #category : #'shortcut creation' }
-ShortcutReminder >> remind: aMenuItem [ 
+ShortcutReminder >> remind: aMenuItem  inWorld: aWorld [
 
 	| itemHash |
 	
@@ -297,7 +296,7 @@ ShortcutReminder >> remind: aMenuItem [
 	(self wantsToShow: itemHash) ifFalse: [ ^self ].
 	
 	self 
-	show: aMenuItem;
+	show: aMenuItem inWorld: aWorld;
 	updateCount: itemHash.
 ]
 
@@ -308,15 +307,15 @@ ShortcutReminder >> resetCount [
 ]
 
 { #category : #'shortcut creation' }
-ShortcutReminder >> show: aMenuItem [
+ShortcutReminder >> show: aMenuItem inWorld: aWorld [
 
 	| shortcutMorph |
 	
 	shortcutMorph := self createShortcutMorphFor: aMenuItem.
 	
-	self positionShortcut: shortcutMorph.
+	self positionShortcut: shortcutMorph inWorld: aWorld.
 	
-	shortcutMorph openInWorld.
+	shortcutMorph openInWorld: aWorld.
 ]
 
 { #category : #private }

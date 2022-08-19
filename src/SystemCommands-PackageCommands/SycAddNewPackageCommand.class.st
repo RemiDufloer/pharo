@@ -59,16 +59,20 @@ SycAddNewPackageCommand >> packageName: anObject [
 
 { #category : #execution }
 SycAddNewPackageCommand >> prepareFullExecutionInContext: aToolContext [
+
 	super prepareFullExecutionInContext: aToolContext.
-		
-	systemEnvironment := aToolContext systemEnvironment.		
+
+	systemEnvironment := aToolContext systemEnvironment.
 	packageName := ''.
 	aToolContext isPackageSelected ifTrue: [ 
-		packageName := aToolContext lastSelectedPackage name].
-	
-	packageName := UIManager default 
-		request: 'Name of the new package:' initialAnswer: packageName title: 'Create a new package'.
-	packageName isEmptyOrNil ifTrue: [ ^CmdCommandAborted signal]
+		packageName := aToolContext lastSelectedPackage name ].
+
+	packageName := UIManager default
+		               request: 'Name of the new package:'
+		               initialAnswer: packageName
+		               title: 'Create a new package'
+		               inWorld: aToolContext tool world.
+	packageName isEmptyOrNil ifTrue: [ ^ CmdCommandAborted signal ]
 ]
 
 { #category : #accessing }

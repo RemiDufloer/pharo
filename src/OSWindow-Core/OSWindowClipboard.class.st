@@ -5,8 +5,17 @@ For setting/retrieving clipboard text, use clipboardText/clipboardText: accessor
 Class {
 	#name : #OSWindowClipboard,
 	#superclass : #Clipboard,
+	#instVars : [
+		'worldRenderer'
+	],
 	#category : #'OSWindow-Core-Base'
 }
+
+{ #category : #'instance creation' }
+OSWindowClipboard class >> newByRenderer: aWorldRenderer [
+
+	self new worldRenderer: aWorldRenderer 
+]
 
 { #category : #accessing }
 OSWindowClipboard >> beDefault [
@@ -36,5 +45,11 @@ OSWindowClipboard >> noteRecentClipping: text [
 { #category : #accessing }
 OSWindowClipboard >> worldRenderer [ 
 
-	^ self currentWorld worldState worldRenderer
+	^ worldRenderer 
+]
+
+{ #category : #accessing }
+OSWindowClipboard >> worldRenderer: aWorldRenderer [
+
+	^ worldRenderer := aWorldRenderer 
 ]

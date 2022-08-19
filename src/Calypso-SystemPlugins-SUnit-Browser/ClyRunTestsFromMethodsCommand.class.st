@@ -41,7 +41,7 @@ ClyRunTestsFromMethodsCommand >> execute [
 { #category : #execution }
 ClyRunTestsFromMethodsCommand >> readParametersFromContext: aToolContext [
 	super readParametersFromContext: aToolContext.
-	
+	toolContext := aToolContext.
 	runTestCases := aToolContext selectedClasses
 ]
 

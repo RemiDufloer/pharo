@@ -85,17 +85,16 @@ TimeProfiler class >> menuCommandOn: aBuilder [
 { #category : #'world menu' }
 TimeProfiler class >> menuProfilingOn: aBuilder [
 	<worldMenu>
-
 	(aBuilder item: #'Start profiling all Processes')
 		parent: #Profiling;
 		help: 'Profile all Pharo processes.';
 		order: 10;
-		action: [ self currentWorld worldState startMessageTally ].
+		action: [ aBuilder model worldState startMessageTally ].
 	(aBuilder item: #'Start profiling UI ')
 		parent: #Profiling;
 		help: 'Profile the UI process of Pharo.';
 		order: 20;
-		action: [ self currentWorld worldState startThenBrowseMessageTally ].
+		action: [ aBuilder model worldState startThenBrowseMessageTally ].
 ]
 
 { #category : #opening }

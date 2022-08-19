@@ -34,7 +34,6 @@ FullscreenMorph >> initialize [
 	super initialize.
 	self
 		changeProportionalLayout;
-		bounds: self currentWorld clearArea;
 		beSticky
 ]
 
@@ -57,7 +56,7 @@ FullscreenMorph >> postOpenInWorld: aWorld [
 { #category : #initialize }
 FullscreenMorph >> preOpenInWorld: aWorld [
 
-	"Do nothing"
+	self bounds: aWorld clearArea.
 ]
 
 { #category : #accessing }
