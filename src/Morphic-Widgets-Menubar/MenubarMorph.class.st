@@ -28,7 +28,7 @@ Class {
 }
 
 { #category : #'instance creation' }
-MenubarMorph class >> closeAllWindow [
+MenubarMorph class >> closeAllWindows [
 
 	self currentWorld submorphs
 		select: [ :e | e isKindOf: MenubarMorph ]
@@ -94,7 +94,7 @@ MenubarMorph class >> openInWorld: aWorld [
 MenubarMorph class >> reset [
 
 	<script>
-	self closeAllWindow.
+	self closeAllWindows.
 	self open.
 ]
 

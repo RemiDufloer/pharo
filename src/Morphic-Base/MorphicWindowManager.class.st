@@ -43,14 +43,6 @@ MorphicWindowManager >> allWindow [
 ]
 
 { #category : #accessing }
-MorphicWindowManager >> closeAllWindow [
-
-	
-	(windows size) to: (1) by: (-1) do: [ :m | (windows at: m) delete  ].
-	taskBar updateTasks .
-]
-
-{ #category : #accessing }
 MorphicWindowManager >> closeAllWindowToLeft: aWindow [
 
 	| index |
@@ -70,6 +62,14 @@ MorphicWindowManager >> closeAllWindowToRight: aWindow [
 ]
 
 { #category : #accessing }
+MorphicWindowManager >> closeAllWindows [
+
+	
+	(windows size) to: (1) by: (-1) do: [ :m | (windows at: m) delete  ].
+	taskBar updateTasks .
+]
+
+{ #category : #accessing }
 MorphicWindowManager >> closeWindow: aWindow [
 
 	(windows includes: aWindow) ifTrue: [ windows remove: aWindow ].
@@ -79,7 +79,7 @@ MorphicWindowManager >> closeWindow: aWindow [
 { #category : #closing }
 MorphicWindowManager >> deleteAll [
 
-	self closeAllWindow.
+	self closeAllWindows.
 
 	"Call doDelete because the taskbar window is not subscribed to manager"
 	taskBarWindow doDelete.

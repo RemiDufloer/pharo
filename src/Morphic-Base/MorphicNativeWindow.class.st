@@ -294,7 +294,7 @@ MorphicNativeWindow >> taskbarButtonMenu: aMenu [
 	submenu
 		addToggle: 'Close all' translated
 		target: self manager
-		selector: #closeAllWindow
+		selector: #closeAllWindows
 		getStateSelector: nil
 		enablementSelector: true.
 	submenu

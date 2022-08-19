@@ -65,7 +65,7 @@ MorphicWindowManagerTest >> testDeleteAllWindow [
 	manager openNewWindowWithRoot: Morph new.
 	manager openNewWindowWithRoot: Morph new.
 
-	manager closeAllWindow.
+	manager closeAllWindows.
 
 	self assert: manager numberOfOpenWindows equals: 0
 ]
