@@ -923,7 +923,7 @@ PolymorphSystemSettings class >> setDesktopLogoWith: aMorph [
 				beSticky;
 				lock.
 			"The logo image should appear just below the menu bar"
-			logo position: 10 @ (self currentWorld menubar height + 10).
+			logo position: 10 @ 10.
 			self currentWorld backgroundMorph
 				ifNil: [ self currentWorld addMorphBack: logo ]
 				ifNotNil: [ self currentWorld addMorph: logo inFrontOf: self currentWorld backgroundMorph ] ]
