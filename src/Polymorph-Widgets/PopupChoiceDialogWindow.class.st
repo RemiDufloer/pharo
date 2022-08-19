@@ -165,6 +165,7 @@ PopupChoiceDialogWindow >> handlesKeyboard: evt [
 PopupChoiceDialogWindow >> initialize [
 
 	"Initialize the receiver."
+
 	super initialize.
 	updatingFilter := false.
 	self
