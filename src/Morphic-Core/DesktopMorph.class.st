@@ -42,6 +42,22 @@ DesktopMorph class >> displayScaleFactorSettingsOn: aBuilder [
 		range: (0.5 to: 5 by: 0.5)
 ]
 
+{ #category : #'event handling' }
+DesktopMorph >> acceptDroppingMorph: dropped event: evt [
+
+	"The supplied morph, known to be acceptable to the receiver, is now to be assimilated; the precipitating event is supplied"
+
+	| aMorph |
+	aMorph := self morphToDropFrom: dropped. "Add the given morph to this world and start stepping it if it wants to be."
+	self addMorphFront: aMorph.
+	(aMorph fullBounds intersects: self viewBox) ifFalse: [ 
+		self inform: 'Dropped morph not in bounds'.
+		aMorph position: self bounds center ].
+	aMorph submorphsDo: [ :m | 
+		(m isKindOf: HaloMorph) ifTrue: [ m delete ] ].
+	self bringTopmostsToFront
+]
+
 { #category : #menus }
 DesktopMorph >> addStandardHaloMenuItemsTo: aMenu hand: aHandMorph [
 
@@ -123,6 +139,27 @@ DesktopMorph >> discoveredWorldMenu [
 	^ worldState discoveredWorldMenu
 ]
 
+{ #category : #'event handling' }
+DesktopMorph >> dispatchKeystroke: anEvent [
+
+	"A keystroke was hit when no keyboard focus was set, so it is sent here to the world instead."
+
+	| aChar ascii |
+	aChar := anEvent keyCharacter.
+	(ascii := aChar asciiValue) = 27 ifTrue: [ "escape key" 
+		^ self invokeWorldMenuFromEscapeKey ].
+
+	(self navigationKey: anEvent) ifTrue: [ ^ self ].
+
+	(anEvent commandKeyPressed and: [ TextEditor cmdKeysInText ]) 
+		ifTrue: [ ^ self dispatchCommandKeyInWorld: aChar event: anEvent ].
+
+	"It was unhandled. Remember the keystroke."
+	self lastKeystroke: anEvent keyString.
+	self triggerEvent: #keyStroke.
+	super dispatchKeystroke: anEvent
+]
+
 { #category : #accessing }
 DesktopMorph >> displayArea [
 
@@ -193,6 +230,20 @@ DesktopMorph >> invokeWorldMenu: evt [
 DesktopMorph >> isWorldMorph [
 
 	^ true
+]
+
+{ #category : #menus }
+DesktopMorph >> menubar [
+
+	^ self submorphs detect: #isMenubar
+]
+
+{ #category : #'event handling' }
+DesktopMorph >> mouseDown: evt [
+
+	super mouseDown: evt.
+	self currentWindow ifNotNil: [ :topWindow | 
+		SystemWindow passivateTopWindow ]
 ]
 
 { #category : #accessing }
