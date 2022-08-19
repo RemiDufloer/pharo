@@ -980,18 +980,17 @@ MenuMorph >> keyDown: evt [
 
 { #category : #events }
 MenuMorph >> keyStroke: evt [
+
 	"Handle keboard item matching."
 
-	| matchString char asc "help" |
-"	help := self theme builder newBalloonHelp: 'Enter text to\narrow selection down\to matching items ' withCRs for: self corner: #topLeft.
-	help popUpForHand: self activeHand."
+	| matchString char asc |
+	(self rootMenu hasProperty: #hasUsedKeyboard) ifFalse: [ 
+		self rootMenu setProperty: #hasUsedKeyboard toValue: true.
+		self changed ].
 
-	(self rootMenu hasProperty: #hasUsedKeyboard)
-		ifFalse: [ self rootMenu setProperty: #hasUsedKeyboard toValue: true.
-			self changed ].
-
-	(evt commandKeyPressed and: [ self commandKeyHandler notNil ])
-		ifTrue: [ self commandKeyHandler commandKeyTypedIntoMenu: evt.
+	(evt commandKeyPressed and: [ self commandKeyHandler notNil ]) 
+		ifTrue: [ 
+			self commandKeyHandler commandKeyTypedIntoMenu: evt.
 			^ self deleteIfPopUp: evt ].
 
 	char := evt keyCharacter.
@@ -999,7 +998,9 @@ MenuMorph >> keyStroke: evt [
 
 	"If we reach this point, it means that we are editing the filter associated to each menu. "
 	"In case ther eis no filter associated to the menu, we simply create one"
-	matchString := self valueOfProperty: #matchString ifAbsentPut: [ String new ].
+	matchString := self
+		               valueOfProperty: #matchString
+		               ifAbsentPut: [ String new ].
 
 	"No need to go further if the character is not alphanumeric, i.e., not useful for filtering"
 	char isAlphaNumeric ifFalse: [ ^ self ].
