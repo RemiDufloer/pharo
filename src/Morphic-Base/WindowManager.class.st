@@ -120,7 +120,7 @@ WindowManager >> isTaskBarOpen [
 WindowManager >> newWindowWithRoot: aMorph [
 
 	| newWindow |
-	newWindow := Window newWindow: aMorph manageBy: self.
+	newWindow := MorphicNativeWindow newWindow: aMorph manageBy: self.
 	allWindow add: newWindow.
 	^ newWindow
 ]
@@ -190,7 +190,7 @@ WindowManager >> startupRoot [
 { #category : #startup }
 WindowManager >> startupTaskbar [
 	
-	taskBarWindow := Window newWindow: (TaskbarMorphForManager newByManager: self) manageBy: self.
+	taskBarWindow := MorphicNativeWindow newWindow: (TaskbarMorphForManager newByManager: self) manageBy: self.
 	taskBarWindow open.
 	taskBar := taskBarWindow window
 ]

@@ -18,7 +18,7 @@ Internal Representation and Key Implementation Points.
 			
 "
 Class {
-	#name : #Window,
+	#name : #MorphicNativeWindow,
 	#superclass : #Object,
 	#traits : 'TShowInTaskbar',
 	#classTraits : 'TShowInTaskbar classTrait',
@@ -33,7 +33,7 @@ Class {
 }
 
 { #category : #'instance creation' }
-Window class >> newWindow: aMorph manageBy: aManager [
+MorphicNativeWindow class >> newWindow: aMorph manageBy: aManager [
 
 	| newWindow |
 	newWindow  := self new.
@@ -44,20 +44,20 @@ Window class >> newWindow: aMorph manageBy: aManager [
 ]
 
 { #category : #closing }
-Window >> allowedToClose [
+MorphicNativeWindow >> allowedToClose [
 
 	self flag: 'todo'.
 	^ true
 ]
 
 { #category : #'submorphs - add/remove' }
-Window >> attributs [
+MorphicNativeWindow >> attributs [
 
 	^ attributes
 ]
 
 { #category : #'submorphs - add/remove' }
-Window >> attributsSave [
+MorphicNativeWindow >> attributsSave [
 
 	osWindow position.
 	osWindow title.
@@ -67,45 +67,45 @@ Window >> attributsSave [
 ]
 
 { #category : #accessing }
-Window >> backend [
+MorphicNativeWindow >> backend [
 
 	^ backend
 ]
 
 { #category : #testing }
-Window >> canBeMaximized [
+MorphicNativeWindow >> canBeMaximized [
 	"Answer whether we are not we can be maximised."
 
 	^ attributes  resizable  and: [ attributes maximized not ]
 ]
 
 { #category : #'submorphs - add/remove' }
-Window >> closeAllWindowToLeft [
+MorphicNativeWindow >> closeAllWindowToLeft [
 
 	manager closeAllWindowToLeft: self
 ]
 
 { #category : #'submorphs - add/remove' }
-Window >> closeAllWindowToRight [
+MorphicNativeWindow >> closeAllWindowToRight [
 
 	manager closeAllWindowToRight: self
 ]
 
 { #category : #'submorphs - add/remove' }
-Window >> delete [
+MorphicNativeWindow >> delete [
 
 	self doDelete.
 	manager closeWindow: self
 ]
 
 { #category : #'submorphs - add/remove' }
-Window >> deleteByCross [ 
+MorphicNativeWindow >> deleteByCross [ 
 
 	manager ifNotNil: [ manager closeWindow: self ] 
 ]
 
 { #category : #'submorphs - add/remove' }
-Window >> doDelete [
+MorphicNativeWindow >> doDelete [
 
 	"Low-level deletion method.
 	Do not use directly, otherwise the connection with the manager would be lost.
@@ -117,14 +117,14 @@ Window >> doDelete [
 ]
 
 { #category : #'submorphs - add/remove' }
-Window >> ensureDelete [
+MorphicNativeWindow >> ensureDelete [
 
 	self ensureDoDelete.
 	manager closeWindow: self
 ]
 
 { #category : #'submorphs - add/remove' }
-Window >> ensureDoDelete [
+MorphicNativeWindow >> ensureDoDelete [
 
 	"Low-level deletion method.
 	Do not use directly, otherwise the connection with the manager would be lost.
@@ -141,67 +141,67 @@ Window >> ensureDoDelete [
 ]
 
 { #category : #testing }
-Window >> isClosed [
+MorphicNativeWindow >> isClosed [
 	
 	^ self isOpen not
 ]
 
 { #category : #testing }
-Window >> isMaximized [ 
+MorphicNativeWindow >> isMaximized [ 
 
 	^ attributes maximized 
 ]
 
 { #category : #testing }
-Window >> isMinimized [
+MorphicNativeWindow >> isMinimized [
 
 	^ attributes minimized
 ]
 
 { #category : #testing }
-Window >> isNotMinimized [
+MorphicNativeWindow >> isNotMinimized [
 
 	^ attributes minimized not
 ]
 
 { #category : #testing }
-Window >> isNotRestored [
+MorphicNativeWindow >> isNotRestored [
 	"Answer whether we are maximised or minimised."
 
 	^attributes  minimized or: [attributes maximized]
 ]
 
 { #category : #testing }
-Window >> isOpen [
+MorphicNativeWindow >> isOpen [
 	
 	osWindow ifNil: [ ^ false ].
 	^ osWindow isVisible
 ]
 
 { #category : #'submorphs - add/remove' }
-Window >> manager [
+MorphicNativeWindow >> manager [
 	^ manager 
 ]
 
 { #category : #'submorphs - add/remove' }
-Window >> manager: aWindowManager [ 
+MorphicNativeWindow >> manager: aWindowManager [ 
 	manager := aWindowManager
 ]
 
 { #category : #'window management' }
-Window >> maximize [
+MorphicNativeWindow >> maximize [
 
 	osWindow maximize
 ]
 
 { #category : #'window management' }
-Window >> minimize [
+MorphicNativeWindow >> minimize [
 
 	osWindow minimize
 ]
 
 { #category : #'submorphs - add/remove' }
-Window >> open [
+MorphicNativeWindow >> open [
 	backend := window openInExternalWindow.
 	backend manager: manager .
 	attributes := self backend worldState worldRenderer osWindow initialAttributes.
@@ -212,7 +212,7 @@ Window >> open [
 ]
 
 { #category : #open }
-Window >> openWithAttributes: attributes [
+MorphicNativeWindow >> openWithAttributes: attributes [
 
 	backend := window openInExternalWindowWithAttributes: attributes.
 	attributes := self backend worldState worldRenderer osWindow
@@ -221,7 +221,7 @@ Window >> openWithAttributes: attributes [
 ]
 
 { #category : #'submorphs - add/remove' }
-Window >> openWithGtk [
+MorphicNativeWindow >> openWithGtk [
 
 	| presenter morph |
 	presenter := SpPresenter new.
@@ -237,19 +237,19 @@ Window >> openWithGtk [
 ]
 
 { #category : #accessing }
-Window >> osWindow [
+MorphicNativeWindow >> osWindow [
 
 ^	osWindow
 ]
 
 { #category : #'window management' }
-Window >> restore [
+MorphicNativeWindow >> restore [
 
 	osWindow restore
 ]
 
 { #category : #'taskbar-required' }
-Window >> taskbarButtonIsActive [
+MorphicNativeWindow >> taskbarButtonIsActive [
 
 	"true/false"
 	
@@ -257,7 +257,7 @@ Window >> taskbarButtonIsActive [
 ]
 
 { #category : #'taskbar-public' }
-Window >> taskbarButtonMenu: aMenu [
+MorphicNativeWindow >> taskbarButtonMenu: aMenu [
 
 	| menu theme submenu  |
 	theme :=  Smalltalk ui theme.	
@@ -338,20 +338,20 @@ Window >> taskbarButtonMenu: aMenu [
 ]
 
 { #category : #icons }
-Window >> taskbarIcon [
+MorphicNativeWindow >> taskbarIcon [
 
  ^ window class taskbarIcon
 ]
 
 { #category : #'taskbar-required' }
-Window >> taskbarLabel [
+MorphicNativeWindow >> taskbarLabel [
 	"Answer the label to use for a taskbar button for the receiver."
 	
 	^ self attributs title
 ]
 
 { #category : #'taskbar-required' }
-Window >> taskbarState [
+MorphicNativeWindow >> taskbarState [
 	"Answer one of #minimized, #restored, #maximized or #active."
 	
 	^ self attributs minimized
@@ -364,22 +364,22 @@ Window >> taskbarState [
 ]
 
 { #category : #'window management' }
-Window >> theme [
+MorphicNativeWindow >> theme [
 	^ Smalltalk ui theme
 ]
 
 { #category : #getter }
-Window >> window [
+MorphicNativeWindow >> window [
 	^ window
 ]
 
 { #category : #'submorphs - add/remove' }
-Window >> window: aWindow [
+MorphicNativeWindow >> window: aWindow [
 	window := aWindow
 ]
 
-{ #category : #'as yet unclassified' }
-Window >> windowTitleChanged: anAnnouncement [
+{ #category : #'window management' }
+MorphicNativeWindow >> windowTitleChanged: anAnnouncement [
 
 	osWindow title: anAnnouncement title
 ]
