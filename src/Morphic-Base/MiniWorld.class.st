@@ -259,7 +259,7 @@ MiniWorld >> initialize [
 
 	super initialize.
 	submorphs := OrderedCollection new.
-	worldRenderer := OSWorldRenderer forWorld: self.
+	worldRenderer := NullWorldRenderer new.
 	worldState := WorldState new.
 	self color: Color veryLightGray.
 	
