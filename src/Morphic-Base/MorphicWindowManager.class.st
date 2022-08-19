@@ -17,10 +17,10 @@ Class {
 	#superclass : #Morph,
 	#instVars : [
 		'taskBar',
-		'allWindow',
 		'taskBarWindow',
 		'rootSave',
-		'allAttributes'
+		'allAttributes',
+		'windows'
 	],
 	#category : #'Morphic-Base'
 }
@@ -39,14 +39,14 @@ MorphicWindowManager >> allSaveRoot [
 { #category : #accessing }
 MorphicWindowManager >> allWindow [ 
 
-	^ allWindow 
+	^ windows 
 ]
 
 { #category : #accessing }
 MorphicWindowManager >> closeAllWindow [
 
 	
-	(allWindow size) to: (1) by: (-1) do: [ :m | (allWindow at: m) delete  ].
+	(windows size) to: (1) by: (-1) do: [ :m | (windows at: m) delete  ].
 	taskBar updateTasks .
 ]
 
@@ -54,26 +54,26 @@ MorphicWindowManager >> closeAllWindow [
 MorphicWindowManager >> closeAllWindowToLeft: aWindow [
 
 	| index |
-	index := allWindow indexOf: aWindow.
-	(index - 1 )  to: 1 by: (-1) do: [ :m | (allWindow at: m) delete  ].
-	taskBar updateTasks .
+	index := windows indexOf: aWindow.
+	index - 1 to: 1 by: -1 do: [ :m | (windows at: m) delete ].
+	taskBar updateTasks
 ]
 
 { #category : #accessing }
 MorphicWindowManager >> closeAllWindowToRight: aWindow [
 
 	| index |
-	index := allWindow indexOf: aWindow.
-	allWindow size to: index + 1 by: -1 do: [ :m | 
-	(allWindow at: m) delete ].
+	index := windows indexOf: aWindow.
+	windows size to: index + 1 by: -1 do: [ :m | 
+	(windows at: m) delete ].
 	taskBar updateTasks
 ]
 
 { #category : #accessing }
 MorphicWindowManager >> closeWindow: aWindow [
 
-	( allWindow  includes: aWindow )ifTrue:[allWindow remove: aWindow ].
-	taskBar ifNotNil:  [taskBar  updateTasks] .
+	(windows includes: aWindow) ifTrue: [ windows remove: aWindow ].
+	taskBar ifNotNil: [ taskBar updateTasks ]
 ]
 
 { #category : #closing }
@@ -89,8 +89,8 @@ MorphicWindowManager >> deleteAll [
 { #category : #accessing }
 MorphicWindowManager >> ensureCloseAllWindow [
 
-	allWindow size to: 1 by: -1 do: [ :m | 
-		(allWindow at: m) ensureDelete ].
+	windows size to: 1 by: -1 do: [ :m | 
+		(windows at: m) ensureDelete ].
 	taskBar updateTasks
 ]
 
@@ -106,7 +106,7 @@ MorphicWindowManager >> ensureDeleteAll [
 { #category : #accessing }
 MorphicWindowManager >> initialize [
 
-	allWindow := OrderedCollection new.
+	windows := OrderedCollection new.
 	self startupTaskbar .
 ]
 
@@ -121,7 +121,7 @@ MorphicWindowManager >> newWindowWithRoot: aMorph [
 
 	| newWindow |
 	newWindow := MorphicNativeWindow newWindow: aMorph manageBy: self.
-	allWindow add: newWindow.
+	windows add: newWindow.
 	^ newWindow
 ]
 
@@ -134,7 +134,7 @@ MorphicWindowManager >> numberOfAttributesSave [
 { #category : #accessing }
 MorphicWindowManager >> numberOfOpenWindows [
 
-	^ allWindow size
+	^ windows size
 ]
 
 { #category : #accessing }
@@ -145,7 +145,7 @@ MorphicWindowManager >> numberOfRootSave [
 
 { #category : #accessing }
 MorphicWindowManager >> numberOfWindows [
-	^ allWindow size
+	^ windows size
 ]
 
 { #category : #accessing }
@@ -166,19 +166,19 @@ MorphicWindowManager >> openNewWindowWithRoot: aMorph [
 { #category : #saving }
 MorphicWindowManager >> saveAllAttributes [
 	
-	allAttributes := allWindow collect: [  :w | w attributsSave ].
+	allAttributes := windows collect: [  :w | w attributsSave ].
 ]
 
 { #category : #saving }
 MorphicWindowManager >> saveAllRoot [
 	
-	rootSave := allWindow collect: [ :m | m window ]
+	rootSave := windows collect: [ :m | m window ]
 ]
 
 { #category : #startup }
 MorphicWindowManager >> startupOpenWithAttributes [
 	
-	1 to: allAttributes  size do: [ :a | (allWindow  at: a) openWithAttributes: (allAttributes at: a)  ]
+	1 to: allAttributes  size do: [ :a | (windows  at: a) openWithAttributes: (allAttributes at: a)  ]
 ]
 
 { #category : #'startup - shutdown' }
