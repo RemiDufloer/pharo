@@ -115,6 +115,12 @@ WorldMorph class >> removeExtraWorld: aWorld [
 	CursorOwnerWorld == aWorld ifTrue: [ CursorOwnerWorld := nil ].
 ]
 
+{ #category : #accessing }
+WorldMorph class >> scaleFactor [
+	
+	^ World scaleFactor
+]
+
 { #category : #operations }
 WorldMorph >> activateCursor: aCursor withMask: maskForm [
 
