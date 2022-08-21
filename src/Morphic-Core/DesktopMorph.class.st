@@ -42,6 +42,12 @@ DesktopMorph class >> displayScaleFactorSettingsOn: aBuilder [
 		range: (0.5 to: 5 by: 0.5)
 ]
 
+{ #category : #accessing }
+DesktopMorph class >> scaleFactor [
+	
+	^ World scaleFactor
+]
+
 { #category : #'event handling' }
 DesktopMorph >> acceptDroppingMorph: dropped event: evt [
 
