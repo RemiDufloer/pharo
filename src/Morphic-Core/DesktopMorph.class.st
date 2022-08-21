@@ -172,6 +172,12 @@ DesktopMorph >> displayArea [
 	^ owner worldState worldRenderer usableArea.
 ]
 
+{ #category : #accessing }
+DesktopMorph >> doOneCycle [ 
+
+	^ owner doOneCycle .
+]
+
 { #category : #geometry }
 DesktopMorph >> extent: aPoint [
 
