@@ -175,7 +175,7 @@ DesktopMorph >> displayArea [
 { #category : #accessing }
 DesktopMorph >> doOneCycle [ 
 
-	^ owner doOneCycle .
+	^ owner doOneCycleNow  .
 ]
 
 { #category : #geometry }
