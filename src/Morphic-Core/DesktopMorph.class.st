@@ -302,7 +302,7 @@ DesktopMorph >> wantsWindowEvent: anEvent [
 { #category : #accessing }
 DesktopMorph >> world [
  
-	^owner ifNil: [^ self]
+	^ self
 ]
 
 { #category : #'world menu' }

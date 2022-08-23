@@ -76,8 +76,8 @@ BaselineOfMorphicCore >> postload: loader package: packageSpec [
 	world addHand: hand.
 	world activeHand: hand.
 
-	Smalltalk at: #World put: desktop.
-	Smalltalk at: #ActiveWorld put: desktop.
+	Smalltalk at: #World put: world.
+	Smalltalk at: #ActiveWorld put: world.
 
 	world viewBox: Display boundingBox.
 	
