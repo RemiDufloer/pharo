@@ -104,7 +104,7 @@ Morph >> openInWindow [
 
 { #category : #'*Morphic-Widgets-Windows' }
 Morph >> openInWindowLabeled: aString [
-	^self openInWindowLabeled: aString inWorld: self currentWorld  
+	^self openInWindowLabeled: aString inWorld: self currentDesktop   
 ]
 
 { #category : #'*Morphic-Widgets-Windows' }

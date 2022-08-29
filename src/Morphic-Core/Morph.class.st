@@ -4461,7 +4461,7 @@ Morph >> openInHand [
 
 { #category : #opening }
 Morph >> openInWorld [
-	self openInWorld: self currentWorld
+	self openInWorld: self currentDesktop 
 ]
 
 { #category : #opening }

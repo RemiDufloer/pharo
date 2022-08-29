@@ -7,6 +7,12 @@ Object >> complexContents [
 ]
 
 { #category : #'*Morphic-Core' }
+Object >> currentDesktop [
+	"Answer a morphic world that is the current UI focus."
+	^ UIManager default currentDesktop
+]
+
+{ #category : #'*Morphic-Core' }
 Object >> currentWorld [
 	"Answer a morphic world that is the current UI focus."
 	^ UIManager default currentWorld
