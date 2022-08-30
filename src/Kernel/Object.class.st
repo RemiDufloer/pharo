@@ -1150,6 +1150,12 @@ Object >> isContext [
 	^false
 ]
 
+{ #category : #kerning }
+Object >> isDesktop [
+
+	^ false
+]
+
 { #category : #testing }
 Object >> isDictionary [
 	^false

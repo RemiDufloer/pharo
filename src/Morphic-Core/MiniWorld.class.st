@@ -92,13 +92,16 @@ MiniWorld >> addHand: aHandMorph [
 { #category : #'submorphs - add/remove' }
 MiniWorld >> addMorph: aMorph [
 
+	| desktop |
+	'ici' traceCr .
+	desktop := submorphs detect:  [ :d | d isDesktop  ] ifNone: [self] .
 	"I will be the owner (and I will act as a world)"
-	aMorph privateOwner: self.
+	aMorph privateOwner: desktop .
 	
 	"check for the need of steppiong stepping"
 	aMorph wantsSteps ifTrue: [ self  startStepping: aMorph ].
 
-	self addSubmorphs: aMorph	.
+	desktop  addSubmorphs: aMorph 	.
 ]
 
 { #category : #'world state' }
@@ -110,13 +113,16 @@ MiniWorld >> addMorphFront: aMorph [
 { #category : #'submorphs - add/remove' }
 MiniWorld >> addMorphInFrontOfLayer: aMorph [
 
+	| desktop |
+	'ici' traceCr .
+	desktop := submorphs detect:  [ :d | d isDesktop  ] ifNone: [self] .
 	"I will be the owner (and I will act as a world)"
-	aMorph privateOwner: self.
+	aMorph privateOwner: desktop.
 
 	"check for the need of steppiong stepping"
 	aMorph wantsSteps ifTrue: [ self  startStepping: aMorph ].
 
-	submorphs addFirst: aMorph
+	desktop submorphs addFirst: aMorph
 ]
 
 { #category : #accessing }

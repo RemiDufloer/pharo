@@ -210,7 +210,7 @@ DesktopMorph >> initialize [
 		send: #fullscreenChanged:
 		to: self.
 		
-	MenubarMorph openInWorld: self.
+	"MenubarMorph openInWorld: self."
 	"taskBarWindow := TaskbarMorphForDesktop newWithDesktop: self.
 	self addMorphFront: taskBarWindow.
 	taskBarWindow intoWorld: self."
@@ -236,6 +236,12 @@ DesktopMorph >> invokeWorldMenu: evt [
 	
 	(menu := self worldMenu  menuEntitled: 'World') popUpEvent: evt in: self.
 	^ menu
+]
+
+{ #category : #testing }
+DesktopMorph >> isDesktop [
+
+	^ true
 ]
 
 { #category : #'meta-actions' }
