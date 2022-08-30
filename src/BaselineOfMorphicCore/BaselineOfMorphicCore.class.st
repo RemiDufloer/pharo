@@ -78,6 +78,7 @@ BaselineOfMorphicCore >> postload: loader package: packageSpec [
 
 	Smalltalk at: #World put: world.
 	Smalltalk at: #ActiveWorld put: world.
+	Smalltalk at: #ActiveDesktop put: desktop .
 
 	world viewBox: Display boundingBox.
 	

@@ -210,10 +210,10 @@ DesktopMorph >> initialize [
 		send: #fullscreenChanged:
 		to: self.
 		
-	"MenubarMorph openInWorld: self.
+	"MenubarMorph openInWorld: self."
 	taskBarWindow := TaskbarMorphForDesktop newWithDesktop: self.
 	self addMorphFront: taskBarWindow.
-	taskBarWindow intoWorld: self."
+	taskBarWindow intoWorld: self.
 ]
 
 { #category : #initialization }

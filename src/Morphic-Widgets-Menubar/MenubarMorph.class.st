@@ -76,7 +76,7 @@ MenubarMorph class >> open [
 	self showMenubar ifFalse: [ ^ self ].
 
 	self new
-		menuBarItems: self currentWorld worldState menuBuilder menuSpec items;
+		menuBarItems: self currentDesktop  worldState menuBuilder menuSpec items;
 		open.
 ]
 
