@@ -93,7 +93,6 @@ MiniWorld >> addHand: aHandMorph [
 MiniWorld >> addMorph: aMorph [
 
 	| desktop |
-	'ici' traceCr .
 	desktop := submorphs detect:  [ :d | d isDesktop  ] ifNone: [self] .
 	"I will be the owner (and I will act as a world)"
 	aMorph privateOwner: desktop .
@@ -114,7 +113,6 @@ MiniWorld >> addMorphFront: aMorph [
 MiniWorld >> addMorphInFrontOfLayer: aMorph [
 
 	| desktop |
-	'ici' traceCr .
 	desktop := submorphs detect:  [ :d | d isDesktop  ] ifNone: [self] .
 	"I will be the owner (and I will act as a world)"
 	aMorph privateOwner: desktop.
