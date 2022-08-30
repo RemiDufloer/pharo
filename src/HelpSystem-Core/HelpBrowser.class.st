@@ -205,7 +205,7 @@ HelpBrowser >> open [
  	"Open the receivers window" 
 
 	self refresh.	
-	window openInWorld: self currentWorld .
+	window openInWorld.
 ]
 
 { #category : #actions }

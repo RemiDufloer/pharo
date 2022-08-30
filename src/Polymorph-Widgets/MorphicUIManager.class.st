@@ -348,13 +348,6 @@ MorphicUIManager >> confirm: queryString trueChoice: trueChoice falseChoice: fal
 ]
 
 { #category : #'ui requests' }
-MorphicUIManager >> currentDesktop [ 
-
-	ActiveDesktop ifNotNil: [ ^ ActiveDesktop ].
-	^ World
-]
-
-{ #category : #'ui requests' }
 MorphicUIManager >> currentWorld [
 
 	ActiveWorld ifNotNil: [ ^ ActiveWorld ].
