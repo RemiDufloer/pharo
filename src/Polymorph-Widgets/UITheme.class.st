@@ -1892,8 +1892,8 @@ UITheme >> disabledTextColor [
 
 { #category : #accessing }
 UITheme >> displayScaleFactor [
-	
-	^ self world displayScaleFactor
+
+	^ self world ifNil: [ 1 ] ifNotNil: [ :w | w displayScaleFactor ]
 ]
 
 { #category : #accessing }
