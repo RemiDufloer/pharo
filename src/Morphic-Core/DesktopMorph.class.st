@@ -139,6 +139,11 @@ DesktopMorph >> contentsMenuTitle [
 	^ 'World contents' translated
 ]
 
+{ #category : #initialization }
+DesktopMorph >> defaultBorderWidth [
+	^ 0
+]
+
 { #category : #'world menu' }
 DesktopMorph >> discoveredWorldMenu [
 
@@ -210,10 +215,10 @@ DesktopMorph >> initialize [
 		send: #fullscreenChanged:
 		to: self.
 		
-	"MenubarMorph openInWorld: self."
-	"taskBarWindow := TaskbarMorphForDesktop newWithDesktop: self.
+	MenubarMorph openInWorld: self.
+	taskBarWindow := TaskbarMorphForDesktop newWithDesktop: self.
 	self addMorphFront: taskBarWindow.
-	taskBarWindow intoWorld: self."
+	taskBarWindow intoWorld: self.
 ]
 
 { #category : #initialization }
