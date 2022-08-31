@@ -86,7 +86,6 @@ BaselineOfMorphic >> baseline: spec [
 		spec package: 'Morphic-Widgets-Tree'.
 		spec package: 'Morphic-Widgets-Windows'.
 		spec package: 'Morphic-Widgets-FastTable'.
-		
 		spec package: 'Morphic-Widgets-Taskbar-Tests'.
 		
 		"Several packages depend on Rubric as a basic Morphic component"
@@ -174,6 +173,7 @@ BaselineOfMorphic >> cleanUpAfterMorphicInitialization [
 { #category : #fonts }
 BaselineOfMorphic >> exportBitmapDejaVuSans [
 
+	"Public API. Useful to regenerate the font files."
 	| familyName styleNames pointSizes family font fileName fontCopy style |
 
 	familyName := 'Bitmap DejaVu Sans'.
@@ -324,28 +324,12 @@ BaselineOfMorphic >> postload: loader package: packageSpec [
 
 	BalloonMorph setBalloonColorTo: Color yellow.
 
-	UIManager default terminateUIProcess.
-	MorphicUIManager new spawnNewProcess.
-	Display newDepth: 32.
-	
-	UIManager default: MorphicUIManager new.
-	UIManager default uiProcess resume.
-	PharoLightTheme beCurrent.
 	self cleanUpAfterMorphicInitialization.
 
 	GraphicFontSettings setFontsToStyleNamed: #small.
 
-	"Install the right UIManager"
-	UIManager default: UIManager forCurrentSystemConfiguration.
-	Stdio stdout nextPutAll: 'UIManager changed:' ; nextPutAll: UIManager default class name ; lf.
-
 	TextEditor initialize.
-
 	MenubarMorph initialize.	
-
-	PolymorphSystemSettings showDesktopLogo: false.
-	PolymorphSystemSettings showDesktopLogo: true.
-	PolymorphSystemSettings desktopColor: Color white.
 
 	Smalltalk cleanOutUndeclared.
 
@@ -358,11 +342,10 @@ BaselineOfMorphic >> postload: loader package: packageSpec [
 	array at: 5 put: Bitmap.
 	Smalltalk specialObjectsArray becomeForward: array.
 
+	UIManager default restoreDisplay.
+
 	Author reset.
 	MCMethodDefinition initializersEnabled: initializersEnabled.
-
-	UIManager default restoreDisplay.
-	
 	Initialized := true.
 ]
 

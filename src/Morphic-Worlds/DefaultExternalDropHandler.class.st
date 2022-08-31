@@ -5,7 +5,7 @@ An alternative default handler that uses the file-list services to process files
 Class {
 	#name : #DefaultExternalDropHandler,
 	#superclass : #Object,
-	#category : #'Morphic-Core-Worlds'
+	#category : #'Morphic-Worlds'
 }
 
 { #category : #initialization }
@@ -27,6 +27,22 @@ DefaultExternalDropHandler >> chooseServiceFrom: aCollection [
 	aCollection size = 1
 		ifTrue: [^ aCollection anyOne].
 	^ UIManager default chooseFrom: (aCollection collect: [:each | each label]) values: aCollection.
+]
+
+{ #category : #events }
+DefaultExternalDropHandler >> handle: aFileReference in: pasteUp dropEvent: anEvent [
+	"the file was just droped, let's do our job"
+
+	| fileName services theOne |
+	fileName := aFileReference fullName.
+	services := self servicesForFileNamed: fileName.
+
+	"no service, default behavior"
+	services isEmpty
+		ifTrue: [ aFileReference inspect.
+			^ self ].
+	theOne := self chooseServiceFrom: services.
+	theOne ifNotNil: [ theOne performServiceFor: aFileReference ]
 ]
 
 { #category : #private }

@@ -7,7 +7,7 @@ Class {
 	#classInstVars : [
 		'displayScaleFactor'
 	],
-	#category : #'Morphic-Core-Worlds'
+	#category : #'Morphic-Worlds'
 }
 
 { #category : #setting }

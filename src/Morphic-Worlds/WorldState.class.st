@@ -32,7 +32,7 @@ Class {
 		'ServerMode',
 		'ShowUpdateOptionInWorldMenu'
 	],
-	#category : #'Morphic-Core-Worlds'
+	#category : #'Morphic-Worlds'
 }
 
 { #category : #accessing }
@@ -45,6 +45,26 @@ WorldState class >> MinCycleLapse: milliseconds [
 WorldState class >> addDeferredUIMessage: aValuable [
 	"aValuable will be executed in the next UI rendering cycle"
 	self deferredUIMessages nextPut: aValuable
+]
+
+{ #category : #'world menu' }
+WorldState class >> browseWorldMenuOn: aBuilder [
+	<worldMenu>
+	(aBuilder item: #Browse)
+		order: 10;
+		help: 'Tools to explore and modify the image';
+		with: [ 
+			(aBuilder group: #Browsing)
+				order: 1;
+				withSeparatorAfter.
+			(aBuilder group: #InputOutput)
+				order: 2;
+				withSeparatorAfter.
+			(aBuilder group: #Testing)
+				order: 3;
+				withSeparatorAfter.
+			(aBuilder group: #Searching)
+				order: 4]
 ]
 
 { #category : #'testing os' }
@@ -61,6 +81,22 @@ WorldState class >> debugShowDamage [
 { #category : #accessing }
 WorldState class >> debugShowDamage: aBoolean [
 	DebugShowDamage := aBoolean
+]
+
+{ #category : #'world menu' }
+WorldState class >> debugWorldMenuOn: aBuilder [
+	<worldMenu>
+	(aBuilder item: #Debug)
+		order: 30;
+		with: [
+			(aBuilder group: #Breakpoints)
+				order: 1;
+				withSeparatorAfter.
+			(aBuilder group: #Profiling)
+				order: 2;
+				withSeparatorAfter.
+			(aBuilder group: #Counters)
+				order: 3]
 ]
 
 { #category : #'deferred message' }
@@ -179,6 +215,15 @@ WorldState class >> lastCycleTime [
 { #category : #'drawing cycle' }
 WorldState class >> lastDrawCycleTime [
 	^ LastCycleTime ifNil: [ LastCycleTime := Time millisecondClockValue ]
+]
+
+{ #category : #'world menu' }
+WorldState class >> libraryWorldMenuOn: aBuilder [
+	<worldMenu>
+	(aBuilder item: #Tools)
+		label: 'Library';
+		order: 70;
+		help: 'Third party tools and applications'
 ]
 
 { #category : #'world menu items' }
@@ -304,9 +349,153 @@ WorldState class >> showUpdateOptionInWorldMenu: aBoolean [
 	ShowUpdateOptionInWorldMenu := aBoolean
 ]
 
+{ #category : #'world menu' }
+WorldState class >> sourcesWorldMenuOn: aBuilder [
+	<worldMenu>
+	(aBuilder item: #Sources)
+		order: 50;
+		help: 'Source Management Tools';
+		with: [ 
+			(aBuilder group: #Versioning)
+				order: 1;
+				withSeparatorAfter.
+			(aBuilder group: #Packaging)
+				order: 2;
+				withSeparatorAfter.
+			(aBuilder group: #Changes)
+				order: 3;
+				withSeparatorAfter.
+			(aBuilder group: #Refactoring)
+				order: 4 ]
+]
+
+{ #category : #'world menu' }
+WorldState class >> startMessageTallyInWorld: aWorld [
+
+	(self confirm: 'MessageTally will start now,
+and stop when the cursor goes
+to the top of the screen' translated) 
+		ifFalse: [ ^ self ].
+
+	TimeProfiler spyAllOn: [
+		MorphicRenderLoop new doOneCycleWhile: [ 
+			 aWorld  activeHand position y > 0 ] ]
+]
+
+{ #category : #'world menu' }
+WorldState class >> startThenBrowseMessageTallyInWorld: aWorld [
+	"Tally only the UI process"
+	
+	(self confirm: 'MessageTally the UI process until the
+mouse pointer goes to the top of the screen')
+		ifFalse: [ ^ self ].
+
+	TimeProfiler onBlock: [
+		MorphicRenderLoop new doOneCycleWhile: [ 
+			aWorld  activeHand position y > 10 ] ]
+]
+
+{ #category : #'world menu' }
+WorldState class >> systemOn: aBuilder [
+
+	<worldMenu>
+	| world |
+	world := aBuilder model world.
+	(aBuilder item: #System)
+		order: 60;
+		with: [ 
+			(aBuilder group: #SystemTools)
+				order: 1;
+				withSeparatorAfter.
+			(aBuilder group: #Startup)
+				order: 2;
+				withSeparatorAfter.
+			(aBuilder group: #Image)
+				order: 3;
+				with: [ 
+					(aBuilder item: #'Space left')
+						help:
+							'Do a garbage collection, and report results about the to the user.';
+						order: 1;
+						action: [ Smalltalk informSpaceLeftAfterGarbageCollection ].
+					(aBuilder item: #'Do Image Cleanup')
+						help:
+							'Clean out any caches and other state that should be flushed when trying to get an image into a pristine state.';
+						order: 2;
+						action: [ Smalltalk cleanUp: true ].
+					aBuilder withSeparatorAfter ].
+			(aBuilder group: #World)
+				order: 4;
+				with: [ 
+					(aBuilder item: #'Start drawing again')
+						help: 'Resume the drawing after a draw error of the world.';
+						order: 1;
+						action: [ world resumeAfterDrawError ].
+					(aBuilder item: #'Start stepping again')
+						help: 'Resume stepping of Morph after an error has occured.';
+						order: 2;
+						action: [ world resumeAfterStepError ].
+					(aBuilder item: #'Restore display')
+						help: 'Restore Morphic display.';
+						order: 3;
+						action: [ world restoreMorphicDisplay ].
+					aBuilder withSeparatorAfter ] ]
+]
+
 { #category : #accessing }
 WorldState class >> theme [
 	^ Smalltalk ui theme
+]
+
+{ #category : #'world menu' }
+WorldState class >> windowsOn: aBuilder [
+
+	<worldMenu>
+	| world |
+	world := aBuilder model world.
+	(aBuilder item: #Windows)
+		order: 90;
+		with: [ 
+			(aBuilder item: #'Collapse all windows')
+				action: [ world collapseAll ];
+				help:
+					'Reduce all open windows to collapsed forms that only show titles'
+						translated.
+			(aBuilder item: #'Expand all windows')
+				iconName: #expandBoxIcon;
+				action: [ world expandAll ];
+				help:
+					'Expand all collapsed windows back to their expanded forms'
+						translated.
+			(aBuilder item: #'Fit all windows')
+				action: [ world fitAllVisibleWindows ];
+				help: 'Fit all open windows as visible in World' translated.
+			(aBuilder item: #'Close all debuggers')
+				help: 'Close all opened debugger in the image.';
+				action: [ OupsDebuggerSystem closeAllDebuggers ].
+			(aBuilder item: #'Send top window to back (\)')
+				action: [ SystemWindow sendTopWindowToBack ];
+				help:
+					'Make the topmost window become the backmost one, and activate the window just beneath it.'
+						translated.
+			(aBuilder item: #'Move windows onscreen')
+				action: [ world bringWindowsFullOnscreen ];
+				help: 'Make all windows fully visible on the screen' translated.
+			(aBuilder item: #'Delete unchanged windows')
+				action: [ world closeUnchangedWindows ];
+				help:
+					'Deletes all windows that do not have unsaved text edits.'
+						translated.
+			(aBuilder item: #'Delete all windows discarding edits')
+				action: [ world closeAllWindowsDiscardingChanges ];
+				help:
+					'Deletes all windows even if they have unsaved text edits.'
+						translated.
+			(aBuilder item: #'Toggle full screen mode')
+				action: [ Display toggleFullscreen ];
+				help:
+					'Turn full screen mode on when it is off, off when it is on.'
+						translated ]
 ]
 
 { #category : #settings }
@@ -346,6 +535,17 @@ WorldState >> activeHand [
 { #category : #hands }
 WorldState >> activeHand: aHand [
 	activeHand := aHand
+]
+
+{ #category : #'events - alarms' }
+WorldState >> addAlarm: aSelector withArguments: argArray for: aTarget at: scheduledTime [
+	"Add a new alarm with the given set of parameters"
+	self alarms add: 
+		(MorphicAlarm 
+			scheduledAt: scheduledTime
+			receiver: aTarget
+			selector: aSelector
+			arguments: argArray).
 ]
 
 { #category : #hands }
@@ -700,6 +900,16 @@ WorldState >> listOfSteppingMorphs [
 	^stepList collect:[:entry| entry receiver].
 ]
 
+{ #category : #'world menu' }
+WorldState >> menuBuilder [
+
+	^ (PragmaMenuBuilder
+		   pragmaKeyword: self discoveredMenuPragmaKeyword
+		   model: self)
+		  menuSpec;
+		  yourself
+]
+
 { #category : #hands }
 WorldState >> realWindowExtent [
 
@@ -800,6 +1010,33 @@ WorldState >> selectHandsToDrawForDamage: damageList [
 { #category : #settings }
 WorldState >> serverMode [
 	^ self class serverMode
+]
+
+{ #category : #'world menu' }
+WorldState >> startMessageTally [
+
+	self class startMessageTallyInWorld: self world
+]
+
+{ #category : #alarms }
+WorldState >> startStepping: aMorph at: scheduledTime selector: aSelector arguments: args stepTime: stepTime [
+	"Add the given morph to the step list. Do nothing if it is already being stepped."
+
+	self stopStepping: aMorph selector: aSelector.
+	self adjustWakeupTimesIfNecessary.
+	stepList add:(
+		StepMessage 
+			scheduledAt: scheduledTime
+			stepTime: stepTime
+			receiver: aMorph
+			selector: aSelector
+			arguments: args)
+]
+
+{ #category : #'world menu' }
+WorldState >> startThenBrowseMessageTally [
+
+	self class startThenBrowseMessageTallyInWorld: self world
 ]
 
 { #category : #initialization }

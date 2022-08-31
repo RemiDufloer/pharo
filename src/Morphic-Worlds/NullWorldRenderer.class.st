@@ -5,7 +5,7 @@ I am used when we are in command line or during the initialization
 Class {
 	#name : #NullWorldRenderer,
 	#superclass : #AbstractWorldRenderer,
-	#category : #'Morphic-Core-Worlds'
+	#category : #'Morphic-Worlds'
 }
 
 { #category : #accessing }

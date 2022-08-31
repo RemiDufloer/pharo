@@ -15,7 +15,7 @@ Class {
 		'MainWorldRenderer',
 		'RenderingProfilingLogOutput'
 	],
-	#category : #'Morphic-Core-Worlds'
+	#category : #'Morphic-Worlds'
 }
 
 { #category : #profiling }

@@ -40,7 +40,7 @@ BaselineOfUI >> baseline: spec [
 		spec package: 'Debugger-Oups'.
 
 		"Load morphic before Spec"
-		spec baseline: 'Morphic' with: [ spec repository: repository ].
+		spec baseline: 'MorphicWorlds' with: [ spec repository: repository ].
 		spec baseline: 'Commander2' with: [ spec repository: repository ].
 		"Spec 2 (base), using external configuration"
 		self specBase: spec.		
