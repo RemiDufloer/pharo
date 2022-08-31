@@ -83,7 +83,7 @@ MenubarMorph class >> openInWorld: aWorld [
 
 { #category : #accessing }
 MenubarMorph class >> showMenubar [
-	^ ShowMenubar
+	^ ShowMenubar ifNil: [ true ]
 ]
 
 { #category : #accessing }
