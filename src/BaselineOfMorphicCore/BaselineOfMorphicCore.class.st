@@ -51,59 +51,13 @@ BaselineOfMorphicCore >> baseline: spec [
 { #category : #actions }
 BaselineOfMorphicCore >> postload: loader package: packageSpec [
 
-	| world hand desktop |
-
 	"Ignore pre and post loads if already executed"
 	Initialized = true ifTrue: [ ^ self ].
 	
 	IdentityTransform initialize.
 
-	RealEstateAgent initialize.
-	WorldState initialize.
-	Morph initialize.
-	HandMorph initialize.
-	
-	AbstractWorldRenderer initialize.	
-
 	Cursor initTarget.
 	EventManager initialize.
-
-	world := MiniWorld new.
-	world instVarNamed: #worldState put: WorldState new.
-	world addMorph: (desktop := DesktopMorph new).
-	
-	hand := HandMorph new.
-	world addHand: hand.
-	world activeHand: hand.
-
-	Smalltalk at: #World put: world.
-	Smalltalk at: #ActiveWorld put: world.
-	Smalltalk at: #ActiveDesktop put: desktop .
-
-	world viewBox: Display boundingBox.
-	
-	world handsDo: [:h | h initForEvents].
-	desktop borderWidth: 0.
-	
-	Display newDepth: 32.
-	world displayWorldSafely.
-	MorphicCoreUIManager new spawnNewProcess.
-
-	ExternalDropHandler resetRegisteredHandlers.
-
-	Display newDepth: 32.
-
-	(world instVarNamed: #worldState) invalidate.
-
-	hand instVarNamed: #targetOffset put: 0@0.
-
-	MiniWorld  initialize.
-	ExternalDropHandler initialize.
-	WorldMorph initialize .
-	PasteUpMorph initialize.
-	DefaultExternalDropHandler initialize.
-	
-	MiniWorld  recompile.
 
 	Initialized := true.
 ]

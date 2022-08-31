@@ -29,6 +29,8 @@ BaselineOfMorphicWorlds >> baseline: spec [
 BaselineOfMorphicWorlds >> postload: loader package: packageSpec [
 
 	"Ignore pre and post loads if already executed"
+
+	| world desktop hand |
 	Initialized = true ifTrue: [ ^ self ].
 
 	SystemNotification signal: 'Starting postload action'.
@@ -46,11 +48,52 @@ BaselineOfMorphicWorlds >> postload: loader package: packageSpec [
 	PolymorphSystemSettings desktopLogoChanged.
 	PolymorphSystemSettings desktopColor: Color white.
 
-	UIManager default restoreDisplay.
-	
+	RealEstateAgent initialize.
+	WorldState initialize.
+	Morph initialize.
+	HandMorph initialize.
+
+	AbstractWorldRenderer initialize.
+
+	world := MiniWorld new.
+	world instVarNamed: #worldState put: WorldState new.
+	world addMorph: (desktop := DesktopMorph new).
+
+	hand := HandMorph new.
+	world addHand: hand.
+	world activeHand: hand.
+
+	Smalltalk at: #World put: world.
+	Smalltalk at: #ActiveWorld put: world.
+	Smalltalk at: #ActiveDesktop put: desktop.
+
+	world viewBox: Display boundingBox.
+
+	world handsDo: [ :h | h initForEvents ].
+	desktop borderWidth: 0.
+
+	Display newDepth: 32.
+	world displayWorldSafely.
+	MorphicCoreUIManager new spawnNewProcess.
+
+	ExternalDropHandler resetRegisteredHandlers.
+
+	Display newDepth: 32.
+
+	(world instVarNamed: #worldState) invalidate.
+	hand instVarNamed: #targetOffset put: 0 @ 0.
+
+	MiniWorld initialize.
+	ExternalDropHandler initialize.
+	WorldMorph initialize.
+	PasteUpMorph initialize.
+	DefaultExternalDropHandler initialize.
+
+	MiniWorld recompile.
+
 	Author reset.
 	MCMethodDefinition initializersEnabled: initializersEnabled.
-	Initialized := true.
+	Initialized := true
 ]
 
 { #category : #actions }
