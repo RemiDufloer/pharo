@@ -29,8 +29,10 @@ Form >> iconOrThumbnailOfSize: aNumberOrPoint [
 
 { #category : #'*Morphic-Base' }
 Form >> scaledByDisplayScaleFactor [
-	
-	^ self scaledToSize: self extent * self currentWorld displayScaleFactor.
+
+	^ self scaledToSize: self extent * (self currentWorld
+			   ifNil: [ 1 ]
+			   ifNotNil: [ :w | w displayScaleFactor ])
 ]
 
 { #category : #'*Morphic-Base' }
