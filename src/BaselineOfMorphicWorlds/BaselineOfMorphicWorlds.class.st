@@ -88,6 +88,7 @@ BaselineOfMorphicWorlds >> postload: loader package: packageSpec [
 	WorldMorph initialize.
 	PasteUpMorph initialize.
 	DefaultExternalDropHandler initialize.
+	UITheme initialize.
 
 	MiniWorld recompile.
 

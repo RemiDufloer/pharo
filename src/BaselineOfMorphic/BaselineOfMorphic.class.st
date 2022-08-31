@@ -318,7 +318,7 @@ BaselineOfMorphic >> postload: loader package: packageSpec [
 	RxMatcher RxParser RxsPredicate
 	SHA1 ShortIntegerArray
 	SystemProgressMorph SystemWindow TestCase TextContainer TextDiffBuilder
-	ThemeIcons ThumbnailMorph TransferMorph UITheme ZnByteEncoder
+	ThemeIcons ThumbnailMorph TransferMorph ZnByteEncoder
 	ZnConstants ZnMimeType ZnNetworkingUtils ZnServer ZnSingleThreadedServer
 	) do: [:each | (Smalltalk globals at: each) initialize. ].
 
