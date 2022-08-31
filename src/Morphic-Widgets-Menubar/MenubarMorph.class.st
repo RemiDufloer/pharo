@@ -57,7 +57,7 @@ MenubarMorph class >> menubarSettingOn: aBuilder [
 MenubarMorph class >> methodAnnouncementReceived: anAnnouncement [
 
 	(anAnnouncement methodAffected hasPragmaNamed: #worldMenu)
-		ifTrue: [ self reset ]
+		ifTrue: [ "reset" ]
 ]
 
 { #category : #'instance creation' }
