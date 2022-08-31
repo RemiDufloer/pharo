@@ -45,9 +45,6 @@ BaselineOfMorphicWorlds >> postload: loader package: packageSpec [
 	"Install the right UIManager"
 	UIManager default: UIManager forCurrentSystemConfiguration.
 
-	PolymorphSystemSettings desktopLogoChanged.
-	PolymorphSystemSettings desktopColor: Color white.
-
 	RealEstateAgent initialize.
 	WorldState initialize.
 	HandMorph initialize.
@@ -92,6 +89,10 @@ BaselineOfMorphicWorlds >> postload: loader package: packageSpec [
 
 
 	MiniWorld recompile.
+
+	"Install the Pharo Logo in the desktop"
+	PolymorphSystemSettings desktopLogoChanged.
+	PolymorphSystemSettings desktopColor: Color white.
 
 	Author reset.
 	MCMethodDefinition initializersEnabled: initializersEnabled.
