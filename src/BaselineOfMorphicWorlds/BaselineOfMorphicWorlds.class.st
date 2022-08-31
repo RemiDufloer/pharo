@@ -50,7 +50,6 @@ BaselineOfMorphicWorlds >> postload: loader package: packageSpec [
 
 	RealEstateAgent initialize.
 	WorldState initialize.
-	Morph initialize.
 	HandMorph initialize.
 
 	AbstractWorldRenderer initialize.

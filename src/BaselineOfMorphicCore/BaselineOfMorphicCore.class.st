@@ -56,6 +56,7 @@ BaselineOfMorphicCore >> postload: loader package: packageSpec [
 	
 	IdentityTransform initialize.
 
+	Morph initialize.
 	Cursor initTarget.
 	EventManager initialize.
 
