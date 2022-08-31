@@ -31,7 +31,6 @@ Class {
 MenubarMorph class >> initialize [
 	self showMenubar: true.
 	self install.
-	self reset
 ]
 
 { #category : #'instance creation' }
@@ -82,13 +81,6 @@ MenubarMorph class >> openInWorld: aWorld [
 		openInWorld: aWorld.
 ]
 
-{ #category : #'class initialization' }
-MenubarMorph class >> reset [
-
-	<script>
-	self open.
-]
-
 { #category : #accessing }
 MenubarMorph class >> showMenubar [
 	^ ShowMenubar
@@ -97,7 +89,6 @@ MenubarMorph class >> showMenubar [
 { #category : #accessing }
 MenubarMorph class >> showMenubar: aBoolean [
 	ShowMenubar := aBoolean.
-	self reset
 ]
 
 { #category : #construction }

@@ -329,7 +329,6 @@ BaselineOfMorphic >> postload: loader package: packageSpec [
 	GraphicFontSettings setFontsToStyleNamed: #small.
 
 	TextEditor initialize.
-	MenubarMorph initialize.	
 
 	Smalltalk cleanOutUndeclared.
 
