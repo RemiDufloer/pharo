@@ -93,14 +93,17 @@ MiniWorld >> addHand: aHandMorph [
 MiniWorld >> addMorph: aMorph [
 
 	| desktop |
-	desktop := submorphs detect:  [ :d | d isDesktop  ] ifNone: [self] .
+	desktop := submorphs
+		           detect: [ :d | d isDesktop ]
+		           ifFound: [ :d | ^ d addMorphInFrontOfLayer: aMorph ]
+		           ifNone: [ self ].
 	"I will be the owner (and I will act as a world)"
-	aMorph privateOwner: desktop .
-	
-	"check for the need of steppiong stepping"
-	aMorph wantsSteps ifTrue: [ self  startStepping: aMorph ].
+	aMorph privateOwner: desktop.
 
-	desktop submorphs asOrderedCollection  addLast: aMorph 	.
+	"check for the need of steppiong stepping"
+	aMorph wantsSteps ifTrue: [ self startStepping: aMorph ].
+
+	desktop submorphs asOrderedCollection addLast: aMorph
 ]
 
 { #category : #'world state' }
@@ -113,14 +116,17 @@ MiniWorld >> addMorphFront: aMorph [
 MiniWorld >> addMorphInFrontOfLayer: aMorph [
 
 	| desktop |
-	desktop := submorphs detect:  [ :d | d isDesktop  ] ifNone: [self] .
+	desktop := submorphs
+		           detect: [ :d | d isDesktop ]
+		           ifFound: [ :d | ^ d addMorphInFrontOfLayer: aMorph ]
+		           ifNone: [ self ].
 	"I will be the owner (and I will act as a world)"
 	aMorph privateOwner: desktop.
 
 	"check for the need of steppiong stepping"
-	aMorph wantsSteps ifTrue: [ self  startStepping: aMorph ].
+	aMorph wantsSteps ifTrue: [ self startStepping: aMorph ].
 
-	desktop submorphs asOrderedCollection addLast:   aMorph
+	desktop submorphs asOrderedCollection addLast: aMorph
 ]
 
 { #category : #accessing }
