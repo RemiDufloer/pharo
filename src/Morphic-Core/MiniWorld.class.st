@@ -100,7 +100,7 @@ MiniWorld >> addMorph: aMorph [
 	"check for the need of steppiong stepping"
 	aMorph wantsSteps ifTrue: [ self  startStepping: aMorph ].
 
-	desktop  addMorph: aMorph 	.
+	desktop submorphs asOrderedCollection  addLast: aMorph 	.
 ]
 
 { #category : #'world state' }
@@ -120,7 +120,7 @@ MiniWorld >> addMorphInFrontOfLayer: aMorph [
 	"check for the need of steppiong stepping"
 	aMorph wantsSteps ifTrue: [ self  startStepping: aMorph ].
 
-	desktop addMorphInFrontOfLayer:  aMorph
+	desktop submorphs asOrderedCollection addLast:   aMorph
 ]
 
 { #category : #accessing }
