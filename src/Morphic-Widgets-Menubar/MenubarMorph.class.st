@@ -28,14 +28,6 @@ Class {
 }
 
 { #category : #'instance creation' }
-MenubarMorph class >> closeAllWindows [
-
-	self currentWorld submorphs
-		select: [ :e | e isKindOf: MenubarMorph ]
-		thenDo: [ :e | e delete ].
-]
-
-{ #category : #'instance creation' }
 MenubarMorph class >> initialize [
 	self showMenubar: true.
 	self install.
@@ -94,7 +86,6 @@ MenubarMorph class >> openInWorld: aWorld [
 MenubarMorph class >> reset [
 
 	<script>
-	self closeAllWindows.
 	self open.
 ]
 
