@@ -120,7 +120,7 @@ MiniWorld >> addMorphInFrontOfLayer: aMorph [
 	"check for the need of steppiong stepping"
 	aMorph wantsSteps ifTrue: [ self  startStepping: aMorph ].
 
-	desktop submorphs addFirst: aMorph
+	submorphs addFirst:  aMorph
 ]
 
 { #category : #accessing }
