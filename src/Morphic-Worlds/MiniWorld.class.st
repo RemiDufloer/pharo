@@ -504,9 +504,9 @@ MiniWorld >> world [
 ]
 
 { #category : #accessing }
-MiniWorld >> worldRenderer [ 
+MiniWorld >> worldRenderer [
 
-	^ worldRenderer 
+	^ worldState worldRenderer
 ]
 
 { #category : #accessing }
