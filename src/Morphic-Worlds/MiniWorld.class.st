@@ -19,8 +19,7 @@ Class {
 		'root',
 		'backgroundMorph',
 		'manager',
-		'worldState',
-		'worldRenderer'
+		'worldState'
 	],
 	#category : #'Morphic-Worlds'
 }
@@ -275,7 +274,6 @@ MiniWorld >> initialize [
 
 	super initialize.
 	submorphs := OrderedCollection new.
-	worldRenderer := NullWorldRenderer new.
 	worldState := WorldState new.
 	self color: Color veryLightGray.
 	
@@ -327,6 +325,7 @@ MiniWorld >> modalUnlockFrom: aSystemWindow [
 { #category : #'API - opening' }
 MiniWorld >> open [
 
+	| worldRenderer |
 	worldRenderer := OSWorldRenderer forWorld: self.
 	worldRenderer windowCloseAction: [ self worldRenderer deactivate ].
 	worldState activeHand: (self addHand: HandMorph new).
@@ -363,6 +362,7 @@ MiniWorld >> openModal: aSystemWindow [
 { #category : #opening }
 MiniWorld >> openWithAttributes: aAttributes [
 
+	| worldRenderer |
 	worldRenderer := (OSWorldRenderer forWorld: self withAttributs: aAttributes  ).
 	self worldState worldRenderer:
 		(worldRenderer windowCloseAction: [ self worldRenderer deactivate ]).
