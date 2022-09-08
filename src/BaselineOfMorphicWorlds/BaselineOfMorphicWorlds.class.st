@@ -53,7 +53,13 @@ BaselineOfMorphicWorlds >> postload: loader package: packageSpec [
 
 	world := MiniWorld new.
 	world instVarNamed: #worldState put: WorldState new.
-	world addMorph: (desktop := DesktopMorph new).
+	world
+		layoutPolicy: StackLayout  new;
+		clipSubmorphs: true.
+
+	desktop := DesktopMorph new.
+	desktop hResizing: #spaceFill; vResizing: #spaceFill.
+	desktop openInWorld: world.
 
 	hand := HandMorph new.
 	world addHand: hand.
