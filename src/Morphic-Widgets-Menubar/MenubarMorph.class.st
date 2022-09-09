@@ -65,10 +65,7 @@ MenubarMorph class >> open [
 	<script>
 	
 	self showMenubar ifFalse: [ ^ self ].
-
-	self new
-		menuBarItems: self currentDesktop  worldState menuBuilder menuSpec items;
-		open.
+	self openInWorld: self currentDesktop
 ]
 
 { #category : #'instance creation' }
@@ -77,7 +74,7 @@ MenubarMorph class >> openInWorld: aWorld [
 	self showMenubar ifFalse: [ ^ self ].
 
 	self new
-		menuBarItems:  aWorld worldMenu menuSpec items;
+		menuBarItems: aWorld worldState menuBuilder menuSpec items;
 		openInWorld: aWorld.
 ]
 
