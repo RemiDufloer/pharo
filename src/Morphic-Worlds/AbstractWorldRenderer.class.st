@@ -305,7 +305,6 @@ AbstractWorldRenderer >> restoreMorphicDisplay [
 		extent: self actualScreenSize;
 		viewBox: self viewBox;
 		handsDo: [:h | h visible: true; showTemporaryCursor: nil];
-		resizeBackgroundMorph;
 		submorphsDo: [ :each | each displayExtentChanged ];
 		fullRepaintNeeded.
 		

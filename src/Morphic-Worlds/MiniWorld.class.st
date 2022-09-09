@@ -137,26 +137,6 @@ MiniWorld >> addSubmorphs: aMorph [
 	submorphs addFirst:  aMorph
 ]
 
-{ #category : #background }
-MiniWorld >> backgroundMorph [
-
-	"Answer the background morph if any."
-
-	^ backgroundMorph
-]
-
-{ #category : #background }
-MiniWorld >> backgroundMorph: aMorph [
-
-	"Set the background morph.
-	Probably best if locked prior to adding."
-	self backgroundMorph ifNotNil: [ self backgroundMorph delete ].
-	backgroundMorph := aMorph.
-	aMorph ifNotNil: [ 
-		aMorph bounds: self bounds.
-		self addMorphBack: aMorph ]
-]
-
 { #category : #accessing }
 MiniWorld >> basicLabel [
 

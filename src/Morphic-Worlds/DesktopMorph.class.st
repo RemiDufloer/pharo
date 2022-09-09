@@ -79,6 +79,26 @@ DesktopMorph >> announcer [
 	^ WorldAnnouncer
 ]
 
+{ #category : #background }
+DesktopMorph >> backgroundMorph [
+
+	"Answer the background morph if any."
+
+	^ backgroundMorph
+]
+
+{ #category : #background }
+DesktopMorph >> backgroundMorph: aMorph [
+
+	"Set the background morph.
+	Probably best if locked prior to adding."
+	self backgroundMorph ifNotNil: [ self backgroundMorph delete ].
+	backgroundMorph := aMorph.
+	aMorph ifNotNil: [ 
+		aMorph bounds: self bounds.
+		self addMorphBack: aMorph ]
+]
+
 { #category : #cursor }
 DesktopMorph >> beCursorOwner [
 
@@ -321,6 +341,5 @@ DesktopMorph >> worldMenu [
 
 	| menu |
 	menu := PragmaMenuBuilder pragmaKeyword: #worldMenu model: self.
-	menu menuSpec.
-	^ menu
+	^ menu menu
 ]
