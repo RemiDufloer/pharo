@@ -188,7 +188,7 @@ MorphicWindowManagerTest >> testWindowShouldBeOpenAfterStartupWithGoodMorphWithG
 
 
 	self
-		assert: manager allWindow first attributs
+		assert: manager allWindow first attributs 
 		equals: newWindow attributs
 ]
 

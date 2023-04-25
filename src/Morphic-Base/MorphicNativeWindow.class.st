@@ -1,6 +1,4 @@
 "
-Please comment me using the following template inspired by Class Responsibility Collaborator (CRC) design:
-
 I represent a native window
 
 I open a new window with a specific backend, i know my manager, i have all atributs for the window.
@@ -46,7 +44,7 @@ MorphicNativeWindow class >> newWindow: aMorph manageBy: aManager [
 { #category : #closing }
 MorphicNativeWindow >> allowedToClose [
 
-	self flag: 'todo'.
+" no reason to dont close ? "
 	^ true
 ]
 
@@ -54,6 +52,12 @@ MorphicNativeWindow >> allowedToClose [
 MorphicNativeWindow >> attributs [
 
 	^ attributes
+]
+
+{ #category : #'submorphs - add/remove' }
+MorphicNativeWindow >> attributs: aOsWindowAttributs [
+
+	attributes := aOsWindowAttributs
 ]
 
 { #category : #'submorphs - add/remove' }
@@ -219,11 +223,10 @@ MorphicNativeWindow >> open [
 ]
 
 { #category : #open }
-MorphicNativeWindow >> openWithAttributes: attributes [
+MorphicNativeWindow >> openWithAttributes: anOsWindowAttributs [
 
-	backend := window openInExternalWindowWithAttributes: attributes.
-	attributes := self backend worldState worldRenderer osWindow
-		             initialAttributes.
+	backend := window openInExternalWindowWithAttributes: anOsWindowAttributs.
+	self attributs: anOsWindowAttributs.
 	osWindow := self backend worldState worldRenderer osWindow
 ]
 

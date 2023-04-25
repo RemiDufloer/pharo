@@ -177,8 +177,9 @@ MorphicWindowManager >> saveAllRoot [
 
 { #category : #startup }
 MorphicWindowManager >> startupOpenWithAttributes [
-	
-	1 to: allAttributes  size do: [ :a | (windows  at: a) openWithAttributes: (allAttributes at: a)  ]
+
+	1 to: allAttributes size do: [ :a | 
+	(windows at: a) openWithAttributes: (allAttributes at: a) ]
 ]
 
 { #category : #'startup - shutdown' }

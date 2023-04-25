@@ -20,8 +20,8 @@ MorphicNativeWindowTest >> testMaximizeWindow [
 
 	window open.
 	window maximize.
-
-	self assert: window isMaximized equals: true
+	self assert: window isMaximized equals: true.
+	window restore
 ]
 
 { #category : #tests }
@@ -31,7 +31,9 @@ MorphicNativeWindowTest >> testMinimizeWindow [
 
 	window minimize.
 
-	self assert: window isMinimized
+	self assert: window isMinimized.
+	
+	window restore
 ]
 
 { #category : #tests }
