@@ -46,6 +46,15 @@ SystemWindow >> activeTitleFillStyle [
 ]
 
 { #category : #'*Polymorph-Widgets' }
+SystemWindow >> addBoxes [
+
+	self addCloseBox .
+	self addMenuControl.
+	self addExpandBox .
+	self addCollapseBox .
+]
+
+{ #category : #'*Polymorph-Widgets' }
 SystemWindow >> addCollapseBox [
 	"If I have a labelArea, add a collapse box to it."
 
@@ -515,6 +524,13 @@ SystemWindow >> createMenuBox [
 	"Answer a button for the window menu."
 
 	^self theme createMenuBoxFor: self
+]
+
+{ #category : #'*Polymorph-Widgets' }
+SystemWindow >> createReturnToWorldBox [
+	"Answer a button for closing the window."
+
+	^self theme createReturnToWorldBoxFor: self
 ]
 
 { #category : #'*Polymorph-Widgets' }
@@ -1184,6 +1200,13 @@ SystemWindow >> removeLabelArea [
 ]
 
 { #category : #'*Polymorph-Widgets' }
+SystemWindow >> removeReturnToWorld [
+	"Remove the collapse box."
+
+	returnToWorldBox ifNotNil: [returnToWorldBox delete. returnToWorldBox := nil]
+]
+
+{ #category : #'*Polymorph-Widgets' }
 SystemWindow >> replaceBoxes [
 	"Rebuild the various boxes."
 
@@ -1322,6 +1345,12 @@ SystemWindow >> themeChanged [
 	self isEmbedded ifTrue: [ self borderWidth: 0 ].
 
 	super themeChanged
+]
+
+{ #category : #'*Polymorph-Widgets' }
+SystemWindow >> title [
+
+	^ self labelString 
 ]
 
 { #category : #'*Polymorph-Widgets' }

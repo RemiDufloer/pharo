@@ -50,18 +50,20 @@ MorphicUIManager class >> uiProcess [
 { #category : #private }
 MorphicUIManager >> activate [
 
-	self currentWorld worldState worldRenderer: (AbstractWorldRenderer detectCorrectOneForWorld: self currentWorld).
-	self currentWorld currentCursor: self currentWorld currentCursor.
+	| world |
+	world := Smalltalk at: #World.
 
-	self currentWorld ifNotNil: [:world | world restoreMorphicDisplay].
-	WorldMorph extraWorldList do: [:each | each restoreMorphicDisplay].
+	world worldState worldRenderer:
+		(AbstractWorldRenderer detectCorrectOneForWorld: world).
+	world currentCursor: self currentWorld currentCursor.
+
+	world ifNotNil: [ world restoreMorphicDisplay ].
+	WorldMorph extraWorldList do: [ :each | each restoreMorphicDisplay ].
 
 	activeTranscript
 		ifNil: [
 			Transcript class == ThreadSafeTranscript ifFalse: [
-				ThreadSafeTranscript install
-			]
-		]
+				ThreadSafeTranscript install ] ]
 		ifNotNil: [ Transcript := activeTranscript ].
 
 	SystemProgressMorph enable

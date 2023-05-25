@@ -1286,6 +1286,18 @@ UITheme >> createMenuBoxFor: aSystemWindow [
 	^msb
 ]
 
+{ #category : #'label-styles' }
+UITheme >> createReturnToWorldBoxFor: aSystemWindow [
+	"Answer a button for closing the window."
+
+	^(self
+		newReturnToWorldControlIn: aSystemWindow
+		for: aSystemWindow
+		action: [aSystemWindow returnToOriginalWorld ]
+		help: 'Return this window to the original world' translated)
+		extent: aSystemWindow boxExtent
+]
+
 { #category : #accessing }
 UITheme >> currentSettings [
 
@@ -3598,6 +3610,23 @@ UITheme >> newRadioButtonSelectedForm [
 ]
 
 { #category : #'morph creation' }
+UITheme >> newReturnToWorldControlIn: aThemedMorph for: aModel action: aValuable help: helpText [
+	"Answer a button for closing things."
+
+	|form msb|
+	form := self windowCloseForm.
+	msb := MultistateButtonMorph new extent: form extent.
+	form := self windowForm.
+	msb
+		extent: form extent;
+		activeEnabledOverDownFillStyle: (ImageFillStyle form: form);
+		passiveEnabledOverDownFillStyle: (ImageFillStyle form: form);
+		addUpAction: aValuable;
+		setBalloonText: helpText.
+	^msb
+]
+
+{ #category : #'morph creation' }
 UITheme >> newRowIn: aThemedMorph for: controls [
 	"Answer a morph laid out with a row of controls."
 
@@ -5519,6 +5548,12 @@ UITheme >> windowEdgePressedFillStyleFor: anEdgeGrip [
 { #category : #'fill-styles' }
 UITheme >> windowExtentChangedFor: aWindow [
 	"Update any extent related visuals."
+]
+
+{ #category : #rd }
+UITheme >> windowForm [
+	
+	^ self iconNamed: #window
 ]
 
 { #category : #'fill-styles' }
