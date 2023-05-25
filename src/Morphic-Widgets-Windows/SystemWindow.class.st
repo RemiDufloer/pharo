@@ -24,7 +24,9 @@ Class {
 		'expandBox',
 		'embeddable',
 		'isResizeable',
-		'taskbarTask'
+		'taskbarTask',
+		'worldBeforeOpenInExternalWindow',
+		'returnToWorldBox'
 	],
 	#classVars : [
 		'CloseBoxImage',
@@ -498,7 +500,13 @@ SystemWindow class >> windowMenuOn: aBuilder [
 		ifFalse: [ #Maximize ].
 	(aBuilder item: maximizeLabel)
 		action: [ aBuilder model expandBoxHit ];
-		iconName: #windowMaximizeForm
+		iconName: #windowMaximizeForm;
+		withSeparatorAfter.
+	(aBuilder item: #'Open in external Window')
+		action: [ MorphicNativeWindow openNewWindow: (aBuilder model)  ];
+		iconName: #window.
+		
+		
 ]
 
 { #category : #'top window' }
@@ -596,6 +604,19 @@ SystemWindow >> addPaneSplittersIfNeeded [
 	(isCollapsed not
 		and: [ self paneMorphs isNotEmpty and: [self splitters isEmpty]])
 			ifTrue: [self addPaneSplitters]
+]
+
+{ #category : #initialization }
+SystemWindow >> addReturnToWorld [
+	"If I have a labelArea, add a close box to it"
+
+	| frame |
+	self setWorldBeforeOpenInExternalWindow.
+	labelArea ifNil: [ ^ self ].
+	returnToWorldBox := self createReturnToWorldBox.
+	frame := LayoutFrame identity leftOffset: 2.
+	returnToWorldBox layoutFrame: frame.
+	labelArea addMorphBack: returnToWorldBox
 ]
 
 { #category : #'top window' }
@@ -1487,6 +1508,29 @@ SystemWindow >> offerWindowMenu [
 ]
 
 { #category : #'open/close' }
+SystemWindow >> openInExternalWindow [
+
+	| world |
+	world := OSWindowWorldMorph new extent: self fullBounds extent.
+	world
+		layoutPolicy: StackLayout new;
+		clipSubmorphs: true.
+
+	self removeBoxes.
+	self addReturnToWorld.
+
+
+	self
+		hResizing: #spaceFill;
+		vResizing: #spaceFill.
+	self openInWorld: world.
+	self onAnnouncement: MorphDeleted do: [ :announce |
+		world ifNotNil: [ world delete ].
+		world := nil ].
+	^ world open
+]
+
+{ #category : #'open/close' }
 SystemWindow >> openModal [
 	self openInWorld.
 	MorphicRenderLoop new doOneCycleWhile: [ self isInWorld ]
@@ -1727,6 +1771,20 @@ SystemWindow >> restoreDefaultPaneColor [
 	self setStripeColorsFrom: self paneColor
 ]
 
+{ #category : #opening }
+SystemWindow >> returnToOriginalWorld [
+
+	| world |
+	world := self world.
+
+	self openInWorld: self worldBeforeOpenInExternalWindow.
+	self removeReturnToWorld.
+	self removeLabelArea .
+	self initializeLabelArea .
+
+	world delete
+]
+
 { #category : #drawing }
 SystemWindow >> scrollBarColor [
 	^self paneColor
@@ -1755,35 +1813,44 @@ SystemWindow >> setBoundsWithFlex: newFrame [
 
 { #category : #label }
 SystemWindow >> setLabel: aString [
+
 	| frame announcement |
 	labelString := aString.
-	announcement := (WindowLabelled new
-						window: self;
-						label: aString;
-						yourself).
+	announcement := WindowLabelled new
+		                window: self;
+		                label: aString;
+		                yourself.
 	self announce: announcement.
 	self currentWorld announcer announce: announcement.
-	label ifNil: [^ self].
+	label ifNil: [ ^ self ].
 	label contents: aString.
-	self labelWidgetAllowance.  "Sets it if not already"
+	self labelWidgetAllowance. "Sets it if not already"
 	self isCollapsed
-		ifTrue: [self extent: (label width + labelWidgetAllowance) @ (self labelHeight + 2)]
-		ifFalse: [
-				"Add a tooltip on the label with the full content in case there is not enough space"
-				(label width > (bounds width - labelWidgetAllowance))
-					ifTrue: [ label setBalloonText: label contents ]
-					ifFalse: [ label setBalloonText: nil ].
+		ifTrue: [
+			self extent:
+				label width + labelWidgetAllowance @ (self labelHeight + 2) ]
+		ifFalse: [ "Add a tooltip on the label with the full content in case there is not enough space"
+			label width > (bounds width - labelWidgetAllowance)
+				ifTrue: [ label setBalloonText: label contents ]
+				ifFalse: [ label setBalloonText: nil ].
 
-				label fitContents; setWidth: (label width min: bounds width - labelWidgetAllowance).
-				label align: label bounds topCenter with: bounds topCenter + (0@borderWidth).
-				collapsedFrame ifNotNil:
-					[collapsedFrame := collapsedFrame withWidth: label width + labelWidgetAllowance]].
+			label
+				fitContents;
+				setWidth: (label width min: bounds width - labelWidgetAllowance).
+			label
+				align: label bounds topCenter
+				with: bounds topCenter + (0 @ borderWidth).
+			collapsedFrame ifNotNil: [
+				collapsedFrame := collapsedFrame withWidth:
+					                  label width + labelWidgetAllowance ] ].
 	frame := LayoutFrame new.
-	frame leftFraction: 0.5;
-		 topFraction: 0.5;
-		 leftOffset: label width negated // 2;
-		 topOffset: label height negated // 2.
-	label layoutFrame: frame
+	frame
+		leftFraction: 0.5;
+		topFraction: 0.5;
+		leftOffset: label width negated // 2;
+		topOffset: label height negated // 2.
+	label layoutFrame: frame.
+	self currentWorld announcer announce: WindowLabelled
 ]
 
 { #category : #label }
@@ -1835,6 +1902,12 @@ SystemWindow >> setWindowColor [
 
 	(UIManager default chooseColor: self paneColor)
 		ifNotNil: [:nc | self setWindowColor: nc]
+]
+
+{ #category : #'base - worlds' }
+SystemWindow >> setWorldBeforeOpenInExternalWindow [
+
+	worldBeforeOpenInExternalWindow := self world.
 ]
 
 { #category : #testing }
@@ -2006,4 +2079,10 @@ SystemWindow >> wantsYellowButtonMenu [
 { #category : #label }
 SystemWindow >> widthOfFullLabelText [
 	^StandardFonts windowTitleFont widthOfString: labelString
+]
+
+{ #category : #'base - worlds' }
+SystemWindow >> worldBeforeOpenInExternalWindow [
+
+	^ worldBeforeOpenInExternalWindow
 ]

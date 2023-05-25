@@ -6311,6 +6311,12 @@ Morph >> tileTopRight [
 	self bounds: (max topCenter corner: max rightCenter)
 ]
 
+{ #category : #accessing }
+Morph >> title [
+
+	^ nil
+]
+
 { #category : #rounding }
 Morph >> toggleCornerRounding [
 	self cornerStyle == #rounded

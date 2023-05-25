@@ -412,7 +412,7 @@ NECMenuMorph >> engine: aCompletionEngine position: aPoint [
 	self position: aPoint - (20 @ 0).
 	self refreshSelection.
 	self createTitle.
-	self openInWorld
+	self openInWorld: engine editor textArea world
 ]
 
 { #category : #private }
@@ -475,6 +475,7 @@ NECMenuMorph >> home [
 
 { #category : #initialization }
 NECMenuMorph >> initialize [
+
 	super initialize.
 	self color: self class backgroundColor.
 	self borderStyle: (BorderStyle color: Color gray width: 1)
