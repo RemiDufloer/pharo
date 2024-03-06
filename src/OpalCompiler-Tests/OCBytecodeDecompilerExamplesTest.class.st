@@ -1,10 +1,12 @@
 Class {
-	#name : #OCBytecodeDecompilerExamplesTest,
-	#superclass : #TestCase,
-	#category : #'OpalCompiler-Tests-Bytecode'
+	#name : 'OCBytecodeDecompilerExamplesTest',
+	#superclass : 'TestCase',
+	#category : 'OpalCompiler-Tests-Bytecode',
+	#package : 'OpalCompiler-Tests',
+	#tag : 'Bytecode'
 }
 
-{ #category : #'tests - blocks' }
+{ #category : 'tests - blocks' }
 OCBytecodeDecompilerExamplesTest >> testExampleBlockArgument [
 
 	| ir method newMethod instance |
@@ -12,15 +14,15 @@ OCBytecodeDecompilerExamplesTest >> testExampleBlockArgument [
 		          generateMethod.
 	instance := OCOpalExamples new.
 
-	ir := IRBytecodeDecompiler new decompile: method.
+	ir := FBIRBytecodeDecompiler new decompile: method.
 	newMethod := ir compiledMethod.
 
 	self
-		assert: (newMethod valueWithReceiver: instance arguments: #(  ))
+		assert: (newMethod valueWithReceiver: instance)
 		equals: instance exampleBlockArgument
 ]
 
-{ #category : #'tests - blocks' }
+{ #category : 'tests - blocks' }
 OCBytecodeDecompilerExamplesTest >> testExampleBlockExternal [
 
 	| ir method newMethod instance |
@@ -28,15 +30,15 @@ OCBytecodeDecompilerExamplesTest >> testExampleBlockExternal [
 		          generateMethod.
 	instance := OCOpalExamples new.
 
-	ir := IRBytecodeDecompiler new decompile: method.
+	ir := FBIRBytecodeDecompiler new decompile: method.
 	newMethod := ir compiledMethod.
 
 	self
-		assert: (newMethod valueWithReceiver: instance arguments: #(  ))
+		assert: (newMethod valueWithReceiver: instance)
 		equals: instance exampleBlockExternal
 ]
 
-{ #category : #'tests - blocks' }
+{ #category : 'tests - blocks' }
 OCBytecodeDecompilerExamplesTest >> testExampleBlockExternal2 [
 
 	| ir method newMethod instance |
@@ -44,15 +46,15 @@ OCBytecodeDecompilerExamplesTest >> testExampleBlockExternal2 [
 		          generateMethod.
 	instance := OCOpalExamples new.
 
-	ir := IRBytecodeDecompiler new decompile: method.
+	ir := FBIRBytecodeDecompiler new decompile: method.
 	newMethod := ir compiledMethod.
 
 	self
-		assert: (newMethod valueWithReceiver: instance arguments: #(  ))
+		assert: (newMethod valueWithReceiver: instance)
 		equals: instance exampleBlockExternal2
 ]
 
-{ #category : #'tests - blocks' }
+{ #category : 'tests - blocks' }
 OCBytecodeDecompilerExamplesTest >> testExampleBlockExternalArg [
 
 	| ir method newMethod instance |
@@ -60,15 +62,15 @@ OCBytecodeDecompilerExamplesTest >> testExampleBlockExternalArg [
 		          generateMethod.
 	instance := OCOpalExamples new.
 
-	ir := IRBytecodeDecompiler new decompile: method.
+	ir := FBIRBytecodeDecompiler new decompile: method.
 	newMethod := ir compiledMethod.
 
 	self
-		assert: (newMethod valueWithReceiver: instance arguments: #(  ))
+		assert: (newMethod valueWithReceiver: instance)
 		equals: instance exampleBlockExternalArg
 ]
 
-{ #category : #'tests - blocks' }
+{ #category : 'tests - blocks' }
 OCBytecodeDecompilerExamplesTest >> testExampleBlockExternalNested [
 
 	| ir method newMethod instance |
@@ -76,15 +78,15 @@ OCBytecodeDecompilerExamplesTest >> testExampleBlockExternalNested [
 		          generateMethod.
 	instance := OCOpalExamples new.
 
-	ir := IRBytecodeDecompiler new decompile: method.
+	ir := FBIRBytecodeDecompiler new decompile: method.
 	newMethod := ir compiledMethod.
 
 	self
-		assert: (newMethod valueWithReceiver: instance arguments: #(  ))
+		assert: (newMethod valueWithReceiver: instance)
 		equals: instance exampleBlockExternalNested
 ]
 
-{ #category : #'tests - blocks' }
+{ #category : 'tests - blocks' }
 OCBytecodeDecompilerExamplesTest >> testExampleBlockInternal [
 
 	| ir method newMethod instance |
@@ -92,15 +94,15 @@ OCBytecodeDecompilerExamplesTest >> testExampleBlockInternal [
 		          generateMethod.
 	instance := OCOpalExamples new.
 
-	ir := IRBytecodeDecompiler new decompile: method.
+	ir := FBIRBytecodeDecompiler new decompile: method.
 	newMethod := ir compiledMethod.
 
 	self
-		assert: (newMethod valueWithReceiver: instance arguments: #(  ))
+		assert: (newMethod valueWithReceiver: instance)
 		equals: instance exampleBlockInternal
 ]
 
-{ #category : #'tests - blocks' }
+{ #category : 'tests - blocks' }
 OCBytecodeDecompilerExamplesTest >> testExampleBlockNested [
 
 	| ir method newMethod instance |
@@ -108,15 +110,15 @@ OCBytecodeDecompilerExamplesTest >> testExampleBlockNested [
 		          generateMethod.
 	instance := OCOpalExamples new.
 
-	ir := IRBytecodeDecompiler new decompile: method.
+	ir := FBIRBytecodeDecompiler new decompile: method.
 	newMethod := ir compiledMethod.
 
 	self
-		assert: (newMethod valueWithReceiver: instance arguments: #(  ))
+		assert: (newMethod valueWithReceiver: instance)
 		equals: instance exampleBlockNested
 ]
 
-{ #category : #'tests - simple' }
+{ #category : 'tests - simple' }
 OCBytecodeDecompilerExamplesTest >> testExampleEmptyMethod [
 
 	| ir method newMethod instance |
@@ -124,15 +126,15 @@ OCBytecodeDecompilerExamplesTest >> testExampleEmptyMethod [
 		          generateMethod.
 	instance := OCOpalExamples new.
 
-	ir := IRBytecodeDecompiler new decompile: method.
+	ir := FBIRBytecodeDecompiler new decompile: method.
 	newMethod := ir compiledMethod.
 
 	self
-		assert: (newMethod valueWithReceiver: instance arguments: #(  ))
+		assert: (newMethod valueWithReceiver: instance)
 		equals: instance exampleEmptyMethod
 ]
 
-{ #category : #'tests - blocks-optimized' }
+{ #category : 'tests - blocks-optimized' }
 OCBytecodeDecompilerExamplesTest >> testExampleIfFalse [
 
 	| ir method newMethod instance |
@@ -140,15 +142,15 @@ OCBytecodeDecompilerExamplesTest >> testExampleIfFalse [
 		          generateMethod.
 	instance := OCOpalExamples new.
 
-	ir := IRBytecodeDecompiler new decompile: method.
+	ir := FBIRBytecodeDecompiler new decompile: method.
 	newMethod := ir compiledMethod.
 
 	self
-		assert: (newMethod valueWithReceiver: instance arguments: #(  ))
+		assert: (newMethod valueWithReceiver: instance)
 		equals: instance exampleIfFalse
 ]
 
-{ #category : #'tests - blocks-optimized' }
+{ #category : 'tests - blocks-optimized' }
 OCBytecodeDecompilerExamplesTest >> testExampleIfFalseIfTrue [
 
 	| ir method newMethod instance |
@@ -156,15 +158,15 @@ OCBytecodeDecompilerExamplesTest >> testExampleIfFalseIfTrue [
 		          generateMethod.
 	instance := OCOpalExamples new.
 
-	ir := IRBytecodeDecompiler new decompile: method.
+	ir := FBIRBytecodeDecompiler new decompile: method.
 	newMethod := ir compiledMethod.
 
 	self
-		assert: (newMethod valueWithReceiver: instance arguments: #(  ))
+		assert: (newMethod valueWithReceiver: instance)
 		equals: instance exampleIfFalseIfTrue
 ]
 
-{ #category : #'tests - blocks-optimized' }
+{ #category : 'tests - blocks-optimized' }
 OCBytecodeDecompilerExamplesTest >> testExampleIfIfNotNilReturnNil [
 
 	| ir method newMethod instance |
@@ -172,15 +174,15 @@ OCBytecodeDecompilerExamplesTest >> testExampleIfIfNotNilReturnNil [
 		          generateMethod.
 	instance := OCOpalExamples new.
 
-	ir := IRBytecodeDecompiler new decompile: method.
+	ir := FBIRBytecodeDecompiler new decompile: method.
 	newMethod := ir compiledMethod.
 
 	self
-		assert: (newMethod valueWithReceiver: instance arguments: #(  ))
+		assert: (newMethod valueWithReceiver: instance)
 		equals: instance exampleIfNotNilReturnNil
 ]
 
-{ #category : #'tests - blocks-optimized' }
+{ #category : 'tests - blocks-optimized' }
 OCBytecodeDecompilerExamplesTest >> testExampleIfNotNilArg [
 
 	| ir method newMethod instance |
@@ -188,30 +190,30 @@ OCBytecodeDecompilerExamplesTest >> testExampleIfNotNilArg [
 		          generateMethod.
 	instance := OCOpalExamples new.
 
-	ir := IRBytecodeDecompiler new decompile: method.
+	ir := FBIRBytecodeDecompiler new decompile: method.
 	newMethod := ir compiledMethod.
 
 	self
-		assert: (newMethod valueWithReceiver: instance arguments: #(  ))
+		assert: (newMethod valueWithReceiver: instance)
 		equals: instance exampleIfNotNilArg
 ]
 
-{ #category : #'tests - blocks-optimized' }
+{ #category : 'tests - blocks-optimized' }
 OCBytecodeDecompilerExamplesTest >> testExampleIfTrue [
 
 	| ir method newMethod instance |
 	method := (OCOpalExamples >> #exampleIfTrue) parseTree generateMethod.
 	instance := OCOpalExamples new.
 
-	ir := IRBytecodeDecompiler new decompile: method.
+	ir := FBIRBytecodeDecompiler new decompile: method.
 	newMethod := ir compiledMethod.
 
 	self
-		assert: (newMethod valueWithReceiver: instance arguments: #(  ))
+		assert: (newMethod valueWithReceiver: instance)
 		equals: instance exampleIfTrue
 ]
 
-{ #category : #'tests - blocks-optimized' }
+{ #category : 'tests - blocks-optimized' }
 OCBytecodeDecompilerExamplesTest >> testExampleIfTrueIfFalse [
 
 	| ir method newMethod instance |
@@ -219,15 +221,15 @@ OCBytecodeDecompilerExamplesTest >> testExampleIfTrueIfFalse [
 		          generateMethod.
 	instance := OCOpalExamples new.
 
-	ir := IRBytecodeDecompiler new decompile: method.
+	ir := FBIRBytecodeDecompiler new decompile: method.
 	newMethod := ir compiledMethod.
 
 	self
-		assert: (newMethod valueWithReceiver: instance arguments: #(  ))
+		assert: (newMethod valueWithReceiver: instance)
 		equals: instance exampleIfTrueIfFalse
 ]
 
-{ #category : #'tests - blocks' }
+{ #category : 'tests - blocks' }
 OCBytecodeDecompilerExamplesTest >> testExampleMethodTempInNestedBlock [
 
 	| ir method newMethod instance |
@@ -235,15 +237,15 @@ OCBytecodeDecompilerExamplesTest >> testExampleMethodTempInNestedBlock [
 		          parseTree generateMethod.
 	instance := OCOpalExamples new.
 
-	ir := IRBytecodeDecompiler new decompile: method.
+	ir := FBIRBytecodeDecompiler new decompile: method.
 	newMethod := ir compiledMethod.
 
 	self
-		assert: (newMethod valueWithReceiver: instance arguments: #(  ))
+		assert: (newMethod valueWithReceiver: instance)
 		equals: instance exampleMethodTempInNestedBlock
 ]
 
-{ #category : #'tests - blocks-optimized' }
+{ #category : 'tests - blocks-optimized' }
 OCBytecodeDecompilerExamplesTest >> testExampleMethodWithOptimizedBlocksA [
 
 	| ir method newMethod instance |
@@ -251,15 +253,15 @@ OCBytecodeDecompilerExamplesTest >> testExampleMethodWithOptimizedBlocksA [
 		          parseTree generateMethod.
 	instance := OCOpalExamples new.
 
-	ir := IRBytecodeDecompiler new decompile: method.
+	ir := FBIRBytecodeDecompiler new decompile: method.
 	newMethod := ir compiledMethod.
 
 	self
-		assert: (newMethod valueWithReceiver: instance arguments: #(  ))
+		assert: (newMethod valueWithReceiver: instance)
 		equals: instance exampleMethodWithOptimizedBlocksA
 ]
 
-{ #category : #'tests - blocks' }
+{ #category : 'tests - blocks' }
 OCBytecodeDecompilerExamplesTest >> testExampleNestedBlockScoping [
 
 	| ir method newMethod instance |
@@ -267,15 +269,15 @@ OCBytecodeDecompilerExamplesTest >> testExampleNestedBlockScoping [
 		          generateMethod.
 	instance := OCOpalExamples new.
 
-	ir := IRBytecodeDecompiler new decompile: method.
+	ir := FBIRBytecodeDecompiler new decompile: method.
 	newMethod := ir compiledMethod.
 
 	self
-		assert: (newMethod valueWithReceiver: instance arguments: #(  ))
+		assert: (newMethod valueWithReceiver: instance)
 		equals: instance exampleNestedBlockScoping
 ]
 
-{ #category : #'tests - simple' }
+{ #category : 'tests - simple' }
 OCBytecodeDecompilerExamplesTest >> testExampleNewArray [
 
 	| ir method newMethod instance |
@@ -283,15 +285,15 @@ OCBytecodeDecompilerExamplesTest >> testExampleNewArray [
 		          generateMethod.
 	instance := OCOpalExamples new.
 
-	ir := IRBytecodeDecompiler new decompile: method.
+	ir := FBIRBytecodeDecompiler new decompile: method.
 	newMethod := ir compiledMethod.
 
 	self
-		assert: (newMethod valueWithReceiver: instance arguments: #(  ))
+		assert: (newMethod valueWithReceiver: instance)
 		equals: instance exampleNewArray
 ]
 
-{ #category : #'tests - misc' }
+{ #category : 'tests - misc' }
 OCBytecodeDecompilerExamplesTest >> testExamplePushArray [
 
 	| ir method newMethod instance |
@@ -299,15 +301,15 @@ OCBytecodeDecompilerExamplesTest >> testExamplePushArray [
 		          generateMethod.
 	instance := OCOpalExamples new.
 
-	ir := IRBytecodeDecompiler new decompile: method.
+	ir := FBIRBytecodeDecompiler new decompile: method.
 	newMethod := ir compiledMethod.
 
 	self
-		assert: (newMethod valueWithReceiver: instance arguments: #(  ))
+		assert: (newMethod valueWithReceiver: instance)
 		equals: instance examplePushArray
 ]
 
-{ #category : #'tests - simple' }
+{ #category : 'tests - simple' }
 OCBytecodeDecompilerExamplesTest >> testExampleReturn1 [
 
 	| ir method newMethod instance |
@@ -315,15 +317,15 @@ OCBytecodeDecompilerExamplesTest >> testExampleReturn1 [
 		          generateMethod.
 	instance := OCOpalExamples new.
 
-	ir := IRBytecodeDecompiler new decompile: method.
+	ir := FBIRBytecodeDecompiler new decompile: method.
 	newMethod := ir compiledMethod.
 
 	self
-		assert: (newMethod valueWithReceiver: instance arguments: #(  ))
+		assert: (newMethod valueWithReceiver: instance)
 		equals: instance exampleReturn42
 ]
 
-{ #category : #'tests - simple' }
+{ #category : 'tests - simple' }
 OCBytecodeDecompilerExamplesTest >> testExampleReturn1plus2 [
 
 	| ir method newMethod instance |
@@ -331,30 +333,30 @@ OCBytecodeDecompilerExamplesTest >> testExampleReturn1plus2 [
 		          generateMethod.
 	instance := OCOpalExamples new.
 
-	ir := IRBytecodeDecompiler new decompile: method.
+	ir := FBIRBytecodeDecompiler new decompile: method.
 	newMethod := ir compiledMethod.
 
 	self
-		assert: (newMethod valueWithReceiver: instance arguments: #(  ))
+		assert: (newMethod valueWithReceiver: instance)
 		equals: instance exampleReturn1plus2
 ]
 
-{ #category : #'tests - variables' }
+{ #category : 'tests - variables' }
 OCBytecodeDecompilerExamplesTest >> testExampleSelf [
 
 	| ir method newMethod instance |
 	method := (OCOpalExamples >> #exampleSelf) parseTree generateMethod.
 	instance := OCOpalExamples new.
 
-	ir := IRBytecodeDecompiler new decompile: method.
+	ir := FBIRBytecodeDecompiler new decompile: method.
 	newMethod := ir compiledMethod.
 
 	self
-		assert: (newMethod valueWithReceiver: instance arguments: #(  ))
+		assert: (newMethod valueWithReceiver: instance)
 		equals: instance exampleSelf
 ]
 
-{ #category : #'tests - blocks' }
+{ #category : 'tests - blocks' }
 OCBytecodeDecompilerExamplesTest >> testExampleSimpleBlock [
 
 	| ir method newMethod instance |
@@ -362,16 +364,16 @@ OCBytecodeDecompilerExamplesTest >> testExampleSimpleBlock [
 		          generateMethod.
 	instance := OCOpalExamples new.
 
-	ir := IRBytecodeDecompiler new decompile: method.
+	ir := FBIRBytecodeDecompiler new decompile: method.
 	newMethod := ir compiledMethod.
 
 	self
 		assert:
-		(newMethod valueWithReceiver: instance arguments: #(  )) value
+		(newMethod valueWithReceiver: instance) value
 		equals: instance exampleSimpleBlock value
 ]
 
-{ #category : #'tests - blocks' }
+{ #category : 'tests - blocks' }
 OCBytecodeDecompilerExamplesTest >> testExampleSimpleBlockArgument1 [
 
 	| ir method newMethod instance |
@@ -379,15 +381,15 @@ OCBytecodeDecompilerExamplesTest >> testExampleSimpleBlockArgument1 [
 		          generateMethod.
 	instance := OCOpalExamples new.
 
-	ir := IRBytecodeDecompiler new decompile: method.
+	ir := FBIRBytecodeDecompiler new decompile: method.
 	newMethod := ir compiledMethod.
 
 	self
-		assert: (newMethod valueWithReceiver: instance arguments: #(  ))
+		assert: (newMethod valueWithReceiver: instance)
 		equals: instance exampleSimpleBlockArgument1
 ]
 
-{ #category : #'tests - blocks' }
+{ #category : 'tests - blocks' }
 OCBytecodeDecompilerExamplesTest >> testExampleSimpleBlockArgument2 [
 
 	| ir method newMethod instance |
@@ -395,15 +397,15 @@ OCBytecodeDecompilerExamplesTest >> testExampleSimpleBlockArgument2 [
 		          generateMethod.
 	instance := OCOpalExamples new.
 
-	ir := IRBytecodeDecompiler new decompile: method.
+	ir := FBIRBytecodeDecompiler new decompile: method.
 	newMethod := ir compiledMethod.
 
 	self
-		assert: (newMethod valueWithReceiver: instance arguments: #(  ))
+		assert: (newMethod valueWithReceiver: instance)
 		equals: instance exampleSimpleBlockArgument2
 ]
 
-{ #category : #'tests - blocks' }
+{ #category : 'tests - blocks' }
 OCBytecodeDecompilerExamplesTest >> testExampleSimpleBlockArgument3 [
 
 	| ir method newMethod instance |
@@ -411,15 +413,15 @@ OCBytecodeDecompilerExamplesTest >> testExampleSimpleBlockArgument3 [
 		          generateMethod.
 	instance := OCOpalExamples new.
 
-	ir := IRBytecodeDecompiler new decompile: method.
+	ir := FBIRBytecodeDecompiler new decompile: method.
 	newMethod := ir compiledMethod.
 
 	self
-		assert: (newMethod valueWithReceiver: instance arguments: #(  ))
+		assert: (newMethod valueWithReceiver: instance)
 		equals: instance exampleSimpleBlockArgument3
 ]
 
-{ #category : #'tests - blocks' }
+{ #category : 'tests - blocks' }
 OCBytecodeDecompilerExamplesTest >> testExampleSimpleBlockArgument4 [
 
 	| ir method newMethod instance |
@@ -427,15 +429,15 @@ OCBytecodeDecompilerExamplesTest >> testExampleSimpleBlockArgument4 [
 		          generateMethod.
 	instance := OCOpalExamples new.
 
-	ir := IRBytecodeDecompiler new decompile: method.
+	ir := FBIRBytecodeDecompiler new decompile: method.
 	newMethod := ir compiledMethod.
 
 	self
-		assert: (newMethod valueWithReceiver: instance arguments: #(  ))
+		assert: (newMethod valueWithReceiver: instance)
 		equals: instance exampleSimpleBlockArgument4
 ]
 
-{ #category : #'tests - blocks' }
+{ #category : 'tests - blocks' }
 OCBytecodeDecompilerExamplesTest >> testExampleSimpleBlockArgument5 [
 
 	| ir method newMethod instance |
@@ -443,15 +445,15 @@ OCBytecodeDecompilerExamplesTest >> testExampleSimpleBlockArgument5 [
 		          generateMethod.
 	instance := OCOpalExamples new.
 
-	ir := IRBytecodeDecompiler new decompile: method.
+	ir := FBIRBytecodeDecompiler new decompile: method.
 	newMethod := ir compiledMethod.
 
 	self
-		assert: (newMethod valueWithReceiver: instance arguments: #(  ))
+		assert: (newMethod valueWithReceiver: instance)
 		equals: instance exampleSimpleBlockArgument5
 ]
 
-{ #category : #'tests - blocks' }
+{ #category : 'tests - blocks' }
 OCBytecodeDecompilerExamplesTest >> testExampleSimpleBlockEmpty [
 
 	| ir method newMethod instance |
@@ -459,15 +461,15 @@ OCBytecodeDecompilerExamplesTest >> testExampleSimpleBlockEmpty [
 		          generateMethod.
 	instance := OCOpalExamples new.
 
-	ir := IRBytecodeDecompiler new decompile: method.
+	ir := FBIRBytecodeDecompiler new decompile: method.
 	newMethod := ir compiledMethod.
 
 	self
-		assert: (newMethod valueWithReceiver: instance arguments: #(  ))
+		assert: (newMethod valueWithReceiver: instance)
 		equals: instance exampleSimpleBlockEmpty
 ]
 
-{ #category : #'tests - blocks' }
+{ #category : 'tests - blocks' }
 OCBytecodeDecompilerExamplesTest >> testExampleSimpleBlockLocal [
 
 	| ir method newMethod instance |
@@ -475,15 +477,15 @@ OCBytecodeDecompilerExamplesTest >> testExampleSimpleBlockLocal [
 		          generateMethod.
 	instance := OCOpalExamples new.
 
-	ir := IRBytecodeDecompiler new decompile: method.
+	ir := FBIRBytecodeDecompiler new decompile: method.
 	newMethod := ir compiledMethod.
 
 	self
-		assert: (newMethod valueWithReceiver: instance arguments: #(  ))
+		assert: (newMethod valueWithReceiver: instance)
 		equals: instance exampleSimpleBlockLocal
 ]
 
-{ #category : #'tests - blocks-optimized' }
+{ #category : 'tests - blocks-optimized' }
 OCBytecodeDecompilerExamplesTest >> testExampleSimpleBlockLocalIf [
 
 	| ir method newMethod instance |
@@ -491,15 +493,15 @@ OCBytecodeDecompilerExamplesTest >> testExampleSimpleBlockLocalIf [
 		          generateMethod.
 	instance := OCOpalExamples new.
 
-	ir := IRBytecodeDecompiler new decompile: method.
+	ir := FBIRBytecodeDecompiler new decompile: method.
 	newMethod := ir compiledMethod.
 
 	self
-		assert: (newMethod valueWithReceiver: instance arguments: #(  ))
+		assert: (newMethod valueWithReceiver: instance)
 		equals: instance exampleSimpleBlockLocalIf
 ]
 
-{ #category : #'tests - blocks' }
+{ #category : 'tests - blocks' }
 OCBytecodeDecompilerExamplesTest >> testExampleSimpleBlockLocalNested [
 
 	| ir method newMethod instance |
@@ -507,15 +509,15 @@ OCBytecodeDecompilerExamplesTest >> testExampleSimpleBlockLocalNested [
 		          generateMethod.
 	instance := OCOpalExamples new.
 
-	ir := IRBytecodeDecompiler new decompile: method.
+	ir := FBIRBytecodeDecompiler new decompile: method.
 	newMethod := ir compiledMethod.
 
 	self
-		assert: (newMethod valueWithReceiver: instance arguments: #(  ))
+		assert: (newMethod valueWithReceiver: instance)
 		equals: instance exampleSimpleBlockNested
 ]
 
-{ #category : #'tests - blocks-optimized' }
+{ #category : 'tests - blocks-optimized' }
 OCBytecodeDecompilerExamplesTest >> testExampleSimpleBlockLocalWhile [
 
 	| ir method newMethod instance |
@@ -523,15 +525,15 @@ OCBytecodeDecompilerExamplesTest >> testExampleSimpleBlockLocalWhile [
 		          generateMethod.
 	instance := OCOpalExamples new.
 
-	ir := IRBytecodeDecompiler new decompile: method.
+	ir := FBIRBytecodeDecompiler new decompile: method.
 	newMethod := ir compiledMethod.
 
 	self
-		assert: (newMethod valueWithReceiver: instance arguments: #(  ))
+		assert: (newMethod valueWithReceiver: instance)
 		equals: instance exampleSimpleBlockLocalWhile
 ]
 
-{ #category : #'tests - blocks' }
+{ #category : 'tests - blocks' }
 OCBytecodeDecompilerExamplesTest >> testExampleSimpleBlockNested [
 
 	| ir method newMethod instance |
@@ -539,15 +541,15 @@ OCBytecodeDecompilerExamplesTest >> testExampleSimpleBlockNested [
 		          generateMethod.
 	instance := OCOpalExamples new.
 
-	ir := IRBytecodeDecompiler new decompile: method.
+	ir := FBIRBytecodeDecompiler new decompile: method.
 	newMethod := ir compiledMethod.
 
 	self
-		assert: (newMethod valueWithReceiver: instance arguments: #(  ))
+		assert: (newMethod valueWithReceiver: instance)
 		equals: instance exampleSimpleBlockNested
 ]
 
-{ #category : #'tests - blocks' }
+{ #category : 'tests - blocks' }
 OCBytecodeDecompilerExamplesTest >> testExampleSimpleBlockReturn [
 
 	| ir method newMethod instance |
@@ -555,15 +557,15 @@ OCBytecodeDecompilerExamplesTest >> testExampleSimpleBlockReturn [
 		          generateMethod.
 	instance := OCOpalExamples new.
 
-	ir := IRBytecodeDecompiler new decompile: method.
+	ir := FBIRBytecodeDecompiler new decompile: method.
 	newMethod := ir compiledMethod.
 
 	self
-		assert: (newMethod valueWithReceiver: instance arguments: #(  ))
+		assert: (newMethod valueWithReceiver: instance)
 		equals: instance exampleSimpleBlockReturn
 ]
 
-{ #category : #'tests - blocks' }
+{ #category : 'tests - blocks' }
 OCBytecodeDecompilerExamplesTest >> testExampleSimpleBlockiVar [
 
 	| ir method newMethod instance |
@@ -571,46 +573,46 @@ OCBytecodeDecompilerExamplesTest >> testExampleSimpleBlockiVar [
 		          generateMethod.
 	instance := OCOpalExamples new.
 
-	ir := IRBytecodeDecompiler new decompile: method.
+	ir := FBIRBytecodeDecompiler new decompile: method.
 	newMethod := ir compiledMethod.
 
 	self
-		assert: (newMethod valueWithReceiver: instance arguments: #(  ))
+		assert: (newMethod valueWithReceiver: instance)
 		equals: instance exampleSimpleBlockiVar
 ]
 
-{ #category : #'tests - variables' }
+{ #category : 'tests - variables' }
 OCBytecodeDecompilerExamplesTest >> testExampleSuper [
 
 	| ir method newMethod instance |
 	method := (OCOpalExamples >> #exampleSuper) parseTree generateMethod.
 	instance := OCOpalExamples new.
 
-	ir := IRBytecodeDecompiler new decompile: method.
+	ir := FBIRBytecodeDecompiler new decompile: method.
 	newMethod := ir compiledMethod.
 
 	self
-		assert: (newMethod valueWithReceiver: instance arguments: #(  ))
+		assert: (newMethod valueWithReceiver: instance)
 		equals: instance exampleSuper
 ]
 
-{ #category : #'tests - variables' }
+{ #category : 'tests - variables' }
 OCBytecodeDecompilerExamplesTest >> testExampleThisContext [
 
 	| ir method newMethod instance |
 	method := (OCOpalExamples >> #exampleThisContext) parseTree
 		          generateMethod.
 
-	ir := IRBytecodeDecompiler new decompile: method.
+	ir := FBIRBytecodeDecompiler new decompile: method.
 	newMethod := ir compiledMethod.
 
 	instance := OCOpalExamples new.
-	newMethod valueWithReceiver: instance arguments: #(  ).
+	newMethod valueWithReceiver: instance.
 
 	self assert: instance result isContext
 ]
 
-{ #category : #'tests - blocks-optimized' }
+{ #category : 'tests - blocks-optimized' }
 OCBytecodeDecompilerExamplesTest >> testExampleToDoArgument [
 
 	| ir method newMethod instance |
@@ -618,15 +620,15 @@ OCBytecodeDecompilerExamplesTest >> testExampleToDoArgument [
 		          generateMethod.
 	instance := OCOpalExamples new.
 
-	ir := IRBytecodeDecompiler new decompile: method.
+	ir := FBIRBytecodeDecompiler new decompile: method.
 	newMethod := ir compiledMethod.
 
 	self
-		assert: (newMethod valueWithReceiver: instance arguments: #(  ))
+		assert: (newMethod valueWithReceiver: instance)
 		equals: instance exampleToDoArgument
 ]
 
-{ #category : #'tests - blocks-optimized' }
+{ #category : 'tests - blocks-optimized' }
 OCBytecodeDecompilerExamplesTest >> testExampleToDoArgumentNotInlined [
 
 	| ir method newMethod instance |
@@ -634,15 +636,15 @@ OCBytecodeDecompilerExamplesTest >> testExampleToDoArgumentNotInlined [
 		          parseTree generateMethod.
 	instance := OCOpalExamples new.
 
-	ir := IRBytecodeDecompiler new decompile: method.
+	ir := FBIRBytecodeDecompiler new decompile: method.
 	newMethod := ir compiledMethod.
 
 	self
-		assert: (newMethod valueWithReceiver: instance arguments: #(  ))
+		assert: (newMethod valueWithReceiver: instance)
 		equals: instance exampleToDoArgumentNotInlined
 ]
 
-{ #category : #'tests - blocks-optimized' }
+{ #category : 'tests - blocks-optimized' }
 OCBytecodeDecompilerExamplesTest >> testExampleToDoInsideTemp [
 
 	| ir method newMethod instance |
@@ -650,15 +652,15 @@ OCBytecodeDecompilerExamplesTest >> testExampleToDoInsideTemp [
 		          generateMethod.
 	instance := OCOpalExamples new.
 
-	ir := IRBytecodeDecompiler new decompile: method.
+	ir := FBIRBytecodeDecompiler new decompile: method.
 	newMethod := ir compiledMethod.
 
 	self
-		assert: (newMethod valueWithReceiver: instance arguments: #(  ))
+		assert: (newMethod valueWithReceiver: instance)
 		equals: instance exampleToDoInsideTemp
 ]
 
-{ #category : #'tests - blocks-optimized' }
+{ #category : 'tests - blocks-optimized' }
 OCBytecodeDecompilerExamplesTest >> testExampleToDoInsideTempNotInlined [
 
 	| ir method newMethod instance |
@@ -666,15 +668,15 @@ OCBytecodeDecompilerExamplesTest >> testExampleToDoInsideTempNotInlined [
 		          parseTree generateMethod.
 	instance := OCOpalExamples new.
 
-	ir := IRBytecodeDecompiler new decompile: method.
+	ir := FBIRBytecodeDecompiler new decompile: method.
 	newMethod := ir compiledMethod.
 
 	self
-		assert: (newMethod valueWithReceiver: instance arguments: #(  ))
+		assert: (newMethod valueWithReceiver: instance)
 		equals: instance exampleToDoInsideTempNotInlined
 ]
 
-{ #category : #'tests - blocks-optimized' }
+{ #category : 'tests - blocks-optimized' }
 OCBytecodeDecompilerExamplesTest >> testExampleToDoOutsideTemp [
 
 	| ir method newMethod instance |
@@ -682,15 +684,15 @@ OCBytecodeDecompilerExamplesTest >> testExampleToDoOutsideTemp [
 		          generateMethod.
 	instance := OCOpalExamples new.
 
-	ir := IRBytecodeDecompiler new decompile: method.
+	ir := FBIRBytecodeDecompiler new decompile: method.
 	newMethod := ir compiledMethod.
 
 	self
-		assert: (newMethod valueWithReceiver: instance arguments: #(  ))
+		assert: (newMethod valueWithReceiver: instance)
 		equals: instance exampleToDoOutsideTemp
 ]
 
-{ #category : #'tests - blocks-optimized' }
+{ #category : 'tests - blocks-optimized' }
 OCBytecodeDecompilerExamplesTest >> testExampleToDoOutsideTempNotInlined [
 
 	| ir method newMethod instance |
@@ -698,15 +700,15 @@ OCBytecodeDecompilerExamplesTest >> testExampleToDoOutsideTempNotInlined [
 		          parseTree generateMethod.
 	instance := OCOpalExamples new.
 
-	ir := IRBytecodeDecompiler new decompile: method.
+	ir := FBIRBytecodeDecompiler new decompile: method.
 	newMethod := ir compiledMethod.
 
 	self
-		assert: (newMethod valueWithReceiver: instance arguments: #(  ))
+		assert: (newMethod valueWithReceiver: instance)
 		equals: instance exampleToDoOutsideTempNotInlined
 ]
 
-{ #category : #'tests - misc' }
+{ #category : 'tests - misc' }
 OCBytecodeDecompilerExamplesTest >> testExampleToDoValue [
 
 	| ir method newMethod instance |
@@ -714,31 +716,31 @@ OCBytecodeDecompilerExamplesTest >> testExampleToDoValue [
 		          generateMethod.
 	instance := OCOpalExamples new.
 
-	ir := IRBytecodeDecompiler new decompile: method.
+	ir := FBIRBytecodeDecompiler new decompile: method.
 	newMethod := ir compiledMethod.
 
 	self
-		assert: (newMethod valueWithReceiver: instance arguments: #(  ))
+		assert: (newMethod valueWithReceiver: instance)
 		equals: instance exampleToDoValue
 ]
 
-{ #category : #'tests - blocks-optimized' }
+{ #category : 'tests - blocks-optimized' }
 OCBytecodeDecompilerExamplesTest >> testExampleWhileModificationAfterNotInlined [
 
 	| ir method newMethod |
 	method := (OCOpalExamples >> #exampleWhileModificationAfterNotInlined)
 		          parseTree generateMethod.
 
-	ir := IRBytecodeDecompiler new decompile: method.
+	ir := FBIRBytecodeDecompiler new decompile: method.
 	newMethod := ir compiledMethod.
 
 	self
 		assert:
-		(newMethod valueWithReceiver: OCOpalExamples new arguments: #(  ))
+		(newMethod valueWithReceiver: OCOpalExamples new)
 		equals: OCOpalExamples new exampleWhileModificationAfterNotInlined
 ]
 
-{ #category : #'tests - blocks-optimized' }
+{ #category : 'tests - blocks-optimized' }
 OCBytecodeDecompilerExamplesTest >> testExampleWhileModificationBefore [
 
 	| ir method newMethod instance |
@@ -746,15 +748,15 @@ OCBytecodeDecompilerExamplesTest >> testExampleWhileModificationBefore [
 		          parseTree generateMethod.
 	instance := OCOpalExamples new.
 
-	ir := IRBytecodeDecompiler new decompile: method.
+	ir := FBIRBytecodeDecompiler new decompile: method.
 	newMethod := ir compiledMethod.
 
 	self
-		assert: (newMethod valueWithReceiver: instance arguments: #(  ))
+		assert: (newMethod valueWithReceiver: instance)
 		equals: instance exampleWhileModificationBefore
 ]
 
-{ #category : #'tests - blocks-optimized' }
+{ #category : 'tests - blocks-optimized' }
 OCBytecodeDecompilerExamplesTest >> testExampleWhileModificationBeforeNotInlined [
 
 	| ir method newMethod |
@@ -762,58 +764,58 @@ OCBytecodeDecompilerExamplesTest >> testExampleWhileModificationBeforeNotInlined
 	           >> #exampleWhileModificationBeforeNotInlined) parseTree
 		          generateMethod.
 
-	ir := IRBytecodeDecompiler new decompile: method.
+	ir := FBIRBytecodeDecompiler new decompile: method.
 	newMethod := ir compiledMethod.
 
 	self
 		assert:
-		(newMethod valueWithReceiver: OCOpalExamples new arguments: #(  ))
+		(newMethod valueWithReceiver: OCOpalExamples new)
 		equals: OCOpalExamples new exampleWhileModificationBeforeNotInlined
 ]
 
-{ #category : #'tests - blocks-optimized' }
+{ #category : 'tests - blocks-optimized' }
 OCBytecodeDecompilerExamplesTest >> testExampleWhileWithTemp [
 
 	| ir method newMethod |
 	method := (OCOpalExamples >> #exampleWhileWithTemp) parseTree
 		          generateMethod.
 
-	ir := IRBytecodeDecompiler new decompile: method.
+	ir := FBIRBytecodeDecompiler new decompile: method.
 	newMethod := ir compiledMethod.
 
 	self
 		assert:
-		(newMethod valueWithReceiver: OCOpalExamples new arguments: #(  ))
+		(newMethod valueWithReceiver: OCOpalExamples new)
 		equals: OCOpalExamples new exampleWhileWithTemp
 ]
 
-{ #category : #'tests - blocks-optimized' }
+{ #category : 'tests - blocks-optimized' }
 OCBytecodeDecompilerExamplesTest >> testExampleWhileWithTempNotInlined [
 
 	| ir method newMethod |
 	method := (OCOpalExamples >> #exampleWhileWithTempNotInlined)
 		          parseTree generateMethod.
 
-	ir := IRBytecodeDecompiler new decompile: method.
+	ir := FBIRBytecodeDecompiler new decompile: method.
 	newMethod := ir compiledMethod.
 
 	self
 		assert:
-		(newMethod valueWithReceiver: OCOpalExamples new arguments: #(  ))
+		(newMethod valueWithReceiver: OCOpalExamples new)
 		equals: OCOpalExamples new exampleWhileWithTempNotInlined
 ]
 
-{ #category : #'tests - variables' }
+{ #category : 'tests - variables' }
 OCBytecodeDecompilerExamplesTest >> testExampleiVar [
 
 	| ir method newMethod instance |
 	method := (OCOpalExamples >> #exampleiVar) parseTree generateMethod.
 	instance := OCOpalExamples new.
 
-	ir := IRBytecodeDecompiler new decompile: method.
+	ir := FBIRBytecodeDecompiler new decompile: method.
 	newMethod := ir compiledMethod.
 
 	self
-		assert: (newMethod valueWithReceiver: instance arguments: #(  ))
+		assert: (newMethod valueWithReceiver: instance)
 		equals: instance exampleiVar
 ]

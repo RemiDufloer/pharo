@@ -4,22 +4,24 @@ It contains copies of the various CodeHolder methods that perform the various me
 
 "
 Class {
-	#name : #MCCodeTool,
-	#superclass : #MCTool,
+	#name : 'MCCodeTool',
+	#superclass : 'MCTool',
 	#instVars : [
 		'items'
 	],
-	#category : #'MonticelloGUI-Tools'
+	#category : 'MonticelloGUI-Tools',
+	#package : 'MonticelloGUI',
+	#tag : 'Tools'
 }
 
-{ #category : #menus }
+{ #category : 'menus' }
 MCCodeTool >> browseMessages [
 	"Present a menu of the currently selected message, as well as all messages sent by it.  Open a message set browser of all implementors of the selector chosen."
 
 	self systemNavigation browseAllImplementorsOf: (self selectedMessageName ifNil: [ ^nil ])
 ]
 
-{ #category : #menus }
+{ #category : 'menus' }
 MCCodeTool >> browseMethodFull [
 	"Create and schedule a full Browser and then select the current class and message."
 
@@ -28,14 +30,14 @@ MCCodeTool >> browseMethodFull [
 		[Smalltalk tools browser openOnClass: myClass selector: self selectedMessageName]
 ]
 
-{ #category : #menus }
+{ #category : 'menus' }
 MCCodeTool >> browseSendersOfMessages [
 	"Present a menu of the currently selected message, as well as all messages sent by it.  Open a message set browser of all senders of the selector chosen."
 
 	self systemNavigation browseAllSendersOf: (self selectedMessageName ifNil: [ ^nil ])
 ]
 
-{ #category : #menus }
+{ #category : 'menus' }
 MCCodeTool >> browseVersions [
 	"Create and schedule a message set browser on all versions of the 
 	currently selected message selector."
@@ -46,7 +48,7 @@ MCCodeTool >> browseVersions [
 		
 ]
 
-{ #category : #menus }
+{ #category : 'menus' }
 MCCodeTool >> classHierarchy [
 	"Create and schedule a class list browser on the receiver's hierarchy."
 
@@ -55,7 +57,7 @@ MCCodeTool >> classHierarchy [
 		selector: self selectedMessageName	"OK if nil"
 ]
 
-{ #category : #menus }
+{ #category : 'menus' }
 MCCodeTool >> classListMenu: aMenu [ 
 
 	^aMenu addList: #(
@@ -66,7 +68,7 @@ MCCodeTool >> classListMenu: aMenu [
 		('Show hierarchy'			methodHierarchy))
 ]
 
-{ #category : #menus }
+{ #category : 'menus' }
 MCCodeTool >> copySelector [
 	"Copy the selected selector to the clipboard"
 
@@ -75,45 +77,56 @@ MCCodeTool >> copySelector [
 		[Clipboard clipboardText: selector asString]
 ]
 
-{ #category : #menus }
+{ #category : 'menus' }
 MCCodeTool >> fileOutMessage [
 	"Put a description of the selected message on a file"
 
 	| fileName |
-	self selectedMessageName ifNotNil:
-		[Cursor write showWhile:
-			[self selectedClassOrMetaClass fileOutMethod: self selectedMessageName].
-		 ^self].
-	items isEmpty ifTrue:
-		[^self].
-	fileName := UIManager default request: 'File out on which file?' initialAnswer: 'methods'.
-	Cursor write showWhile:
-		[| internalStream |
+	self selectedMessageName ifNotNil: [
+		Cursor write showWhile: [
+			self selectedClassOrMetaClass fileOutMethod:
+				self selectedMessageName ].
+		^ self ].
+	items isEmpty ifTrue: [ ^ self ].
+	fileName := MorphicUIManager new
+		            request: 'File out on which file?'
+		            initialAnswer: 'methods'.
+	Cursor write showWhile: [
+		| internalStream |
 		internalStream := WriteStream on: (String new: 1000).
-		internalStream header; timeStamp.
-		items do:
-			[:patchOp|
-			patchOp definition isMethodDefinition ifTrue:
-				[(patchOp definition actualClass notNil
-				  and: [patchOp definition actualClass includesSelector: patchOp definition selector])
-					ifTrue:
-						[patchOp definition actualClass
+		internalStream
+			header;
+			timeStamp.
+		items do: [ :patchOp |
+			patchOp definition isMethodDefinition ifTrue: [
+				(patchOp definition actualClass isNotNil and: [
+					 patchOp definition actualClass includesSelector:
+						 patchOp definition selector ])
+					ifTrue: [
+						patchOp definition actualClass
 							printMethodChunk: patchOp definition selector
 							on: internalStream ]
-					ifFalse:
-						[internalStream nextChunkPut: patchOp definition className, ' removeSelector: ', patchOp definition selector printString]].
-			patchOp definition isClassDefinition ifTrue:
-				[patchOp definition actualClass
-					ifNotNil:
-						[internalStream nextChunkPut: patchOp definition actualClass definition.
-						 patchOp definition comment ifNotNil:
-							[ patchOp definition actualClass putCommentOnFile: internalStream ] ]
-					ifNil:
-						[internalStream nextChunkPut: patchOp definition className, ' removeFromSystem']]].
-		CodeExporter writeSourceCodeFrom: internalStream baseName: fileName isSt: true]
+					ifFalse: [
+						internalStream nextChunkPut:
+							patchOp definition className , ' removeSelector: '
+							, patchOp definition selector printString ] ].
+			patchOp definition isClassDefinition ifTrue: [
+				patchOp definition actualClass
+					ifNotNil: [
+						internalStream nextChunkPut:
+							patchOp definition actualClass definition.
+						patchOp definition comment ifNotNil: [
+							patchOp definition actualClass putCommentOnFile: internalStream ] ]
+					ifNil: [
+						internalStream nextChunkPut:
+							patchOp definition className , ' removeFromSystem' ] ] ].
+		CodeExporter
+			writeSourceCodeFrom: internalStream
+			baseName: fileName
+			isSt: true ]
 ]
 
-{ #category : #menus }
+{ #category : 'menus' }
 MCCodeTool >> methodHierarchy [
 	"Create and schedule a method browser on the hierarchy of implementors."
 
@@ -121,7 +134,7 @@ MCCodeTool >> methodHierarchy [
 		selector: self selectedMessageName
 ]
 
-{ #category : #menus }
+{ #category : 'menus' }
 MCCodeTool >> methodListKey: aKeystroke from: aListMorph [ 
 	aKeystroke caseOf: {
 		[$b] -> [self browseMethodFull].
@@ -135,7 +148,7 @@ MCCodeTool >> methodListKey: aKeystroke from: aListMorph [
 		 otherwise: []
 ]
 
-{ #category : #menus }
+{ #category : 'menus' }
 MCCodeTool >> methodListMenu: aMenu [
 	"Build the menu for the selected method, if any."
 	
@@ -158,19 +171,19 @@ MCCodeTool >> methodListMenu: aMenu [
 
 ]
 
-{ #category : #subclassresponsibility }
+{ #category : 'subclassresponsibility' }
 MCCodeTool >> selectedClass [
 	"Answer the class that is selected, or nil"
 	self subclassResponsibility
 ]
 
-{ #category : #subclassresponsibility }
+{ #category : 'subclassresponsibility' }
 MCCodeTool >> selectedMessageCategoryName [
 	"Answer the method category of the method that is selected, or nil"
 	self subclassResponsibility
 ]
 
-{ #category : #subclassresponsibility }
+{ #category : 'subclassresponsibility' }
 MCCodeTool >> selectedMessageName [
 	"Answer the name of the selected message"
 	self subclassResponsibility

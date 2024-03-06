@@ -17,17 +17,19 @@ items:                   <OrderedCollection> A list to select
 selectedItems:           <OrderedCollection> A list with selected items
 "
 Class {
-	#name : #StItemsSelectionPresenter,
-	#superclass : #SpPresenter,
+	#name : 'StItemsSelectionPresenter',
+	#superclass : 'SpPresenter',
 	#instVars : [
 		'table',
 		'label',
 		'selectedItems'
 	],
-	#category : #'Refactoring-UI'
+	#category : 'Refactoring-UI-UI',
+	#package : 'Refactoring-UI',
+	#tag : 'UI'
 }
 
-{ #category : #layout }
+{ #category : 'layout' }
 StItemsSelectionPresenter class >> defaultLayout [
 	^ SpBoxLayout newTopToBottom
 		add: #label withConstraints: [ :c | c height: self buttonHeight ];
@@ -38,20 +40,21 @@ StItemsSelectionPresenter class >> defaultLayout [
 		yourself
 ]
 
-{ #category : #specs }
+{ #category : 'specs' }
 StItemsSelectionPresenter class >> label: aString withItems: items selecting: selectedItems [
 	^ self new
 		label: aString withItems: items selecting: selectedItems;
-		openBlockedDialog
+		openBlockedDialog;
+		yourself 
 ]
 
-{ #category : #actions }
+{ #category : 'actions' }
 StItemsSelectionPresenter >> accept [
 
 	selectedItems := table selectedItems
 ]
 
-{ #category : #actions }
+{ #category : 'actions' }
 StItemsSelectionPresenter >> accept: presenter [
 	self accept.
 	presenter
@@ -59,22 +62,28 @@ StItemsSelectionPresenter >> accept: presenter [
 				close
 ]
 
-{ #category : #attributes }
+{ #category : 'TOREMOVE' }
+StItemsSelectionPresenter >> cancelled [ 
+
+	^ self window cancelled 
+]
+
+{ #category : 'attributes' }
 StItemsSelectionPresenter >> columnName [
 	self shouldBeImplemented
 ]
 
-{ #category : #attributes }
+{ #category : 'attributes' }
 StItemsSelectionPresenter >> columnSelector [
 	self shouldBeImplemented
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 StItemsSelectionPresenter >> components [
 	^ { table . label }
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 StItemsSelectionPresenter >> connectPresenters [
 
 	table bindKeyCombination: Character backspace asShortcut
@@ -84,24 +93,22 @@ StItemsSelectionPresenter >> connectPresenters [
 		toAction: [ :presenter | self accept: presenter] ]
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 StItemsSelectionPresenter >> initializeDialogWindow: aModalPresenter [
+	
 	aModalPresenter
-		addButton: 'Refactor' do: [ :presenter | self accept: presenter ];
-		addButton: 'Cancel' do: [ :presenter |
-			presenter
-				beCancel;
-				close ]
+		addButton: 'Cancel' do: [ :presenter | presenter beCancel; close ];
+		addDefaultButton: 'Refactor' do: [ :presenter | self accept: presenter ]
 ]
 
-{ #category : #'initialization - deprecated' }
+{ #category : 'initialization - deprecated' }
 StItemsSelectionPresenter >> initializeWidgets [
 	table := self instantiate: SpFilteringSelectableListPresenter.
 	table display: self columnSelector.
 	label := self newLabel
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 StItemsSelectionPresenter >> label: aString withItems: coll1 selecting: coll2 [
 	label label: aString.
 
@@ -109,7 +116,7 @@ StItemsSelectionPresenter >> label: aString withItems: coll1 selecting: coll2 [
 		selectItems: coll2
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 StItemsSelectionPresenter >> selectedItems [
 	^ selectedItems
 ]

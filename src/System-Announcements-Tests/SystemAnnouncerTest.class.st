@@ -1,14 +1,15 @@
 Class {
-	#name : #SystemAnnouncerTest,
-	#superclass : #TestCase,
+	#name : 'SystemAnnouncerTest',
+	#superclass : 'TestCase',
 	#instVars : [
 		'oldSystemAnnouncer',
 		'factory'
 	],
-	#category : #'System-Announcements-Tests'
+	#category : 'System-Announcements-Tests',
+	#package : 'System-Announcements-Tests'
 }
 
-{ #category : #running }
+{ #category : 'running' }
 SystemAnnouncerTest >> setUp [
 	super setUp.
 
@@ -18,7 +19,7 @@ SystemAnnouncerTest >> setUp [
 	factory := ClassFactoryForTestCase new
 ]
 
-{ #category : #running }
+{ #category : 'running' }
 SystemAnnouncerTest >> tearDown [
 
 	SystemAnnouncer announcer: oldSystemAnnouncer.
@@ -26,7 +27,7 @@ SystemAnnouncerTest >> tearDown [
 	super tearDown
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 SystemAnnouncerTest >> testProtocolAdded [
 
 	| pass class classReorganized protocolAdded |
@@ -40,14 +41,14 @@ SystemAnnouncerTest >> testProtocolAdded [
 		for: self.
 
 	class := factory newClass.
-	class organization addProtocol: 'shiny-new-category'.
+	class addProtocol: 'shiny-new-category'.
 
 	self assert: pass.
 	self assert: classReorganized equals: class.
 	self assert: protocolAdded name equals: 'shiny-new-category'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 SystemAnnouncerTest >> testProtocolRemoved [
 
 	| pass class classRemoved protocolRemoved |
@@ -61,16 +62,16 @@ SystemAnnouncerTest >> testProtocolRemoved [
 		for: self.
 
 	class := factory newClass.
-	class organization addProtocol: 'shiny-new-category'.
+	class addProtocol: 'shiny-new-category'.
 
-	class organization removeProtocolIfEmpty: 'shiny-new-category'.
+	class removeProtocolIfEmpty: 'shiny-new-category'.
 
 	self assert: pass.
 	self assert: classRemoved equals: class.
 	self assert: protocolRemoved name equals: 'shiny-new-category'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 SystemAnnouncerTest >> testSuspendAllWhile [
 	| value |
 
@@ -88,7 +89,7 @@ SystemAnnouncerTest >> testSuspendAllWhile [
 	self assert: value equals: 43
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 SystemAnnouncerTest >> testSuspendAllWhileStoring [
 
 	| stored |
@@ -99,7 +100,7 @@ SystemAnnouncerTest >> testSuspendAllWhileStoring [
 	self assert: ( stored at: 1 ) equals: ClassAdded
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 SystemAnnouncerTest >> testSuspendAllWhileStoringNested [
 	|  stored |
 

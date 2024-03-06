@@ -1,15 +1,17 @@
 Class {
-	#name : #LegacyClassDefinitionPrinterTest,
-	#superclass : #CommonClassDefinitionPrinterTest,
-	#category : #'Kernel-Tests-Fluid'
+	#name : 'LegacyClassDefinitionPrinterTest',
+	#superclass : 'CommonClassDefinitionPrinterTest',
+	#category : 'Kernel-Tests-Fluid',
+	#package : 'Kernel-Tests',
+	#tag : 'Fluid'
 }
 
-{ #category : #helpers }
+{ #category : 'helpers' }
 LegacyClassDefinitionPrinterTest >> forClass: aClass [
 	^ (ClassDefinitionPrinter legacy for: aClass) definitionString
 ]
 
-{ #category : #'tests - classes' }
+{ #category : 'tests - classes' }
 LegacyClassDefinitionPrinterTest >> testArray [
 
 	self
@@ -21,18 +23,18 @@ LegacyClassDefinitionPrinterTest >> testArray [
 	category: ''Collections-Sequenceable-Base'''
 ]
 
-{ #category : #'tests - classes' }
+{ #category : 'tests - classes' }
 LegacyClassDefinitionPrinterTest >> testArrayedCollectionWithPoolDictionary [
 
 	self assert: (self forClass: ExampleForTestWithSharedPool)
-		equals: 'ArrayedCollection subclass: #ExampleForTestWithSharedPool
+		equals: 'Object subclass: #ExampleForTestWithSharedPool
 	instanceVariableNames: ''''
 	classVariableNames: ''''
-	poolDictionaries: ''ChronologyConstants''
+	poolDictionaries: ''PoolDefiner''
 	category: ''Kernel-Tests-Classes'''
 ]
 
-{ #category : #'tests - classes' }
+{ #category : 'tests - classes' }
 LegacyClassDefinitionPrinterTest >> testByteString [
 
 	self
@@ -44,26 +46,26 @@ LegacyClassDefinitionPrinterTest >> testByteString [
 	category: ''Collections-Strings-Base'''
 ]
 
-{ #category : #'tests - classes' }
-LegacyClassDefinitionPrinterTest >> testChronologyConstants [
+{ #category : 'tests - classes' }
+LegacyClassDefinitionPrinterTest >> testClassPool [
 
 	self
-		assert: (self forClass: ChronologyConstants)
-		equals: 'SharedPool subclass: #ChronologyConstants
+		assert: (self forClass: PoolDefiner)
+		equals: 'SharedPool subclass: #PoolDefiner
 	instanceVariableNames: ''''
-	classVariableNames: ''DayNames DaysInMonth HoursInDay MicrosecondsInDay MinutesInHour MonthNames NanosInMicroSecond NanosInMillisecond NanosInSecond SecondsInDay SecondsInHour SecondsInMinute SqueakEpoch''
+	classVariableNames: ''AnAuthor Gloups''
 	poolDictionaries: ''''
-	category: ''Kernel-Chronology'''
+	category: ''Kernel-Tests-Classes'''
 ]
 
-{ #category : #'tests - metaclasses' }
+{ #category : 'tests - metaclasses' }
 LegacyClassDefinitionPrinterTest >> testClassSideDoesNotShowPackage [
 
 	self assert: (self forClass: ContextTest class) equals: 'ContextTest class
 	instanceVariableNames: '''''
 ]
 
-{ #category : #'tests - metaclasses' }
+{ #category : 'tests - metaclasses' }
 LegacyClassDefinitionPrinterTest >> testMetaclass [
 
 	self
@@ -72,10 +74,10 @@ LegacyClassDefinitionPrinterTest >> testMetaclass [
 	instanceVariableNames: ''thisClass''
 	classVariableNames: ''''
 	poolDictionaries: ''''
-	category: ''Kernel-Classes'''
+	category: ''Kernel-CodeModel-Classes'''
 ]
 
-{ #category : #'tests - metaclasses' }
+{ #category : 'tests - metaclasses' }
 LegacyClassDefinitionPrinterTest >> testMetaclassClass [
 
 	self
@@ -84,7 +86,7 @@ LegacyClassDefinitionPrinterTest >> testMetaclassClass [
 	instanceVariableNames: '''''
 ]
 
-{ #category : #'tests - classes' }
+{ #category : 'tests - classes' }
 LegacyClassDefinitionPrinterTest >> testPoint [
 
 	self
@@ -96,7 +98,7 @@ LegacyClassDefinitionPrinterTest >> testPoint [
 	category: ''Kernel-BasicObjects'''
 ]
 
-{ #category : #'tests - classes' }
+{ #category : 'tests - classes' }
 LegacyClassDefinitionPrinterTest >> testProtoObject [
 
 	self
@@ -109,7 +111,7 @@ LegacyClassDefinitionPrinterTest >> testProtoObject [
 ProtoObject superclass: nil'
 ]
 
-{ #category : #'tests - metaclasses' }
+{ #category : 'tests - metaclasses' }
 LegacyClassDefinitionPrinterTest >> testSystemAnnouncerClass [
 
 	self

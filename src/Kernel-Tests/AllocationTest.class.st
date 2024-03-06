@@ -2,12 +2,14 @@
 Test originally from Andreas Raab
 "
 Class {
-	#name : #AllocationTest,
-	#superclass : #TestCase,
-	#category : #'Kernel-Tests-Exception'
+	#name : 'AllocationTest',
+	#superclass : 'TestCase',
+	#category : 'Kernel-Tests-Exception',
+	#package : 'Kernel-Tests',
+	#tag : 'Exception'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 AllocationTest >> testOneGBAllocation [
 	"Documentating a weird bug in the allocator"
 
@@ -22,15 +24,16 @@ AllocationTest >> testOneGBAllocation [
 	self assert: (failed or: [ array size = sz ])
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 AllocationTest >> testOneGWordAllocation [
 	"Documentating a weird bug in the allocator"
 
 	| sz array failed |
 	"This takes too much time to run"
-	self timeLimit: 1 minutes.
+	self timeLimit: 1 minute.
 	"There is currently a bug in the latest VM opening a native window blocking the execution on Windows. This skip is to make the CI pass again. BUT this is an important issue and should be fixed soon."
-	Smalltalk os isWindows ifTrue: [ self skipOnPharoCITestingEnvironment ].
+	Smalltalk os isWindows ifTrue: [
+		self skipOnPharoCITestingEnvironment ].
 	failed := false.
 	sz := 1024 * 1024 * 1024.
 	array := [ Array new: sz ]
@@ -39,7 +42,7 @@ AllocationTest >> testOneGWordAllocation [
 	self assert: (failed or: [ array size = sz ])
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 AllocationTest >> testOneMBAllocation [
 	"Documentating a weird bug in the allocator"
 
@@ -50,7 +53,7 @@ AllocationTest >> testOneMBAllocation [
 	self assert: (failed or:[array size = sz])
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 AllocationTest >> testOneMWordAllocation [
 	"Documentating a weird bug in the allocator"
 

@@ -1,27 +1,28 @@
 Class {
-	#name : #SourceFileBufferedReadWriteStreamTest,
-	#superclass : #TestCase,
+	#name : 'SourceFileBufferedReadWriteStreamTest',
+	#superclass : 'TestCase',
 	#instVars : [
 		'classFactory'
 	],
-	#category : #'System-Sources-Tests'
+	#category : 'System-Sources-Tests',
+	#package : 'System-Sources-Tests'
 }
 
-{ #category : #running }
+{ #category : 'running' }
 SourceFileBufferedReadWriteStreamTest >> setUp [
 	super setUp.
 
 	classFactory := ClassFactoryForTestCase new
 ]
 
-{ #category : #running }
+{ #category : 'running' }
 SourceFileBufferedReadWriteStreamTest >> tearDown [
 	classFactory cleanUp.
 
 	super tearDown
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 SourceFileBufferedReadWriteStreamTest >> testBuffering [
 	| stream |
 	stream := SourceFileBufferedReadWriteStream on: '01234567890123456789' readStream.
@@ -33,7 +34,7 @@ SourceFileBufferedReadWriteStreamTest >> testBuffering [
 	self assert: stream atEnd
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 SourceFileBufferedReadWriteStreamTest >> testEnsureWrittenPositionFlushesCompleteChunk [
 	"This test covers https://github.com/pharo-project/pharo/issues/6063.
 	When flushing is deferred but the internal write buffer overlows during
@@ -59,7 +60,7 @@ SourceFileBufferedReadWriteStreamTest >> testEnsureWrittenPositionFlushesComplet
 	self assert: stringStream contents equals: 'before flush - after flush'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 SourceFileBufferedReadWriteStreamTest >> testEnsureWrittenPositionFlushesCompleteChunkDuringCompilation [
 	"This test covers https://github.com/pharo-project/pharo/issues/6063.
 	When flushing is deferred but the internal write buffer overlows during
@@ -68,55 +69,45 @@ SourceFileBufferedReadWriteStreamTest >> testEnsureWrittenPositionFlushesComplet
 	check only whether the start position of the chunk had been written and
 	a read stream would then read the complete chunk from disk. That chunk would
 	then be incomplete of course."
-	| trait |
+
+	| trait changestampsize preambleLength |
 	trait := classFactory newTrait.
 	"force recompilation"
 	trait addInstVarNamed: 'var'.
-	classFactory
-		newSubclassOf: classFactory defaultSuperclass
-		using: trait.
+	classFactory make: [ :aBuilder | aBuilder traitComposition: trait ].
 
 	"Need to know the length of the author name"
-	Author
-		useAuthor: 'a'
-		during: [
-			| preambleLength |
-			"<cr>
+	"<cr>
 			!TraitForTestToBeDeleted1 methodsFor: 'a' stamp: 'a 6/5/2020 14:47'!
 			<cr>"
-			preambleLength := 2 + trait name size + 13 + 3 + 9 + Author changeStamp size + 3.
+	changestampsize := 'a 6/5/2020 14:47' size.
+	preambleLength := 2 + trait name size + 13 + 3 + 9 + changestampsize
+	                  + 3.
 
-			SourceFiles changesWriteStreamDo: [ :sourceFile |
-				| stream |
-				[ "We want the internal buffer to be flushed after
+	SourceFiles changesWriteStreamDo: [ :sourceFile |
+		| stream |
+		[ "We want the internal buffer to be flushed after
 				writing the first two characters of the method selector"
-				stream := ((sourceFile instVarNamed: 'stream') instVarNamed: 'writeStream') wrappedStream.
-				stream sizeBuffer: preambleLength + 2.
+		stream := ((sourceFile instVarNamed: 'stream') instVarNamed:
+			           'writeStream') wrappedStream.
+		stream sizeBuffer: preambleLength + 2.
 
-				"This happens in MCPackageLoader>>basicLoad:"
-				SourceFiles deferFlushDuring: [
-					"Compiling a method in a trait with users will lead to
+		"This happens in MCPackageLoader>>basicLoad:"
+		SourceFiles deferFlushDuring: [ "Compiling a method in a trait with users will lead to
 					the source of the compiled method being read again for
 					compilation in the using class which would read an incomplete
-					chunk and lead to an error."
-
-					"It's difficult to align the buffer properly to the file size, as
+					chunk and lead to an error.""It's difficult to align the buffer properly to the file size, as
 					we'd need to set the new buffer size first and then check whether
 					the buffer is aligned and then adjust the buffer size again. Instead,
 					we just compile enough methods so that we know we'll eventually end up
 					in a situation were the buffer is flushed and we end up with a partial
 					chunk in memory"
-					1
-						to: 10
-						do: [ :index |
-							"Need to know the length of the category name"
-							trait
-								compile: 'aMethod', index asString
-								classified: 'a' ] ] ] ensure: [
-									stream sizeBuffer: stream defaultBufferSize ] ] ]
+			1 to: 10 do: [ :index | "Need to know the length of the category name"
+				trait compile: 'aMethod' , index asString classified: 'a' ] ] ]
+			ensure: [ stream sizeBuffer: stream defaultBufferSize ] ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 SourceFileBufferedReadWriteStreamTest >> testNextPutAllStartingAt [
 	| stringStream |
 
@@ -132,7 +123,7 @@ SourceFileBufferedReadWriteStreamTest >> testNextPutAllStartingAt [
 	self assert: stringStream contents equals: '01234567890123456789'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 SourceFileBufferedReadWriteStreamTest >> testPeek [
 	| stream |
 	stream := SourceFileBufferedReadWriteStream on: '0123456789' readStream.
@@ -146,7 +137,7 @@ SourceFileBufferedReadWriteStreamTest >> testPeek [
 	self assert: stream next isNil
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 SourceFileBufferedReadWriteStreamTest >> testReadInto [
 	| stream buffer count |
 	stream := SourceFileBufferedReadWriteStream on: '0123456789' readStream.
@@ -162,7 +153,7 @@ SourceFileBufferedReadWriteStreamTest >> testReadInto [
 	self assert: buffer equals: '789123'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 SourceFileBufferedReadWriteStreamTest >> testReadIntoLarger [
 	| stream buffer count |
 	stream := SourceFileBufferedReadWriteStream on: '0123456789' readStream.
@@ -173,12 +164,9 @@ SourceFileBufferedReadWriteStreamTest >> testReadIntoLarger [
 	self assert: buffer equals: '0123456789'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 SourceFileBufferedReadWriteStreamTest >> testReadThenWrite [
 	| stream stringStream |
-
-	((SystemVersion current major < 7) or: [ SystemVersion current build < 690 ])
-		ifTrue: [ ^ self skip ].
 
 	stringStream := ReadWriteStream with: '0123456789' copy.
 	stringStream reset.
@@ -198,7 +186,7 @@ SourceFileBufferedReadWriteStreamTest >> testReadThenWrite [
 	self assert: stringStream contents equals: '0123ABCD89'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 SourceFileBufferedReadWriteStreamTest >> testReadUpTo [
 	| stream |
 	stream := SourceFileBufferedReadWriteStream on: '0123456789' readStream.
@@ -208,7 +196,7 @@ SourceFileBufferedReadWriteStreamTest >> testReadUpTo [
 	self assert: stream atEnd
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 SourceFileBufferedReadWriteStreamTest >> testReadUpToEnd [
 	| stream |
 	stream := SourceFileBufferedReadWriteStream on: '0123456789' readStream.
@@ -218,7 +206,7 @@ SourceFileBufferedReadWriteStreamTest >> testReadUpToEnd [
 	self assert: stream atEnd
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 SourceFileBufferedReadWriteStreamTest >> testSetAtEnd [
 
 	| stream originalStream|
@@ -234,12 +222,9 @@ SourceFileBufferedReadWriteStreamTest >> testSetAtEnd [
 	self assert: originalStream contents equals: '0123456789A'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 SourceFileBufferedReadWriteStreamTest >> testWriteThenRead [
 	| stream stringStream |
-
-	((SystemVersion current major < 7) or: [ SystemVersion current build < 690 ])
-		ifTrue: [ ^ self skip ].
 
 	stringStream := ReadWriteStream with: '0123456789' copy.
 	stringStream reset.
@@ -257,7 +242,7 @@ SourceFileBufferedReadWriteStreamTest >> testWriteThenRead [
 	self assert: stringStream contents equals: 'ABCD456789'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 SourceFileBufferedReadWriteStreamTest >> testWriting [
 	| stringStream bufferedStream |
 	stringStream := ReadWriteStream with: String new.
@@ -269,7 +254,7 @@ SourceFileBufferedReadWriteStreamTest >> testWriting [
 	self assert: stringStream contents equals: '0123456789'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 SourceFileBufferedReadWriteStreamTest >> testWritingOverflow [
 	| stringStream bufferedStream |
 

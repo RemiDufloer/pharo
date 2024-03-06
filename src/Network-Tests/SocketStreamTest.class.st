@@ -2,22 +2,24 @@
 SUnit tests for socket streams
 "
 Class {
-	#name : #SocketStreamTest,
-	#superclass : #ClassTestCase,
+	#name : 'SocketStreamTest',
+	#superclass : 'ClassTestCase',
 	#instVars : [
 		'clientStream',
 		'serverStream'
 	],
-	#category : #'Network-Tests-Kernel'
+	#category : 'Network-Tests-Kernel',
+	#package : 'Network-Tests',
+	#tag : 'Kernel'
 }
 
-{ #category : #coverage }
+{ #category : 'coverage' }
 SocketStreamTest >> classToBeTested [
 
 	^ SocketStream
 ]
 
-{ #category : #running }
+{ #category : 'running' }
 SocketStreamTest >> setUp [
 	| listener clientSocket serverSocket |
 	super setUp.
@@ -37,14 +39,48 @@ SocketStreamTest >> setUp [
 	serverStream := SocketStream on: serverSocket
 ]
 
-{ #category : #running }
+{ #category : 'running' }
 SocketStreamTest >> tearDown [
 	clientStream ifNotNil:[clientStream destroy].
 	serverStream ifNotNil:[serverStream destroy].
 	super tearDown
 ]
 
-{ #category : #'stream protocol' }
+{ #category : 'stream protocol' }
+SocketStreamTest >> testFlushLargeMessageOtherEndClosed [
+	"A large send will be broken into chunks and fail on the second one."
+
+	serverStream close.
+	self
+		should: [ "256kiB"
+			clientStream
+				nextPutAll: (String new: 2 ** 18 withAll: $a);
+				flush ]
+		raise: ConnectionClosed
+]
+
+{ #category : 'stream protocol' }
+SocketStreamTest >> testFlushOtherEndClosed [
+	"Ensure that #flush properly raises an error when called when the other end is closed."
+
+	serverStream close.
+	"The first send after the other end is closed will not have problems as long as it fits within the send buffer."
+	self
+		shouldnt: [
+			clientStream
+				nextPutAll: 'A line of text';
+				flush ]
+		raise: NetworkError.
+	"The next send will wait for the first to finish and discover the error condition."
+	self
+		should: [
+			clientStream
+				nextPutAll: 'Another line of text';
+				flush ]
+		raise: ConnectionClosed
+]
+
+{ #category : 'stream protocol' }
 SocketStreamTest >> testNextIntoClose [
 	"Ensure that #next:into: will function properly when the connection is closed"
 
@@ -55,7 +91,7 @@ SocketStreamTest >> testNextIntoClose [
 		equals: 'A line of text'
 ]
 
-{ #category : #'stream protocol' }
+{ #category : 'stream protocol' }
 SocketStreamTest >> testNextIntoCloseNonSignaling [
 	"Ensure that #next:into: will function properly when the connection is closed"
 
@@ -67,7 +103,21 @@ SocketStreamTest >> testNextIntoCloseNonSignaling [
 		equals: 'A line of text'
 ]
 
-{ #category : #'stream protocol' }
+{ #category : 'stream protocol' }
+SocketStreamTest >> testNextPutAllFlushOtherEndClosed [
+	"#nextPutAllFlush: does its own error handling, so needs to be tested separately.
+	Having some content in the buffer first means that the direct send of the second buffer will encounter an error."
+
+	serverStream close.
+	self
+		should: [
+			clientStream
+				nextPutAll: 'A line of text';
+				nextPutAllFlush: 'Another line of text' ]
+		raise: ConnectionClosed
+]
+
+{ #category : 'stream protocol' }
 SocketStreamTest >> testUpTo [
 	"Tests correct behavior of #upTo:"
 
@@ -78,7 +128,7 @@ SocketStreamTest >> testUpTo [
 	self assert: (serverStream upTo: Character cr) equals: 'with more text'
 ]
 
-{ #category : #'stream protocol' }
+{ #category : 'stream protocol' }
 SocketStreamTest >> testUpToAfterCloseNonSignaling [
 	"Tests correct behavior of #upToAll"
 
@@ -90,7 +140,7 @@ SocketStreamTest >> testUpToAfterCloseNonSignaling [
 	self assert: resp equals: 'A line of text'
 ]
 
-{ #category : #'stream protocol' }
+{ #category : 'stream protocol' }
 SocketStreamTest >> testUpToAfterCloseSignaling [
 	"Tests correct behavior of #upToAll"
 
@@ -99,7 +149,7 @@ SocketStreamTest >> testUpToAfterCloseSignaling [
 	self should: [serverStream upTo: Character cr] raise: ConnectionClosed
 ]
 
-{ #category : #'stream protocol' }
+{ #category : 'stream protocol' }
 SocketStreamTest >> testUpToAll [
 	"Tests correct behavior of #upToAll"
 
@@ -110,7 +160,7 @@ SocketStreamTest >> testUpToAll [
 	self assert: (serverStream upToAll: String crlf) equals: 'with more text'
 ]
 
-{ #category : #'stream protocol' }
+{ #category : 'stream protocol' }
 SocketStreamTest >> testUpToAllAfterCloseNonSignaling [
 	"Tests correct behavior of #upToAll"
 
@@ -122,7 +172,7 @@ SocketStreamTest >> testUpToAllAfterCloseNonSignaling [
 	self assert: resp equals: 'A line of text'
 ]
 
-{ #category : #'stream protocol' }
+{ #category : 'stream protocol' }
 SocketStreamTest >> testUpToAllAfterCloseSignaling [
 	"Tests correct behavior of #upToAll"
 
@@ -131,7 +181,7 @@ SocketStreamTest >> testUpToAllAfterCloseSignaling [
 	self should: [serverStream upToAll: String crlf] raise: ConnectionClosed
 ]
 
-{ #category : #'stream protocol' }
+{ #category : 'stream protocol' }
 SocketStreamTest >> testUpToAllLimit [
 	"Tests correct behavior of #upToAll:limit:"
 
@@ -139,7 +189,7 @@ SocketStreamTest >> testUpToAllLimit [
 	self assert: (serverStream upToAll: String crlf limit: 5) equals: 'A line of text'
 ]
 
-{ #category : #'stream protocol' }
+{ #category : 'stream protocol' }
 SocketStreamTest >> testUpToAllTimeout [
 	"Tests correct behavior of #upToAll"
 
@@ -148,7 +198,7 @@ SocketStreamTest >> testUpToAllTimeout [
 	self should: [ serverStream upToAll: String crlf ] raise: ConnectionTimedOut
 ]
 
-{ #category : #'stream protocol' }
+{ #category : 'stream protocol' }
 SocketStreamTest >> testUpToEndClose [
 	"Ensure that #upToEnd will function properly when the connection is closed"
 
@@ -159,7 +209,7 @@ SocketStreamTest >> testUpToEndClose [
 		equals: 'A line of text'
 ]
 
-{ #category : #'stream protocol' }
+{ #category : 'stream protocol' }
 SocketStreamTest >> testUpToEndCloseNonSignaling [
 	"Ensure that #upToEnd will function properly when the connection is closed"
 
@@ -171,7 +221,7 @@ SocketStreamTest >> testUpToEndCloseNonSignaling [
 		equals: 'A line of text'
 ]
 
-{ #category : #'stream protocol' }
+{ #category : 'stream protocol' }
 SocketStreamTest >> testUpToMax [
 	"Tests correct behavior of #upToAll:max:"
 
@@ -179,7 +229,7 @@ SocketStreamTest >> testUpToMax [
 	self assert: (serverStream upTo: Character cr limit: 5) equals: 'A line of text'
 ]
 
-{ #category : #'stream protocol' }
+{ #category : 'stream protocol' }
 SocketStreamTest >> testUpToSmallInteger [
 	"Tests correct behavior of #upTo:"
 
@@ -190,7 +240,7 @@ SocketStreamTest >> testUpToSmallInteger [
 	self assert: (serverStream upTo: 13) equals: 'with more text'
 ]
 
-{ #category : #'stream protocol' }
+{ #category : 'stream protocol' }
 SocketStreamTest >> testUpToTimeout [
 	"Tests correct behavior of #upToAll"
 
@@ -199,7 +249,7 @@ SocketStreamTest >> testUpToTimeout [
 	self should: [serverStream upTo: Character cr] raise: ConnectionTimedOut
 ]
 
-{ #category : #'stream protocol' }
+{ #category : 'stream protocol' }
 SocketStreamTest >> testUpToWithByteArray [
 	"Tests correct behavior of #upTo:"
 

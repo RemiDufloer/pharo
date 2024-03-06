@@ -17,39 +17,47 @@ Run and browse buttons behaviour are defined by the current plugin selected.
 
 "
 Class {
-	#name : #DrTests,
-	#superclass : #AbstractDrTestsPresenter,
+	#name : 'DrTests',
+	#superclass : 'AbstractDrTestsPresenter',
 	#instVars : [
 		'pluginsDropList',
 		'statusLabel',
 		'plugins',
 		'pluginPresenter'
 	],
-	#category : #'DrTests-Spec'
+	#category : 'DrTests-Spec',
+	#package : 'DrTests',
+	#tag : 'Spec'
 }
 
-{ #category : #'tools registry' }
+{ #category : 'tools registry' }
 DrTests class >> beDefaultTestRunner [
 	<script>
 
 	self registerToolsOn: Smalltalk tools
 ]
 
-{ #category : #'world menu' }
-DrTests class >> menuCommandOn: aBuilder [
-	<worldMenu>
+{ #category : 'class initialization' }
+DrTests class >> initialize [
 
-	(aBuilder item: #'Dr Test (Preview)')
+	Smalltalk tools register: self as: #testRunner
+]
+
+{ #category : 'world menu' }
+DrTests class >> menuCommandOn: aBuilder [
+
+	<worldMenu>
+	(aBuilder item: #'Dr Test')
 		parent: #Testing;
 		action: [ self open ];
 		order: 2;
-		"keyText: 'o, u';" "Note: Removed the shortcut to not clash with SUnitRunner keybinding."
-		help: '(Preview) Let you run and debug SUnit tests.';
-		icon: (aBuilder iconNamed: self taskbarIconName);
+		keyText: 'o, u';
+		help: 'Let you run and debug SUnit tests.';
+		iconName: self taskbarIconName;
 		withSeparatorAfter
 ]
 
-{ #category : #api }
+{ #category : 'api' }
 DrTests class >> open [
 	<script>
 
@@ -58,7 +66,7 @@ DrTests class >> open [
 		  yourself
 ]
 
-{ #category : #'tools registry' }
+{ #category : 'tools registry' }
 DrTests class >> registerToolsOn: registry [
 	"Note: For now, DrTests is only available for preview, thus the following code is commented."
 
@@ -66,7 +74,7 @@ DrTests class >> registerToolsOn: registry [
 	"registry register: self as: #testRunner"
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 DrTests >> connectPresenters [
 
 	"Take the first element in list"
@@ -74,13 +82,13 @@ DrTests >> connectPresenters [
 	self currentPlugin: self pluginsDropList selectedItem new
 ]
 
-{ #category : #'accessing - subwidgets' }
+{ #category : 'accessing - subwidgets' }
 DrTests >> contentForReRun [
 
 	^ self pluginPresenter resultSelected contentForReRun
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 DrTests >> currentPlugin: aPlugin [
 	| newPluginPresenter |
 
@@ -100,13 +108,13 @@ DrTests >> currentPlugin: aPlugin [
 	self updateStatus: aPlugin pluginName , ' plugin is ready to work!' translated
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 DrTests >> dateAndTimeString [
 
 	^ DateAndTime now asStringYMDHM
 ]
 
-{ #category : #layout }
+{ #category : 'layout' }
 DrTests >> defaultLayout [
 
 	^ SpBoxLayout newTopToBottom
@@ -122,7 +130,7 @@ DrTests >> defaultLayout [
 		yourself
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 DrTests >> initializeButtons [
 
 	super initializeButtons.
@@ -131,13 +139,13 @@ DrTests >> initializeButtons [
 		disable
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 DrTests >> initializePluginPresenter [
 
 	pluginPresenter := self instantiate: DTNullPluginPresenter
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 DrTests >> initializePluginsDropList [
 
 	pluginsDropList := self newDropList.
@@ -150,7 +158,7 @@ DrTests >> initializePluginsDropList [
 			self currentPlugin: pluginClass new ]
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 DrTests >> initializePresenters [
 
 	super initializePresenters.
@@ -160,13 +168,13 @@ DrTests >> initializePresenters [
 		initializePluginPresenter
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 DrTests >> initializeStatusLabel [
 
 	statusLabel := self newLabel
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 DrTests >> initializeWindow: aWindowPresenter [
 
 	aWindowPresenter
@@ -175,129 +183,138 @@ DrTests >> initializeWindow: aWindowPresenter [
 		windowIcon: (self iconNamed: self class systemIconName)
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 DrTests >> menuForSelectedResult: menu [
 
 	self resultSelected ifNil: [ ^ self ].
 	self resultSelected content drTestsBuildContextMenu: menu
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 DrTests >> packagesSelected [
 
 	^ pluginPresenter packagesSelected
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 DrTests >> pluginPresenter [
 	^ pluginPresenter
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 DrTests >> plugins [
 
 	^ plugins ifNil: [ DrTestsPlugin availablePlugins ]
 ]
 
-{ #category : #'accessing - subwidgets' }
+{ #category : 'accessing - subwidgets' }
 DrTests >> pluginsDropList [
 
 	^ pluginsDropList
 ]
 
-{ #category : #initialization }
-DrTests >> reloadConfiguration: aDTPluginConfiguration withResults: aDTPluginResult andPlugin: aDTPlugin [
+{ #category : 'accessing' }
+DrTests >> receivePluginPresenter: aPluginPresenter [
 
+	self layout replace: pluginPresenter with: aPluginPresenter.
+	pluginPresenter := aPluginPresenter
+]
+
+{ #category : 'initialization' }
+DrTests >> reloadConfiguration: aDTPluginConfiguration withResults: aDTPluginResult andPlugin: aDTPlugin andPresenter: aDTPluginPresenter [
+	
 	self
 		updateStatus: 'Tests finished.';
 		currentPlugin: aDTPlugin;
 		testsConfiguration: aDTPluginConfiguration;
+		receivePluginPresenter: aDTPluginPresenter;
 		updateWithPluginResult: aDTPluginResult
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 DrTests >> selectedItems [
 
 	^ pluginPresenter selectedItems
 ]
 
-{ #category : #'accessing - model' }
+{ #category : 'accessing - model' }
 DrTests >> setModelBeforeInitialization: aDomainObject [
 
 	plugins := aDomainObject
 ]
 
-{ #category : #'accessing - subwidgets' }
+{ #category : 'accessing - subwidgets' }
 DrTests >> statusLabel [
 
 	^ statusLabel
 ]
 
-{ #category : #'api - locking' }
+{ #category : 'api - locking' }
 DrTests >> subwidgetsToLock [
 
 	^ pluginPresenter subwidgetsToLock
 ]
 
-{ #category : #'private - actions' }
+{ #category : 'private - actions' }
 DrTests >> switchToMiniDrTest [
 
 	((MiniDrTests newApplication: self application)
 		testsConfiguration: self testsConfiguration;
 		currentPlugin: self currentPlugin;
 		updateWithPluginResult: self pluginResult;
+		receivePluginPresenter: self pluginPresenter;
 		yourself)
 		open
 ]
 
-{ #category : #actions }
+{ #category : 'actions' }
 DrTests >> switchUI [
 
 	super switchUI.
 	self switchToMiniDrTest
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 DrTests >> testsConfiguration [
 
 	testsConfiguration := self currentPlugin buildConfigurationFrom: self.
 	^ testsConfiguration
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 DrTests >> testsConfiguration: aDTTestsConfiguration [
 
 	self pluginPresenter packagesList selectItems: aDTTestsConfiguration packagesSelected.
 	self pluginPresenter itemsList selectItems: aDTTestsConfiguration items
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 DrTests >> title [
 
 	^ 'Dr Tests - ' , currentPlugin pluginName
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 DrTests >> updateStatus: aString [
 	self statusLabel
 		label: ('{1}: {2}' format: { self dateAndTimeString . aString })
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 DrTests >> updateSwitchButton: itemsSelected [
 	currentPlugin allowMiniDrTests
 		ifTrue: [ switchButton enabled: itemsSelected isNotEmpty ]
 		ifFalse: switchButton disable
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 DrTests >> updateUI [
 	super updateUI.
 
 	pluginPresenter updateUI
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 DrTests >> updateWithResults: results [
 
 	pluginResult := results.

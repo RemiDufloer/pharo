@@ -1,60 +1,46 @@
-"
-I am a command to rename given class.
-
-Internal Representation and Key Implementation Points.
-
-    Instance Variables
-	newName:		<String>
-"
 Class {
-	#name : #SycRenameClassCommand,
-	#superclass : #SycSingleClassCommand,
+	#name : 'SycRenameClassCommand',
+	#superclass : 'SycSingleClassCommand',
 	#instVars : [
-		'newName'
+		'toolContext'
 	],
-	#category : #'SystemCommands-ClassCommands'
+	#category : 'SystemCommands-ClassCommands',
+	#package : 'SystemCommands-ClassCommands'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 SycRenameClassCommand >> defaultMenuIconName [
 	^ #edit
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 SycRenameClassCommand >> defaultMenuItemName [
-	^'Rename'
+	^'(R) Rename'
 ]
 
-{ #category : #execution }
+{ #category : 'execution' }
 SycRenameClassCommand >> execute [
-
-	| refactoring |
-	refactoring := RBRenameClassTransformation
-		rename: targetClass name
-		to: newName.
-	refactoring execute
+	"Pay attention when you specify a model that is a selection of the full environment. 
+	Indeed imagine that you have a model of just one package, 
+	the precondition may say that the new name is not the one of an already existing global 
+	that is defined outside of your model (think of OrderedCollection) in this case
+	when the refactoring will check then it will say that the name is ok, and you will destroy the system
+	by creating a new class with the same name as an existing one.
+	
+	So this is we pass the model of the full environment and not a scope selected by the user."
+	
+	
+	
+	(ReRenameClassDriver
+		rename: targetClass name) 
+		model: RBBrowserEnvironment new;
+		scopes: toolContext refactoringScopes; runRefactoring
 ]
 
-{ #category : #accessing }
-SycRenameClassCommand >> newName [
-	^ newName
-]
-
-{ #category : #accessing }
-SycRenameClassCommand >> newName: anObject [
-	newName := anObject
-]
-
-{ #category : #execution }
+{ #category : 'execution' }
 SycRenameClassCommand >> prepareFullExecutionInContext: aToolContext [
-
+	
 	super prepareFullExecutionInContext: aToolContext.
+	toolContext := aToolContext
 
-	newName := UIManager default
-		           request: 'New name of the class'
-		           initialAnswer: targetClass name
-		           title: 'Rename a class'.
-
-	newName isEmptyOrNil | (newName = targetClass name) ifTrue: [
-		CmdCommandAborted signal ]
 ]

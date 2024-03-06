@@ -4,16 +4,18 @@ Welcome user interface to browse dependencies packages. Availaible via tools men
 self new openWithSpec
 "
 Class {
-	#name : #DAWelcomePresenter,
-	#superclass : #SpPresenter,
+	#name : 'DAWelcomePresenter',
+	#superclass : 'SpPresenter',
 	#instVars : [
 		'choosePresenter',
 		'browseDependenciesButton'
 	],
-	#category : #'Tool-DependencyAnalyser-UI-Core'
+	#category : 'Tool-DependencyAnalyser-UI-Core',
+	#package : 'Tool-DependencyAnalyser-UI',
+	#tag : 'Core'
 }
 
-{ #category : #'world menu' }
+{ #category : 'world menu' }
 DAWelcomePresenter class >> menuCommandOn: aBuilder [
 	<worldMenu>
 
@@ -21,12 +23,18 @@ DAWelcomePresenter class >> menuCommandOn: aBuilder [
 		order: 2;
 		parent: #Packaging;
 		label: 'Dependency Analyser';
-		icon: (self iconNamed: #package);
+		iconName: #package;
 		help: 'Analyze dependencies between different packages in the image.';
 		action: [ self new open ]
 ]
 
-{ #category : #layout }
+{ #category : 'specs' }
+DAWelcomePresenter class >> title [
+
+	^ 'Package Dependencies Browser'
+]
+
+{ #category : 'layout' }
 DAWelcomePresenter >> defaultLayout [
 
 	^ SpBoxLayout newTopToBottom
@@ -35,17 +43,17 @@ DAWelcomePresenter >> defaultLayout [
 		yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 DAWelcomePresenter >> initialExtent [
 	^ (800@800)
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 DAWelcomePresenter >> initializePresenters [
 
 	choosePresenter := SpChooserPresenter new
-		sourceItems: Smalltalk organization packages;
-		displayBlock: #packageName;
+		sourceItems: self packageOrganizer packages;
+		displayBlock: [ :aPackage | aPackage name ];
 		yourself.
 
 	browseDependenciesButton := self newButton
@@ -56,30 +64,26 @@ DAWelcomePresenter >> initializePresenters [
 		yourself
 ]
 
-{ #category : #initialization }
-DAWelcomePresenter >> initializeWindow: 	aWindowPresenter [
+{ #category : 'initialization' }
+DAWelcomePresenter >> initializeWindow: aWindowPresenter [
+
 	aWindowPresenter
-		title: self title;
+		title: self class title;
 		initialExtent: self initialExtent
 ]
 
-{ #category : #action }
+{ #category : 'action' }
 DAWelcomePresenter >> openDependencyAnalyzer [
 	(DAPackageDependenciesPresenter onPackagesNamed: self selectedPackageNames) open.
 	choosePresenter delete
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 DAWelcomePresenter >> selectedPackageNames [
 	^ self selectedPackages collect: [ :each | each name ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 DAWelcomePresenter >> selectedPackages [
 	^ choosePresenter chosenItems
-]
-
-{ #category : #accessing }
-DAWelcomePresenter >> title [
-	^ 'Package Dependencies Browser'
 ]

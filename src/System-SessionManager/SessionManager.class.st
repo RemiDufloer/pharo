@@ -92,8 +92,8 @@ To differentiate whether we are executing in the running image or in the freshly
 Read the comment of #snapshotPrimitive for more details.
 "
 Class {
-	#name : #SessionManager,
-	#superclass : #Object,
+	#name : 'SessionManager',
+	#superclass : 'Object',
 	#instVars : [
 		'currentSession',
 		'categories',
@@ -106,41 +106,84 @@ Class {
 	#classVars : [
 		'Default'
 	],
-	#category : #'System-SessionManager-Base'
+	#category : 'System-SessionManager-Base',
+	#package : 'System-SessionManager',
+	#tag : 'Base'
 }
 
-{ #category : #accessing }
+{ #category : 'class initialization' }
+SessionManager class >> classRemoved: classRemoved [
+
+	self default unregisterClassNamed: classRemoved classRemoved name
+]
+
+{ #category : 'class initialization' }
+SessionManager class >> classRenamed: classRenamed [
+
+	self default renamedClass: classRenamed classRenamed from: classRenamed oldName to: classRenamed newName
+]
+
+{ #category : 'accessing' }
 SessionManager class >> default [
 	^ Default ifNil: [ Default := self new ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 SessionManager class >> default: aSessionManager [
 	Default := aSessionManager
 ]
 
-{ #category : #'deferred startup actions' }
+{ #category : 'class initialization' }
+SessionManager class >> initialize [
+
+	self codeChangeAnnouncer unsubscribe: self.
+
+	self codeChangeAnnouncer weak
+		when: ClassRemoved send: #classRemoved: to: self;
+		when: ClassRenamed send: #classRenamed: to: self
+]
+
+{ #category : 'initialization' }
+SessionManager class >> initializeKernelRegistrations [
+	"The session manager will be extracted from the KernelGroup of the bootstrap that is build by Espell. Because of that, the sessions needed by the KernelGroup needs to be initialized later in the bootstrap.
+	I am here to manage those regristrations of the classes that were loaded before I am suppose to be in the image."
+
+	self default
+		registerSystemClassNamed: #SmallInteger atPriority: 10;
+		registerSystemClassNamed: #Delay atPriority: 20;
+		registerSystemClassNamed: #ProcessorScheduler atPriority: 30;
+		registerSystemClassNamed: #OSPlatform atPriority: 50;
+		registerSystemClassNamed: #ExternalObject atPriority: 60;
+		registerSystemClassNamed: #FFIBackend atPriority: 60;
+		registerSystemClassNamed: #File atPriority: 90;
+		registerSystemClassNamed: #FinalizationProcess;
+		registerSystemClassNamed: #Stdio;
+		registerSystemClassNamed: #EndianDetector;
+		registerSystemClassNamed: #Symbol
+]
+
+{ #category : 'deferred startup actions' }
 SessionManager >> addDeferredStartupAction: aBlock [
 	"Add the block to the list of actions that we will be performed immediately after the startup list is executed."
 	self currentSession
 		addDeferredStartupAction: aBlock
 ]
 
-{ #category : #'category management' }
+{ #category : 'category management' }
 SessionManager >> basicCreateCategory: aString [
 	^ SessionCategory new
 		name: aString;
 		yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 SessionManager >> categoryNamed: aString [
 	^ categories
 		detect: [ :each | each name = aString ]
 		ifNone: [ NotFound signalFor: aString ]
 ]
 
-{ #category : #'category management' }
+{ #category : 'category management' }
 SessionManager >> createCategory: aCategoryName [
 	| category |
 	category := self basicCreateCategory: aCategoryName.
@@ -148,7 +191,7 @@ SessionManager >> createCategory: aCategoryName [
 	^ category
 ]
 
-{ #category : #'category management' }
+{ #category : 'category management' }
 SessionManager >> createCategory: aCategoryName after: anotherCategoryName [
 	| category |
 	category := self basicCreateCategory: aCategoryName.
@@ -158,23 +201,23 @@ SessionManager >> createCategory: aCategoryName after: anotherCategoryName [
 	^ category
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 SessionManager >> currentSession [
 	^ currentSession
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 SessionManager >> defaultPriority [
 	"Completely arbitrary by now"
 	^ 100
 ]
 
-{ #category : #'well-known categories' }
+{ #category : 'well-known categories' }
 SessionManager >> guiCategory [
 	^ guiCategory
 ]
 
-{ #category : #registration }
+{ #category : 'registration' }
 SessionManager >> hasRegistered: handledId [
 	"handledId, in most cases, will be a class name"
 
@@ -182,7 +225,7 @@ SessionManager >> hasRegistered: handledId [
 			anySatisfy: [ :handler | handler handledId = handledId ]
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 SessionManager >> initialize [
 	super initialize.
 	categories := OrderedCollection new.
@@ -194,55 +237,39 @@ SessionManager >> initialize [
 	userCategory := self createCategory: 'User'
 ]
 
-{ #category : #'session management' }
+{ #category : 'session management' }
 SessionManager >> installNewSession [
 	self installSession: self newSession
 ]
 
-{ #category : #'session management' }
+{ #category : 'session management' }
 SessionManager >> installSession: aWorkingSession [
 	currentSession := aWorkingSession
 ]
 
-{ #category : #'snapshot and quit' }
+{ #category : 'snapshot and quit' }
 SessionManager >> launchSnapshot: save andQuit: quit [
-	| isImageStarting snapshotResult |
+	| snapshotOperation |
 	ChangesLog default logSnapshot: save andQuit: quit.
+	snapshotOperation := SnapshotOperation save: save andQuit: quit withSessionManager: self.
 
-	self currentSession stop: quit.	"Image not usable from here until the session is restarted!"
-	save
-		ifTrue: [
-					snapshotResult := Smalltalk snapshotPrimitive.	"<-- PC frozen here on image file"
-					isImageStarting := snapshotResult == true. ]
-		ifFalse: [ isImageStarting := false ].
-	(quit and: [ isImageStarting not ])
-		ifTrue: [ Smalltalk quitPrimitive ].
+	snapshotOperation performSnapshot.
 
-	"create a new session object if we're booting"
-	isImageStarting ifTrue: [ self installNewSession ].
-
-	self currentSession start: isImageStarting.
-	snapshotResult
-		ifNil: [ self error: 'Failed to write image file (disk full?)' ]
-		ifNotNil: [
-			SystemAnnouncer uniqueInstance snapshotDone: isImageStarting ].
-
-	"We return the resuming state, which may be useful for users to know the state of the image"
-	^ isImageStarting
+	^ snapshotOperation
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 SessionManager >> maxPriority [
 	"Completely arbitrary by now"
 	^ 10000
 ]
 
-{ #category : #'well-known categories' }
+{ #category : 'well-known categories' }
 SessionManager >> networkCategory [
 	^ networkCategory
 ]
 
-{ #category : #'session management' }
+{ #category : 'session management' }
 SessionManager >> newSession [
 	| aWorkingSession |
 	aWorkingSession := WorkingSession new.
@@ -250,7 +277,7 @@ SessionManager >> newSession [
 	^ aWorkingSession
 ]
 
-{ #category : #registration }
+{ #category : 'registration' }
 SessionManager >> register: aSessionHandler [
 	self
 		register: aSessionHandler
@@ -258,14 +285,14 @@ SessionManager >> register: aSessionHandler [
 		atPriority: self defaultPriority
 ]
 
-{ #category : #registration }
+{ #category : 'registration' }
 SessionManager >> register: aSessionHandler inCategory: aCategory [
 	aCategory
 		register: aSessionHandler
 		atPriority: aCategory defaultPriority
 ]
 
-{ #category : #registration }
+{ #category : 'registration' }
 SessionManager >> register: aSessionHandler inCategory: aCategory atPriority: anInteger [
 	self unregisterHandler: aSessionHandler handledId.
 	aCategory
@@ -273,7 +300,7 @@ SessionManager >> register: aSessionHandler inCategory: aCategory atPriority: an
 		atPriority: anInteger
 ]
 
-{ #category : #registration }
+{ #category : 'registration' }
 SessionManager >> registerGuiClassNamed: aClassName [
 	self
 		register: (ClassSessionHandler forClassNamed: aClassName)
@@ -281,7 +308,7 @@ SessionManager >> registerGuiClassNamed: aClassName [
 		atPriority: self defaultPriority
 ]
 
-{ #category : #registration }
+{ #category : 'registration' }
 SessionManager >> registerGuiClassNamed: aClassName atPriority: anInteger [
 	self
 		register: (ClassSessionHandler forClassNamed: aClassName)
@@ -289,7 +316,7 @@ SessionManager >> registerGuiClassNamed: aClassName atPriority: anInteger [
 		atPriority: anInteger
 ]
 
-{ #category : #registration }
+{ #category : 'registration' }
 SessionManager >> registerLast: aSessionHandler inCategory: aCategory [
 	self
 		register: aSessionHandler
@@ -297,7 +324,7 @@ SessionManager >> registerLast: aSessionHandler inCategory: aCategory [
 		atPriority: self maxPriority
 ]
 
-{ #category : #registration }
+{ #category : 'registration' }
 SessionManager >> registerNetworkClassNamed: aClassName [
 	self
 		register: (ClassSessionHandler forClassNamed: aClassName)
@@ -305,7 +332,7 @@ SessionManager >> registerNetworkClassNamed: aClassName [
 		atPriority: self defaultPriority
 ]
 
-{ #category : #registration }
+{ #category : 'registration' }
 SessionManager >> registerSystemClassNamed: aClassName [
 	self
 		register: (ClassSessionHandler forClassNamed: aClassName)
@@ -313,7 +340,7 @@ SessionManager >> registerSystemClassNamed: aClassName [
 		atPriority: self defaultPriority
 ]
 
-{ #category : #registration }
+{ #category : 'registration' }
 SessionManager >> registerSystemClassNamed: aClassName atPriority: anInteger [
 	self
 		register: (ClassSessionHandler forClassNamed: aClassName)
@@ -321,7 +348,7 @@ SessionManager >> registerSystemClassNamed: aClassName atPriority: anInteger [
 		atPriority: anInteger
 ]
 
-{ #category : #registration }
+{ #category : 'registration' }
 SessionManager >> registerToolClassNamed: aClassName [
 	self
 		register: (ClassSessionHandler forClassNamed: aClassName)
@@ -329,7 +356,7 @@ SessionManager >> registerToolClassNamed: aClassName [
 		atPriority: self defaultPriority
 ]
 
-{ #category : #registration }
+{ #category : 'registration' }
 SessionManager >> registerUserClassNamed: aClassName [
 	self
 		register: (ClassSessionHandler forClassNamed: aClassName)
@@ -337,7 +364,7 @@ SessionManager >> registerUserClassNamed: aClassName [
 		atPriority: self defaultPriority
 ]
 
-{ #category : #registration }
+{ #category : 'registration' }
 SessionManager >> registerUserClassNamed: aClassName atPriority: anInteger [
 	self
 		register: (ClassSessionHandler forClassNamed: aClassName)
@@ -345,7 +372,7 @@ SessionManager >> registerUserClassNamed: aClassName atPriority: anInteger [
 		atPriority: anInteger
 ]
 
-{ #category : #registration }
+{ #category : 'registration' }
 SessionManager >> renamedClass: aClass from: oldName to: newName [
 	"Inform SessionManager that aClass has been renamed"
 
@@ -353,65 +380,72 @@ SessionManager >> renamedClass: aClass from: oldName to: newName [
 		category renamedClass: aClass from: oldName to: newName ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 SessionManager >> shutdownList [
 	^ self startupList reversed
 ]
 
-{ #category : #'snapshot and quit' }
+{ #category : 'snapshot and quit' }
 SessionManager >> snapshot: save andQuit: quit [
+
 
 	| isImageStarting wait |
 	"We do the snapshot in a separate process in maximum priority to have always a clean startup.
 	This process will be interrupted by the fork, and will be resumed as soon as the snapshot finishes.
 	We synchronize these processes in case both are in the same priority.
 	When both arguments are false, do nothing and return false."
+
 	(save or: [ quit ]) ifFalse: [ ^ false ].
 	WorldMorph saveAndKillExtraWorld.
 	wait := Semaphore new.
 	[
 	isImageStarting := self launchSnapshot: save andQuit: quit.
 	wait signal ] forkAt: Processor timingPriority - 1.
+
 	wait wait.
 
+	snapshotOperation hasError 
+		ifTrue: [ snapshotOperation error debug ].
+
 	"The execution of the deferred startup actions are executed in the caller thread."
+
 	self currentSession executeDeferredStartupActions: isImageStarting.
 	WorldMorph restartExtraWorld.
 	^ isImageStarting
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 SessionManager >> startupList [
 	^ (categories flatCollect: #prioritizedList)
 		asArray
 ]
 
-{ #category : #'well-known categories' }
+{ #category : 'well-known categories' }
 SessionManager >> systemCategory [
 	^ systemCategory
 ]
 
-{ #category : #'well-known categories' }
+{ #category : 'well-known categories' }
 SessionManager >> toolsCategory [
 	^ toolsCategory
 ]
 
-{ #category : #'session management' }
+{ #category : 'session management' }
 SessionManager >> uninstallSession: aWorkingSession [
 	currentSession := nil
 ]
 
-{ #category : #registration }
+{ #category : 'registration' }
 SessionManager >> unregisterClassNamed: aClassName [
 	self unregisterHandler: aClassName
 ]
 
-{ #category : #registration }
+{ #category : 'registration' }
 SessionManager >> unregisterHandler: anHandledId [
 	categories do: [ :each | each unregisterHandler: anHandledId ]
 ]
 
-{ #category : #'well-known categories' }
+{ #category : 'well-known categories' }
 SessionManager >> userCategory [
 	^ userCategory
 ]

@@ -1,10 +1,12 @@
 Class {
-	#name : #IRTransformTest,
-	#superclass : #TestCase,
-	#category : #'OpalCompiler-Tests-IR'
+	#name : 'IRTransformTest',
+	#superclass : 'TestCase',
+	#category : 'OpalCompiler-Tests-IR',
+	#package : 'OpalCompiler-Tests',
+	#tag : 'IR'
 }
 
-{ #category : #'tests - adding' }
+{ #category : 'tests - adding' }
 IRTransformTest >> testAdd [
 	| iRMethod aCompiledMethod |
 	iRMethod := IRBuilder new
@@ -17,11 +19,11 @@ IRTransformTest >> testAdd [
 	iRMethod allSequences last add: IRInstruction returnTop.
 	aCompiledMethod := iRMethod compiledMethod.
 	self
-		assert: (aCompiledMethod valueWithReceiver: nil arguments: #())
+		assert: (aCompiledMethod valueWithReceiver: nil)
 		equals: 2
 ]
 
-{ #category : #'tests - adding' }
+{ #category : 'tests - adding' }
 IRTransformTest >> testAddBefore [
 	| iRMethod aCompiledMethod ret |
 	iRMethod := IRBuilder new
@@ -37,11 +39,11 @@ IRTransformTest >> testAddBefore [
 		before: ret.
 	aCompiledMethod := iRMethod compiledMethod.
 	self
-		assert: (aCompiledMethod valueWithReceiver: nil arguments: #())
+		assert: (aCompiledMethod valueWithReceiver: nil)
 		equals: 2
 ]
 
-{ #category : #'tests - adding' }
+{ #category : 'tests - adding' }
 IRTransformTest >> testAddIntructions [
 	| iRMethod aCompiledMethod |
 	iRMethod := IRBuilder new
@@ -56,11 +58,11 @@ IRTransformTest >> testAddIntructions [
 			IRInstruction returnTop}.
 	aCompiledMethod := iRMethod compiledMethod.
 	self
-		assert: (aCompiledMethod valueWithReceiver: nil arguments: #())
+		assert: (aCompiledMethod valueWithReceiver: nil)
 		equals: 2
 ]
 
-{ #category : #'tests - adding' }
+{ #category : 'tests - adding' }
 IRTransformTest >> testAddIntructionsBefore [
 	| iRMethod aCompiledMethod push |
 	iRMethod := IRBuilder new
@@ -75,11 +77,11 @@ IRTransformTest >> testAddIntructionsBefore [
 		before: push.
 	aCompiledMethod := iRMethod compiledMethod.
 	self
-		assert: (aCompiledMethod valueWithReceiver: nil arguments: #())
+		assert: (aCompiledMethod valueWithReceiver: nil)
 		equals: 2
 ]
 
-{ #category : #'tests - adding' }
+{ #category : 'tests - adding' }
 IRTransformTest >> testAddIntructionsBeforeFromLList [
 	| iRMethod aCompiledMethod push llist col |
 	iRMethod := IRBuilder new
@@ -94,11 +96,11 @@ IRTransformTest >> testAddIntructionsBeforeFromLList [
 	iRMethod allSequences last addInstructions: col before: push.
 	aCompiledMethod := iRMethod compiledMethod.
 	self
-		assert: (aCompiledMethod valueWithReceiver: nil arguments: #())
+		assert: (aCompiledMethod valueWithReceiver: nil)
 		equals: 2
 ]
 
-{ #category : #'tests - enumeration' }
+{ #category : 'tests - enumeration' }
 IRTransformTest >> testAllInstructions [
 		| ir |
 
@@ -106,14 +108,14 @@ IRTransformTest >> testAllInstructions [
 		self assert: ir allInstructions last isReturn
 ]
 
-{ #category : #'tests - enumeration' }
+{ #category : 'tests - enumeration' }
 IRTransformTest >> testAllTempAccessInstructions [
 	| ir |
 	ir := IRBuilderTest new testPushTempTemp.
 	self assert: ir allTempAccessInstructions size equals: 1
 ]
 
-{ #category : #'tests - adding' }
+{ #category : 'tests - adding' }
 IRTransformTest >> testDelete [
 	| iRMethod aCompiledMethod |
 	iRMethod := IRBuilder new
@@ -125,11 +127,11 @@ IRTransformTest >> testDelete [
 		detect: [ :each | each isPushLiteral: [ :c | c == 2 ] ]) delete.
 	aCompiledMethod := iRMethod compiledMethod.
 	self
-		assert: (aCompiledMethod valueWithReceiver: nil arguments: #())
+		assert: (aCompiledMethod valueWithReceiver: nil)
 		equals: 1
 ]
 
-{ #category : #'tests - adding' }
+{ #category : 'tests - adding' }
 IRTransformTest >> testReplace [
 	| iRMethod aCompiledMethod |
 	iRMethod := IRBuilder new
@@ -140,11 +142,11 @@ IRTransformTest >> testReplace [
 		replaceWith: (IRInstruction pushLiteral: 2).
 	aCompiledMethod := iRMethod compiledMethod.
 	self
-		assert: (aCompiledMethod valueWithReceiver: nil arguments: #())
+		assert: (aCompiledMethod valueWithReceiver: nil)
 		equals: 2
 ]
 
-{ #category : #'tests - adding' }
+{ #category : 'tests - adding' }
 IRTransformTest >> testReplaceInstr [
 	| iRMethod aCompiledMethod |
 	iRMethod := IRBuilder new
@@ -155,6 +157,6 @@ IRTransformTest >> testReplaceInstr [
 		replaceWithInstructions: {(IRInstruction pushLiteral: 2)}.
 	aCompiledMethod := iRMethod compiledMethod.
 	self
-		assert: (aCompiledMethod valueWithReceiver: nil arguments: #())
+		assert: (aCompiledMethod valueWithReceiver: nil)
 		equals: 2
 ]

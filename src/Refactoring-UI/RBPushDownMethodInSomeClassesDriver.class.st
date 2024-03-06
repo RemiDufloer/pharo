@@ -8,61 +8,67 @@ When I gather all needed information I am calling and executing push down method
 You can create my instance and execute the refactoring by running:
 
 ```
-(RBPushDownMethodDriver model: aRBNamespace scopes: refactoringScopes pushDown: methods) execute
+(RBPushDownMethodDriver model: aRBNamespace scopes: refactoringScopes pushDown: methods) runRefactoring
 ```
 "
 Class {
-	#name : #RBPushDownMethodInSomeClassesDriver,
-	#superclass : #RBPushDownMethodDriver,
+	#name : 'RBPushDownMethodInSomeClassesDriver',
+	#superclass : 'RePushDownMethodDriver',
 	#instVars : [
 		'classes'
 	],
-	#category : #'Refactoring-UI'
+	#category : 'Refactoring-UI-Drivers',
+	#package : 'Refactoring-UI',
+	#tag : 'Drivers'
 }
 
-{ #category : #initialization }
-RBPushDownMethodInSomeClassesDriver class >> model: aRBNamespace scopes: refactoringScopes pushDown: methods [
+{ #category : 'resources' }
+RBPushDownMethodInSomeClassesDriver >> configureRefactoring [
 
-	^ self new model: aRBNamespace scopes: refactoringScopes pushDown: methods
-]
-
-{ #category : #execution }
-RBPushDownMethodInSomeClassesDriver >> execute [
-
-	| changes refactoring |
-	methods := self selectMethods.
-	methods ifNil: [ ^ self ].
-	classes := self selectClasses.
-	classes ifNil: [ ^ self ].
-	
-	refactoring := self refactoring.
-	changes := [
-	           [ refactoring generateChanges ]
-		           on: RBApplicabilityChecksFailedError
-		           do: [ :err |
-		           ^ RBRefactoringError signal: err messageText ] ]
-		           on: RBBreakingChangeChecksFailedWarning
-		           do: [ :err |
-			           RBRefactoringWarning signal: err messageText.
-			           "If user answers no, error is being propagated."
-			           err resume ].
-	(StRefactoringPreviewPresenter
-		 changes: changes
-		 inEnvironment: model
-		 scopes: scopes) open
-]
-
-{ #category : #resources }
-RBPushDownMethodInSomeClassesDriver >> refactoring [
-
-	^ RBPushDownMethodRefactoring
+	refactoring :=  RBPushDownMethodRefactoring
 		model: model
 		pushDown: (methods collect: [ :each | each selector ])
 		from: class
 		in: classes.
 ]
 
-{ #category : #execution }
+{ #category : 'execution' }
+RBPushDownMethodInSomeClassesDriver >> gatherUserInput [
+
+	super gatherUserInput.
+	classes := self selectClasses
+]
+
+{ #category : 'initialization' }
+RBPushDownMethodInSomeClassesDriver >> model: aRBNamespace scopes: refactoringScopes pushDownMethods: methodsList [
+
+	model := aRBNamespace.
+	scopes := refactoringScopes.
+	methods := methodsList.
+	class := methods first origin
+]
+
+{ #category : 'resources' }
+RBPushDownMethodInSomeClassesDriver >> refactoring [
+
+	refactoring :=  RBPushDownMethodRefactoring
+		model: model
+		pushDown: (methods collect: [ :each | each selector ])
+		from: class
+		in: classes.
+]
+
+{ #category : 'execution' }
+RBPushDownMethodInSomeClassesDriver >> runRefactoring [
+
+	self gatherUserInput.
+	methods ifNil: [ ^ self ].
+	classes ifNil: [ ^ self ].
+	
+	self configureAndRunRefactoring 
+]
+
+{ #category : 'execution' }
 RBPushDownMethodInSomeClassesDriver >> selectClasses [
 
 	| dialog |
@@ -73,5 +79,5 @@ RBPushDownMethodInSomeClassesDriver >> selectClasses [
 				          asOrderedCollection
 		          selecting: class subclasses.
 	dialog cancelled ifTrue: [ ^ nil ].
-	^ dialog presenter selectedItems collect: [ :each | each name ]
+	^ dialog selectedItems collect: [ :each | each name ]
 ]

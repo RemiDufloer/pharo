@@ -2,12 +2,13 @@
 I am a command to inline ""self send"" method directly into sender method
 "
 Class {
-	#name : #SycInlineMethodCommand,
-	#superclass : #SycSourceCodeRefactoringCommand,
-	#category : #'SystemCommands-SourceCodeCommands'
+	#name : 'SycInlineMethodCommand',
+	#superclass : 'SycSourceCodeRefactoringCommand',
+	#category : 'SystemCommands-SourceCodeCommands',
+	#package : 'SystemCommands-SourceCodeCommands'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 SycInlineMethodCommand class >> canBeExecutedInContext: aSourceCodeContext [
 
 	^ (super canBeExecutedInContext: aSourceCodeContext) and: [
@@ -15,7 +16,7 @@ SycInlineMethodCommand class >> canBeExecutedInContext: aSourceCodeContext [
 			  aSourceCodeContext isMessageSelected ] ]
 ]
 
-{ #category : #execution }
+{ #category : 'converting' }
 SycInlineMethodCommand >> asRefactorings [
 
 	^ { ((RBInlineMethodRefactoring
@@ -23,18 +24,16 @@ SycInlineMethodCommand >> asRefactorings [
 		    inMethod: method selector
 		    forClass: method origin)
 		   setOption: #inlineExpression toUse: [ :ref :aString |
-			   (self confirm:
-					('Do you want to extract the expression ''<1s>'' into a variable in the current method?'
-					 	expandMacrosWith: aString)) not ];
+			   (self 	confirm: 	('Do you want to inline the expression ''<1s>'' in the current method?' expandMacrosWith: aString)) not ];
 		   yourself) }
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 SycInlineMethodCommand >> defaultMenuIconName [
-	^ #smallRightFlushIcon
+	^ #smallRightFlush
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 SycInlineMethodCommand >> defaultMenuItemName [
 	^ 'Inline method'
 ]

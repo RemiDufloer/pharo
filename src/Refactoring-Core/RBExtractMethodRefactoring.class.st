@@ -7,8 +7,8 @@ The new method needs to have as many arguments as the number of (temp)variables,
 The preconditions are quite complex. The code needs to be parseable valid code. 
 "
 Class {
-	#name : #RBExtractMethodRefactoring,
-	#superclass : #RBMethodRefactoring,
+	#name : 'RBExtractMethodRefactoring',
+	#superclass : 'RBMethodRefactoring',
 	#instVars : [
 		'selector',
 		'extractionInterval',
@@ -19,10 +19,12 @@ Class {
 		'parameterMap',
 		'newExtractedSelector'
 	],
-	#category : #'Refactoring-Core-Refactorings'
+	#category : 'Refactoring-Core-Refactorings',
+	#package : 'Refactoring-Core',
+	#tag : 'Refactorings'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RBExtractMethodRefactoring class >> extract: anInterval from: aSelector in: aClass [
 	^ self new
 		extract: anInterval
@@ -30,7 +32,16 @@ RBExtractMethodRefactoring class >> extract: anInterval from: aSelector in: aCla
 		in: aClass
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
+RBExtractMethodRefactoring class >> extractSource: aString from: aSelector in: aClass [ 
+
+	^ self new
+		extractSource: aString 
+		from: aSelector
+		in: aClass
+]
+
+{ #category : 'instance creation' }
 RBExtractMethodRefactoring class >> model: aRBSmalltalk extract: anInterval from: aSelector in: aClass [
 	^ self new
 		model: aRBSmalltalk;
@@ -40,7 +51,29 @@ RBExtractMethodRefactoring class >> model: aRBSmalltalk extract: anInterval from
 		yourself
 ]
 
-{ #category : #transforming }
+{ #category : 'instance creation' }
+RBExtractMethodRefactoring class >> model: aRBSmalltalk extractSource: aString from: aSelector in: aClass [
+	^ self new
+		model: aRBSmalltalk;
+		extractSource: aString
+		from: aSelector
+		in: aClass;
+		yourself
+]
+
+{ #category : 'preconditions' }
+RBExtractMethodRefactoring >> applicabilityPreconditions [ 
+	^(RBCondition definesSelector: selector in: class)
+		& (RBCondition withBlock:
+					[self extractMethod.
+					self checkSpecialExtractions.
+					self checkReturn.
+					needsReturn ifTrue: [extractedParseTree addReturn].
+					self checkTemporaries.
+					true])
+]
+
+{ #category : 'transforming' }
 RBExtractMethodRefactoring >> checkAssignments: variableNames [
 	| node outsideVars removeAssigned |
 	removeAssigned := variableNames copy.
@@ -60,18 +93,20 @@ RBExtractMethodRefactoring >> checkAssignments: variableNames [
 	self updateTemporariesInExtractedMethodFor: variableNames
 ]
 
-{ #category : #transforming }
+{ #category : 'transforming' }
 RBExtractMethodRefactoring >> checkReturn [
-	needsReturn := self placeholderNode isUsed.
+	needsReturn := self placeholderNode isUsedAsReturnValue.
 	extractedParseTree containsReturn ifFalse: [^self].
 	extractedParseTree lastIsReturn ifTrue: [^self].
+	"Since we have a return that is not last in the extracted tree,
+	extraction is only possible if the modified method's last statement is being extracted"
 	(modifiedParseTree isLast: self placeholderNode)
 		ifFalse:
 			[self refactoringError: 'Couldn''t extract code since it contains a return.'].
 	self checkSelfReturns
 ]
 
-{ #category : #transforming }
+{ #category : 'transforming' }
 RBExtractMethodRefactoring >> checkSelfReturns [
 	| searcher |
 	searcher := self parseTreeSearcher.
@@ -82,7 +117,7 @@ RBExtractMethodRefactoring >> checkSelfReturns [
 		ifTrue: [ self placeholderNode asReturn ]
 ]
 
-{ #category : #transforming }
+{ #category : 'transforming' }
 RBExtractMethodRefactoring >> checkSingleAssignment: varName [
 	((RBReadBeforeWrittenTester isVariable: varName
 		readBeforeWrittenIn: extractedParseTree)
@@ -98,7 +133,7 @@ RBExtractMethodRefactoring >> checkSingleAssignment: varName [
 				in: modifiedParseTree
 ]
 
-{ #category : #transforming }
+{ #category : 'transforming' }
 RBExtractMethodRefactoring >> checkSpecialExtractions [
 	| node |
 	node := self placeholderNode parent.
@@ -109,7 +144,7 @@ RBExtractMethodRefactoring >> checkSpecialExtractions [
 			[self refactoringError: 'Cannot extract first message of a cascaded message']
 ]
 
-{ #category : #transforming }
+{ #category : 'transforming' }
 RBExtractMethodRefactoring >> checkTemporaries [
 	| temps accesses assigned |
 	temps := self remainingTemporaries.
@@ -121,7 +156,7 @@ RBExtractMethodRefactoring >> checkTemporaries [
 				yourself
 ]
 
-{ #category : #transforming }
+{ #category : 'transforming' }
 RBExtractMethodRefactoring >> compileExtractedMethod [
 
 	| cls |
@@ -132,7 +167,7 @@ RBExtractMethodRefactoring >> compileExtractedMethod [
 		  withAttributesFrom: (class methodFor: selector)
 ]
 
-{ #category : #transforming }
+{ #category : 'transforming' }
 RBExtractMethodRefactoring >> existingSelector [
 	"Try to find an existing method instead of creating a new one"
 
@@ -142,14 +177,14 @@ RBExtractMethodRefactoring >> existingSelector [
 				ifNone: [ nil ] ]
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RBExtractMethodRefactoring >> extract: anInterval from: aSelector in: aClass [
 	class := self classObjectFor: aClass.
 	selector := aSelector.
 	extractionInterval := anInterval
 ]
 
-{ #category : #transforming }
+{ #category : 'transforming' }
 RBExtractMethodRefactoring >> extractMethod [
 	| parseTree isSequence extractCode subtree newCode |
 	extractCode := self getExtractedSource.
@@ -213,12 +248,20 @@ RBExtractMethodRefactoring >> extractMethod [
 				onInterval: extractionInterval ]
 ]
 
-{ #category : #accessing }
+{ #category : 'instance creation' }
+RBExtractMethodRefactoring >> extractSource: aString from: aSelector in: aClass [ 
+
+	class := self classObjectFor: aClass.
+	selector := aSelector.
+	extractionInterval := self getIntervalForSource: aString
+]
+
+{ #category : 'accessing' }
 RBExtractMethodRefactoring >> extractedParseTree [
 	^ extractedParseTree
 ]
 
-{ #category : #transforming }
+{ #category : 'transforming' }
 RBExtractMethodRefactoring >> getExtractedSource [
 	| source |
 	source := class sourceCodeFor: selector.
@@ -228,7 +271,22 @@ RBExtractMethodRefactoring >> getExtractedSource [
 	^source copyFrom: extractionInterval first to: extractionInterval last
 ]
 
-{ #category : #transforming }
+{ #category : 'transforming' }
+RBExtractMethodRefactoring >> getIntervalForSource: aString [
+	"I return interval where aString is situated in the `selector`"
+
+	| method expression searcher matchedNode |
+	method := class methodFor: selector.
+	expression := RBParser parseExpression: aString.
+
+	searcher := RBParseTreeSearcher new.
+	searcher matchesTree: expression do: [ :aNode :answer | aNode ].
+	matchedNode := searcher executeTree: method ast.
+	matchedNode ifNil: [ self refactoringError: 'Could not find given source in the method.' ].
+	^ matchedNode start to: matchedNode stop
+]
+
+{ #category : 'transforming' }
 RBExtractMethodRefactoring >> getNewMethodName [
 	| newSelector methodName newMethodName |
 	methodName := RBMethodName new.
@@ -251,7 +309,7 @@ RBExtractMethodRefactoring >> getNewMethodName [
 	^newSelector asSymbol
 ]
 
-{ #category : #transforming }
+{ #category : 'transforming' }
 RBExtractMethodRefactoring >> isMethodEquivalentTo: aSelector [
 
 	selector == aSelector ifTrue: [^false].
@@ -263,7 +321,7 @@ RBExtractMethodRefactoring >> isMethodEquivalentTo: aSelector [
 	^true
 ]
 
-{ #category : #transforming }
+{ #category : 'transforming' }
 RBExtractMethodRefactoring >> isParseTreeEquivalentTo: aSelector [
 	| tree definingClass |
 	definingClass := class whoDefinesMethod: aSelector.
@@ -280,20 +338,20 @@ RBExtractMethodRefactoring >> isParseTreeEquivalentTo: aSelector [
 					(class superclass whichClassIncludesSelector: aSelector)
 						~= (definingClass superclass whichClassIncludesSelector: each)]) not])
 		ifFalse: [^false].
-	^self shouldUseExistingMethod: aSelector
+	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RBExtractMethodRefactoring >> method [
 	^ class realClass >> selector
 ]
 
-{ #category : #transforming }
+{ #category : 'transforming' }
 RBExtractMethodRefactoring >> methodDelimiter [
 	^'#''place.holder.for.method'''
 ]
 
-{ #category : #transforming }
+{ #category : 'transforming' }
 RBExtractMethodRefactoring >> nameNewMethod: aSymbol [
 	| args newSend |
 	newExtractedSelector := aSymbol .
@@ -318,27 +376,27 @@ RBExtractMethodRefactoring >> nameNewMethod: aSymbol [
 	(self parseTreeRewriterClass rename: e newName to: e name) executeTree: modifiedParseTree ]
 ]
 
-{ #category : #transforming }
+{ #category : 'transforming' }
 RBExtractMethodRefactoring >> newExtractedSelector [
 	^ newExtractedSelector
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RBExtractMethodRefactoring >> parameterMap [
 	^ parameterMap ifNil: [ parameterMap := { } ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RBExtractMethodRefactoring >> parameterMap: aDictionary [
 	parameterMap := aDictionary
 ]
 
-{ #category : #transforming }
+{ #category : 'transforming' }
 RBExtractMethodRefactoring >> parameters: anOrderedCollection [
 	parameters := anOrderedCollection
 ]
 
-{ #category : #transforming }
+{ #category : 'transforming' }
 RBExtractMethodRefactoring >> placeholderNode [
 	| node |
 	node := self parseTreeSearcherClass
@@ -348,19 +406,19 @@ RBExtractMethodRefactoring >> placeholderNode [
 	^ node
 ]
 
-{ #category : #preconditions }
-RBExtractMethodRefactoring >> preconditions [
-	^(RBCondition definesSelector: selector in: class)
-		& (RBCondition withBlock:
-					[self extractMethod.
-					self checkSpecialExtractions.
-					self checkReturn.
-					needsReturn ifTrue: [extractedParseTree addReturn].
-					self checkTemporaries.
-					true])
+{ #category : 'transforming' }
+RBExtractMethodRefactoring >> privateTransform [
+
+	| existingSelector |
+	existingSelector := self existingSelector.
+	self nameNewMethod: (existingSelector
+			 ifNil: [ newExtractedSelector ifNil: [ self getNewMethodName ] ]
+			 ifNotNil: [ existingSelector ]).
+	existingSelector ifNil: [ self compileExtractedMethod ].
+	class compileTree: modifiedParseTree
 ]
 
-{ #category : #transforming }
+{ #category : 'transforming' }
 RBExtractMethodRefactoring >> remainingTemporaries [
 	| temps |
 	temps := modifiedParseTree allDefinedVariables asSet.
@@ -369,23 +427,23 @@ RBExtractMethodRefactoring >> remainingTemporaries [
 	^temps
 ]
 
-{ #category : #transforming }
+{ #category : 'transforming' }
 RBExtractMethodRefactoring >> renameAllParameters [
 	self parameterMap do: [ :each |
 			self renameParameterWith: each name to: each newName ]
 ]
 
-{ #category : #renaming }
+{ #category : 'renaming' }
 RBExtractMethodRefactoring >> renameNode: aParseTree withOldName: oldName toWithName: newName [
 	(self parseTreeRewriterClass rename: oldName to: newName) executeTree: aParseTree
 ]
 
-{ #category : #renaming }
+{ #category : 'renaming' }
 RBExtractMethodRefactoring >> renameParameterWith: oldName to: newName [
 	self renameNode: extractedParseTree withOldName: oldName toWithName: newName
 ]
 
-{ #category : #transforming }
+{ #category : 'transforming' }
 RBExtractMethodRefactoring >> reorderParametersToMatch: aSelector [
 	| tree dictionary |
 	tree := class parseTreeForSelector: aSelector.
@@ -400,29 +458,29 @@ RBExtractMethodRefactoring >> reorderParametersToMatch: aSelector [
 								refactoringError: 'An internal error occured, please report this error.']]
 ]
 
-{ #category : #transforming }
+{ #category : 'transforming' }
 RBExtractMethodRefactoring >> requestExistingSelector [
 	^ [(self options at: #existingSelector) value: self]
 			on: Exception
 			do: [ :e | nil ]
 ]
 
-{ #category : #transforming }
+{ #category : 'transforming' }
 RBExtractMethodRefactoring >> requestExtractionClass [
 	^ (self options at: #extractionClass ifAbsent: [ [:ref | class ]]) value: self
 ]
 
-{ #category : #transforming }
+{ #category : 'transforming' }
 RBExtractMethodRefactoring >> selectorsToSearch [
 	^ class allSelectors
 ]
 
-{ #category : #transforming }
+{ #category : 'transforming' }
 RBExtractMethodRefactoring >> startLimit: aNumber [
 	^ aNumber
 ]
 
-{ #category : #printing }
+{ #category : 'storing' }
 RBExtractMethodRefactoring >> storeOn: aStream [
 	aStream nextPut: $(.
 	self class storeOn: aStream.
@@ -436,30 +494,18 @@ RBExtractMethodRefactoring >> storeOn: aStream [
 	aStream nextPut: $)
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RBExtractMethodRefactoring >> targetClass [
 	^ class
 ]
 
-{ #category : #transforming }
-RBExtractMethodRefactoring >> transform [
-
-	| existingSelector |
-	existingSelector := self existingSelector.
-	self nameNewMethod: (existingSelector
-			 ifNil: [ newExtractedSelector ifNil: [ self getNewMethodName ] ]
-			 ifNotNil: [ existingSelector ]).
-	existingSelector ifNil: [ self compileExtractedMethod ].
-	class compileTree: modifiedParseTree
-]
-
-{ #category : #transforming }
+{ #category : 'transforming' }
 RBExtractMethodRefactoring >> updateTemporariesInExtractedMethodFor: assigned [
 	"Add temporaries in extract method"
 	assigned do: [:each | extractedParseTree body addTemporaryNamed: each]
 ]
 
-{ #category : #renaming }
+{ #category : 'renaming' }
 RBExtractMethodRefactoring >> validateRenameNode: aParseTree withOldName: oldName toWithName: newName [
 	|conditions block|
 	conditions := ((RBCondition isValidInstanceVariableName: newName for: class)
@@ -479,7 +525,7 @@ RBExtractMethodRefactoring >> validateRenameNode: aParseTree withOldName: oldNam
 		ifTrue: [ self refactoringError: newName asString , ' is already defined' ]
 ]
 
-{ #category : #renaming }
+{ #category : 'renaming' }
 RBExtractMethodRefactoring >> validateRenameOf: oldName to: newName [
 	self validateRenameNode: extractedParseTree withOldName: oldName toWithName: newName
 ]
