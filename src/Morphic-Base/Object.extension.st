@@ -102,19 +102,23 @@ Object >> taskbarIcon [
 	^ self iconNamed: self taskbarIconName
 ]
 
-{ #category : '*Morphic-Base' }
+
+{ #category : #'*Morphic-Base' }
+Object class >> taskbarIconName [
+	"Answer the icon for an instance of the receiver in a task bar"
+
+
+	^#smallWindow
+]
+
+
+{ #category : #'*Morphic-Base' }
 Object >> taskbarIconName [
 	"Answer the icon for the receiver in a task bar
 	or nil for the default."
 
+
 	^self class taskbarIconName
-]
-
-{ #category : '*Morphic-Base' }
-Object class >> taskbarIconName [
-	"Answer the icon for an instance of the receiver in a task bar"
-
-	^#smallWindow
 ]
 
 { #category : '*Morphic-Base' }

@@ -1306,7 +1306,20 @@ UITheme >> createMenuBoxFor: aSystemWindow [
 	^msb
 ]
 
-{ #category : 'accessing' }
+
+{ #category : #'label-styles' }
+UITheme >> createReturnToWorldBoxFor: aSystemWindow [
+	"Answer a button for closing the window."
+
+	^(self
+		newReturnToWorldControlIn: aSystemWindow
+		for: aSystemWindow
+		action: [aSystemWindow returnToOriginalWorld ]
+		help: 'Return this window to the original world' translated)
+		extent: aSystemWindow boxExtent
+]
+
+{ #category : #accessing }
 UITheme >> currentSettings [
 
 	^ settings
@@ -3253,7 +3266,43 @@ UITheme >> newRadioButtonIn: aThemedMorph for: aModel getSelected: getSel setSel
 	^answer
 ]
 
-{ #category : 'morph creation' }
+
+{ #category : #initialization }
+UITheme >> newRadioButtonMarkerForm [
+	"Answer a new radio button marker form. We make it empty because we already have the selected radio button take care of the state."
+
+	^ self iconNamed: #radioButtonMarkerForm
+]
+
+{ #category : #initialization }
+UITheme >> newRadioButtonSelectedForm [
+	"Answer the form for a selected radio button."
+
+	^(Form
+	extent: 14@14
+	depth: 32
+	fromArray: #( 16777215 16777215 16777215 195273727 2641329849 3563221416 4067918510 4051207088 3546444457 2574352313 160337634 16777215 16777215 16777215 16777215 16777215 1433764797 4033509543 4289442502 4292467941 4292928234 4292928234 4292467941 4289442502 4016797863 1299613120 16777215 16777215 16777215 1383498170 4252665514 4291152600 4291744478 4291744478 4291744478 4291744478 4291744478 4291744478 4291087064 4235822507 1216120505 16777215 192187321 4033181089 4290232016 4290560980 4290560980 4290560980 4290560980 4290560980 4290560980 4290560980 4290560980 4290100687 3982914979 140541887 2623959968 4286746800 4289574859 4289574859 4289574859 4289574859 4289574859 4289574859 4289574859 4289574859 4289574859 4289574859 4286549679 2456319395 3579801242 4286353071 4288654533 4288654533 4288654533 4288654533 4288654533 4288654533 4288654533 4288654533 4288654533 4288654533 4286089901 3495980954 3965612183 4284709539 4286944951 4287011000 4287011000 4287011000 4287011000 4287011000 4287011000 4287011000 4287011000 4286813622 4284643746 3915280279 3915345555 4284973226 4284973226 4284973226 4284973226 4284973226 4284973226 4284973226 4284973226 4284973226 4284973226 4284973226 4284973226 3864947858 3512362887 4285500082 4285500082 4285500082 4285500082 4285500082 4285500082 4285500082 4285500082 4285500082 4285500082 4285500082 4285500082 3428345476 2286835828 4285433514 4286026683 4286026683 4286026683 4286026683 4286026683 4286026683 4286026683 4286026683 4286026683 4286026683 4285235879 2152552048 187582022 3813958010 4286421439 4286553283 4286553283 4286553283 4286553283 4286553283 4286553283 4286553283 4286553283 4286355645 3763494776 187582022 16777215 959790667 4116343939 4286685122 4287014603 4287014603 4287014603 4287014603 4287014603 4287014603 4286619329 4099500930 926039117 16777215 16777215 16777215 908735550 3679148137 4285630628 4286882500 4287541204 4287541204 4286816707 4268787875 3645527655 892024127 16777215 16777215 16777215 16777215 16777215 169482778 1798387264 3040494156 3679082084 3662239075 3023716940 1798452800 169482778 16777215 16777215 16777215)
+	offset: 0@0)
+]
+
+{ #category : #'morph creation' }
+UITheme >> newReturnToWorldControlIn: aThemedMorph for: aModel action: aValuable help: helpText [
+	"Answer a button for closing things."
+
+	|form msb|
+	form := self windowCloseForm.
+	msb := MultistateButtonMorph new extent: form extent.
+	form := self windowForm.
+	msb
+		extent: form extent;
+		activeEnabledOverDownFillStyle: (ImageFillStyle form: form);
+		passiveEnabledOverDownFillStyle: (ImageFillStyle form: form);
+		addUpAction: aValuable;
+		setBalloonText: helpText.
+	^msb
+]
+
+{ #category : #'morph creation' }
 UITheme >> newRowIn: aThemedMorph for: controls [
 	"Answer a morph laid out with a row of controls."
 
@@ -5095,7 +5144,14 @@ UITheme >> windowExtentChangedFor: aWindow [
 	"Update any extent related visuals."
 ]
 
-{ #category : 'fill-styles' }
+
+{ #category : #rd }
+UITheme >> windowForm [
+	
+	^ self iconNamed: #window
+]
+
+{ #category : #'fill-styles' }
 UITheme >> windowInactiveFillStyleFor: aWindow [
 	"We do not want the lighting effect when the window goes inactive"
 	^self windowActiveFillStyleFor: aWindow

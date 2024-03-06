@@ -828,6 +828,7 @@ MenuMorph >> hasSubMenu: aMenuMorph [
 
 { #category : 'initialization' }
 MenuMorph >> initialize [
+
 	super initialize.
 
 	self setDefaultParameters.
@@ -835,8 +836,11 @@ MenuMorph >> initialize [
 	self hResizing: #shrinkWrap.
 	self vResizing: #shrinkWrap.
 	stayUp := false.
-	self setProperty: #morphicLayerNumber toValue: self morphicLayerNumber.
-	self theme currentSettings preferRoundCorner ifTrue: [ self useRoundedCorners ]
+	self
+		setProperty: #morphicLayerNumber
+		toValue: self morphicLayerNumber.
+	self theme currentSettings preferRoundCorner ifTrue: [
+		self useRoundedCorners ]
 ]
 
 { #category : 'keymapping' }
@@ -891,8 +895,8 @@ MenuMorph >> invokeModal [
 	menu invokeModal."
 
   ^ self
-		invokeAt: self currentWorld activeHand position
-		in: self currentWorld
+		invokeAt: self owner world activeHand position
+		in: self owner world 
 ]
 
 { #category : 'testing' }

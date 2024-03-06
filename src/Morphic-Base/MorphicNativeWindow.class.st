@@ -42,7 +42,20 @@ MorphicNativeWindow class >> newWindow: aMorph manageBy: aManager [
 	
 ]
 
-{ #category : 'closing' }
+
+{ #category : #'instance creation' }
+MorphicNativeWindow class >> openNewWindow: aWindow [
+
+	| newWindow |
+	newWindow  := self new.
+	newWindow window: aWindow.
+	newWindow manager: MorphicWindowManager new.
+	newWindow open.
+	^ newWindow 
+	
+]
+
+{ #category : #closing }
 MorphicNativeWindow >> allowedToClose [
 
 " no reason to dont close ? "
@@ -212,13 +225,13 @@ MorphicNativeWindow >> open [
 	backend := window openInExternalWindow.
 	osWindow := self backend worldState worldRenderer osWindow.
 	attributes := osWindow initialAttributes.
-	
+	self updateTitle .
 	osWindow announcer weak
 		when: DeleteWindowByCrossAnnouncement
 		send: #deleteByCross
 		to: self.
 	window announcer weak
-		when: WindowTitleAnnouncement
+		when: WindowLabelled 
 		send: #windowTitleChanged:
 		to: self
 ]
@@ -355,7 +368,17 @@ MorphicNativeWindow >> theme [
 	^ Smalltalk ui theme
 ]
 
-{ #category : 'getter' }
+
+{ #category : #'private - updating' }
+MorphicNativeWindow >> updateTitle [
+
+	window title ifNotNil: [
+		self osWindow backendWindow sdl2Window title:
+			Smalltalk shortImageName , ' | ' , window title ]
+]
+
+{ #category : #getter }
+
 MorphicNativeWindow >> window [
 	^ window
 ]
@@ -368,5 +391,7 @@ MorphicNativeWindow >> window: aWindow [
 { #category : 'window management' }
 MorphicNativeWindow >> windowTitleChanged: anAnnouncement [
 
-	osWindow title: anAnnouncement title
+	anAnnouncement label ifNotNil: [
+		self osWindow backendWindow sdl2Window title:
+			Smalltalk shortImageName , ' | ' , anAnnouncement label ]
 ]

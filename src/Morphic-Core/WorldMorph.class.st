@@ -15,7 +15,8 @@ Class {
 		'LastScreenModeSelected'
 	],
 	#classInstVars : [
-		'displayScaleFactor'
+		'displayScaleFactor',
+		'extraWorldListForSnapshot'
 	],
 	#category : 'Morphic-Core-Worlds',
 	#package : 'Morphic-Core',
@@ -149,7 +150,27 @@ WorldMorph class >> removeExtraWorld: aWorld [
 	CursorOwnerWorld == aWorld ifTrue: [ CursorOwnerWorld := nil ]
 ]
 
-{ #category : 'setting' }
+
+{ #category : #'extra worlds' }
+WorldMorph class >> restartExtraWorld [
+
+	extraWorldListForSnapshot do: [ :e |
+		self addExtraWorld: e.
+		e open ].
+	extraWorldListForSnapshot := extraWorldListForSnapshot
+		                             asOrderedCollection removeAll
+]
+
+{ #category : #'extra worlds' }
+WorldMorph class >> saveAndKillExtraWorld [
+
+	extraWorldListForSnapshot := ExtraWorldList copy.
+	extraWorldListForSnapshot do: [ :e |
+		e delete.
+		self removeExtraWorld: e ]
+]
+
+{ #category : #setting }
 WorldMorph class >> scaleFactor [
 
 	^ World scaleFactor
@@ -667,6 +688,7 @@ WorldMorph >> world [
 
 { #category : 'world menu' }
 WorldMorph >> worldMenu [
+
 	^ worldState worldMenu
 ]
 

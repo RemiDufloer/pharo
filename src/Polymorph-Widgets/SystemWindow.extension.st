@@ -45,7 +45,17 @@ SystemWindow >> activeTitleFillStyle [
 	^self theme windowActiveTitleFillStyleFor: self
 ]
 
-{ #category : '*Polymorph-Widgets' }
+
+{ #category : #'*Polymorph-Widgets' }
+SystemWindow >> addBoxes [
+
+	self addCloseBox .
+	self addMenuControl.
+	self addExpandBox .
+	self addCollapseBox .
+]
+
+{ #category : #'*Polymorph-Widgets' }
 SystemWindow >> addCollapseBox [
 	"If I have a labelArea, add a collapse box to it."
 
@@ -439,7 +449,15 @@ SystemWindow >> createMenuBox [
 	^self theme createMenuBoxFor: self
 ]
 
-{ #category : '*Polymorph-Widgets' }
+
+{ #category : #'*Polymorph-Widgets' }
+SystemWindow >> createReturnToWorldBox [
+	"Answer a button for closing the window."
+
+	^self theme createReturnToWorldBoxFor: self
+]
+
+{ #category : #'*Polymorph-Widgets' }
 SystemWindow >> doubleClick: event [
 	"Handle a double click. Maximize/restore the window.
 	Works in title bar area."
@@ -1084,7 +1102,15 @@ SystemWindow >> removeLabelArea [
 		self addGripsIfWanted]
 ]
 
-{ #category : '*Polymorph-Widgets' }
+
+{ #category : #'*Polymorph-Widgets' }
+SystemWindow >> removeReturnToWorld [
+	"Remove the collapse box."
+
+	returnToWorldBox ifNotNil: [returnToWorldBox delete. returnToWorldBox := nil]
+]
+
+{ #category : #'*Polymorph-Widgets' }
 SystemWindow >> replaceBoxes [
 	"Rebuild the various boxes."
 
@@ -1225,7 +1251,14 @@ SystemWindow >> themeChanged [
 	super themeChanged
 ]
 
-{ #category : '*Polymorph-Widgets' }
+
+{ #category : #'*Polymorph-Widgets' }
+SystemWindow >> title [
+
+	^ self labelString 
+]
+
+{ #category : #'*Polymorph-Widgets' }
 SystemWindow >> toggleVisibleAndRaise [
 	"Toggle the visibility of the receiver, bringing to
 	the front if becoming visible. Activate or passivate here."

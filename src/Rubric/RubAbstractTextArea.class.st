@@ -1571,7 +1571,7 @@ RubAbstractTextArea >> openFindDialog [
 RubAbstractTextArea >> openMenu [
 	"Opens the menu at the cursor position"
 	self openMenu: false and: [ :menu |
-		menu invokeAt: self cursor positionInWorld in: self currentWorld
+		menu invokeAt: self cursor positionInWorld in: self world
 	]
 ]
 
